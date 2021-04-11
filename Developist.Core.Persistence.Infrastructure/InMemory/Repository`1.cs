@@ -77,7 +77,7 @@ namespace Developist.Core.Persistence.InMemory
             if (e.UnitOfWork is UnitOfWorkDataStore uow)
             {
                 DataStore = new HashSet<TEntity>(uow.DataStore);
-                uow.DataStore.Clear();
+                // uow.DataStore.Clear();
             }
         }
 
