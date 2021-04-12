@@ -69,7 +69,7 @@ namespace Developist.Core.Persistence.EntityFramework
             uow.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Added;
         }
 
-        public virtual void Remove(TEntity entity, CancellationToken cancellationToken = default)
+        public virtual void Remove(TEntity entity)
         {
             uow.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Deleted;
         }

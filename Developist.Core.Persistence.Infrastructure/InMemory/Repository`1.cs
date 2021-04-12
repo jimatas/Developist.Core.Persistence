@@ -27,7 +27,7 @@ namespace Developist.Core.Persistence.InMemory
             uow.DataStore.Add(entity);
         }
 
-        public virtual void Remove(TEntity entity, CancellationToken cancellationToken = default)
+        public virtual void Remove(TEntity entity)
         {
             uow.DataStore.Remove(entity);
         }
@@ -77,7 +77,6 @@ namespace Developist.Core.Persistence.InMemory
             if (e.UnitOfWork is UnitOfWorkDataStore uow)
             {
                 DataStore = new HashSet<TEntity>(uow.DataStore);
-                // uow.DataStore.Clear();
             }
         }
 

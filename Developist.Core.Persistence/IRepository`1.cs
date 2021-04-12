@@ -10,6 +10,6 @@ namespace Developist.Core.Persistence
         IUnitOfWork UnitOfWork { get; }
 
         void Add(TEntity entity);
-        void Remove(TEntity entity, CancellationToken cancellationToken = default);
+        void Remove(TEntity entity);
     }
 }
