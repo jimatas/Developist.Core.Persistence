@@ -80,7 +80,7 @@ namespace Developist.Core.Persistence.InMemory
         protected class UnitOfWorkDataStore : IUnitOfWork
         {
             private readonly IUnitOfWork uow;
-            
+
             public UnitOfWorkDataStore(IUnitOfWork uow, IEnumerable<TEntity> dataStore = null)
             {
                 this.uow = uow ?? throw new ArgumentNullException(nameof(uow));
