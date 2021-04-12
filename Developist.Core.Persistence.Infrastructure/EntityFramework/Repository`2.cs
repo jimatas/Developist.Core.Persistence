@@ -24,6 +24,16 @@ namespace Developist.Core.Persistence.EntityFramework
 
         public IUnitOfWork UnitOfWork => uow;
 
+        public virtual void Add(TEntity entity)
+        {
+            uow.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Added;
+        }
+
+        public virtual void Remove(TEntity entity)
+        {
+            uow.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Deleted;
+        }
+
         public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter)
         {
             return Find(filter, includePaths: null);
@@ -62,16 +72,6 @@ namespace Developist.Core.Persistence.EntityFramework
         public virtual async Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths, CancellationToken cancellationToken = default)
         {
             return await CreateQuery(includePaths).Filter(filter).Paginate(paginator).ToListAsync(cancellationToken).ConfigureAwait(false);
-        }
-
-        public virtual void Add(TEntity entity)
-        {
-            uow.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Added;
-        }
-
-        public virtual void Remove(TEntity entity)
-        {
-            uow.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Deleted;
         }
 
         protected IQueryable<TEntity> CreateQuery(IEntityIncludePaths<TEntity> includePaths)

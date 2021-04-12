@@ -34,7 +34,7 @@ namespace Developist.Core.Persistence.InMemory
 
         public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter)
         {
-            return filter.Filter(DataStore.AsQueryable());
+            return DataStore.AsQueryable().Filter(filter);
         }
 
         public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IEntityIncludePaths<TEntity> includePaths)
@@ -44,7 +44,7 @@ namespace Developist.Core.Persistence.InMemory
 
         public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator)
         {
-            return filter.Filter(DataStore.AsQueryable()).Paginate(paginator);
+            return DataStore.AsQueryable().Filter(filter).Paginate(paginator);
         }
 
         public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths)
