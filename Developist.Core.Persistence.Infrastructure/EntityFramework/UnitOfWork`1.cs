@@ -50,7 +50,7 @@ namespace Developist.Core.Persistence.EntityFramework
             try
             {
                 DbContext.ValidateChangedEntities();
-                await DbContext.SaveChangesAsync(cancellationToken);
+                await DbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
