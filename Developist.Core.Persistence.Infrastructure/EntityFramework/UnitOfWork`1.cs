@@ -43,16 +43,8 @@ namespace Developist.Core.Persistence.EntityFramework
 
         public virtual IRepository<TEntity> Repository<TEntity>() where TEntity : class, IEntity
         {
-            if (repositories.TryGetValue(typeof(TEntity), out var wrapper))
-            {
-                return wrapper.Repository<TEntity>();
-            }
-
-            var repository = repositoryFactory.Create<TEntity>(this);
-
-            repositories.TryAdd(typeof(TEntity), new RepositoryWrapper(repository));
-
-            return repository;
+            var wrapper = repositories.GetOrAdd(typeof(TEntity), _ => new(repositoryFactory.Create<TEntity>(this)));
+            return wrapper.Repository<TEntity>();
         }
     }
 }
