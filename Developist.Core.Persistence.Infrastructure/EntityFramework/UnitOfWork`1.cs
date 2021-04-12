@@ -2,6 +2,8 @@
 // Licensed under the MIT License. See License.txt in the project root for details.
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 using System;
 using System.Collections.Concurrent;
@@ -14,11 +16,13 @@ namespace Developist.Core.Persistence.EntityFramework
     {
         private readonly ConcurrentDictionary<Type, RepositoryWrapper> repositories = new();
         private readonly IRepositoryFactory<TDbContext> repositoryFactory;
+        private readonly ILogger logger;
 
-        public UnitOfWork(IRepositoryFactory<TDbContext> repositoryFactory, TDbContext dbContext)
+        public UnitOfWork(TDbContext dbContext, IRepositoryFactory<TDbContext> repositoryFactory, ILogger<UnitOfWork<TDbContext>> logger)
         {
-            this.repositoryFactory = repositoryFactory ?? throw new ArgumentNullException(nameof(repositoryFactory));
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            this.repositoryFactory = repositoryFactory ?? throw new ArgumentNullException(nameof(repositoryFactory));
+            this.logger = logger ?? NullLogger<UnitOfWork<TDbContext>>.Instance;
         }
 
         public TDbContext DbContext { get; }
@@ -27,16 +31,32 @@ namespace Developist.Core.Persistence.EntityFramework
 
         public virtual void Complete()
         {
-            DbContext.ValidateChangedEntities();
-            DbContext.SaveChanges();
+            try
+            {
+                DbContext.ValidateChangedEntities();
+                DbContext.SaveChanges();
+            }
+            catch (Exception exception)
+            {
+                logger.LogWarning(exception, $"Exception thrown during {nameof(UnitOfWork<TDbContext>)}<{nameof(TDbContext)}>.{nameof(Complete)} call.");
+                throw;
+            }
 
             Completed?.Invoke(this, new UnitOfWorkCompletedEventArgs(this));
         }
 
         public virtual async Task CompleteAsync(CancellationToken cancellationToken = default)
         {
-            DbContext.ValidateChangedEntities();
-            await DbContext.SaveChangesAsync(cancellationToken);
+            try
+            {
+                DbContext.ValidateChangedEntities();
+                await DbContext.SaveChangesAsync(cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                logger.LogWarning(exception, $"Exception thrown during {nameof(UnitOfWork<TDbContext>)}<{nameof(TDbContext)}>.{nameof(CompleteAsync)} call.");
+                throw;
+            }
 
             Completed?.Invoke(this, new UnitOfWorkCompletedEventArgs(this));
         }
