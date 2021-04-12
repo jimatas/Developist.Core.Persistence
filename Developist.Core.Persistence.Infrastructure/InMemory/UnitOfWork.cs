@@ -3,12 +3,13 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Developist.Core.Persistence.InMemory
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : DisposableBase, IUnitOfWork
     {
         private readonly ConcurrentDictionary<Type, RepositoryWrapper> repositories = new();
         private readonly IRepositoryFactory repositoryFactory;
@@ -36,6 +37,20 @@ namespace Developist.Core.Persistence.InMemory
         {
             var wrapper = repositories.GetOrAdd(typeof(TEntity), _ => new(repositoryFactory.Create<TEntity>(this)));
             return wrapper.Repository<TEntity>();
+        }
+
+        protected override void ReleaseManagedResources()
+        {
+            repositories.Clear();
+
+            base.ReleaseManagedResources();
+        }
+
+        protected override ValueTask ReleaseManagedResourcesAsync()
+        {
+            repositories.Clear();
+
+            return base.ReleaseManagedResourcesAsync();
         }
     }
 }

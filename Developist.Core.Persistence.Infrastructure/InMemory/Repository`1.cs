@@ -93,9 +93,13 @@ namespace Developist.Core.Persistence.InMemory
                 add => uow.Completed += value;
                 remove => uow.Completed -= value;
             }
+
             public void Complete() => uow.Complete();
             public Task CompleteAsync(CancellationToken cancellationToken = default) => uow.CompleteAsync(cancellationToken);
             public IRepository<T> Repository<T>() where T : class, IEntity => uow.Repository<T>();
+
+            public void Dispose() => uow.Dispose();
+            public ValueTask DisposeAsync() => uow.DisposeAsync();
         }
     }
 }

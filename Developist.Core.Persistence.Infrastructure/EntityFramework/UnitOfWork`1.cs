@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Developist.Core.Persistence.EntityFramework
 {
-    public class UnitOfWork<TDbContext> : IUnitOfWork<TDbContext> where TDbContext : DbContext
+    public class UnitOfWork<TDbContext> : DisposableBase, IUnitOfWork<TDbContext> where TDbContext : DbContext
     {
         private readonly ConcurrentDictionary<Type, RepositoryWrapper> repositories = new();
         private readonly IRepositoryFactory<TDbContext> repositoryFactory;
@@ -65,6 +65,22 @@ namespace Developist.Core.Persistence.EntityFramework
         {
             var wrapper = repositories.GetOrAdd(typeof(TEntity), _ => new(repositoryFactory.Create<TEntity>(this)));
             return wrapper.Repository<TEntity>();
+        }
+
+        protected override void ReleaseManagedResources()
+        {
+            repositories.Clear();
+            DbContext.Dispose();
+
+            base.ReleaseManagedResources();
+        }
+
+        protected async override ValueTask ReleaseManagedResourcesAsync()
+        {
+            repositories.Clear();
+            await DbContext.DisposeAsync().ConfigureAwait(false);
+            
+            await base.ReleaseManagedResourcesAsync().ConfigureAwait(false);
         }
     }
 }

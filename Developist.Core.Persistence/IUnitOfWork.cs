@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Developist.Core.Persistence
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable, IAsyncDisposable
     {
         event EventHandler<UnitOfWorkCompletedEventArgs> Completed;
 

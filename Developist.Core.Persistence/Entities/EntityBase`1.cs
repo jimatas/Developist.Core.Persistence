@@ -33,7 +33,7 @@ namespace Developist.Core.Persistence
                 return true;
             }
 
-            if (this.IsTransient || that.IsTransient) // Entities that have not yet been persisted do not have an identity.
+            if (this.IsTransient || that.IsTransient) // Entities that have not yet been persisted, do not have a meaningful identity.
             {
                 return false;
             }
