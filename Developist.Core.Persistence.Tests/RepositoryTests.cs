@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System;
+using System.Linq;
 
 namespace Developist.Core.Persistence.Tests
 {
@@ -96,6 +97,55 @@ namespace Developist.Core.Persistence.Tests
             repository.Find(filter, paginator, includePaths);
 
             // Assert
+        }
+
+        [TestMethod]
+        public void Find_GivenFilter_ReturnsExpectedResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            IQueryableFilter<Person> filter = new PersonByIdFilter(id: 2);
+
+            // Act
+            var people = repository.Find(filter);
+
+            // Assert
+            Assert.AreEqual(1, people.Count());
+            Assert.AreEqual("Randall Bloom", people.Single().FullName());
+        }
+
+        [TestMethod]
+        public void Find_GivenFilterAndPaginator_ReturnsExpectedResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            IQueryableFilter<Person> filter = new PersonByIdFilter(id: 2);
+            IQueryablePaginator<Person> paginator = new SorterPaginator<Person>(nameof(Person.FamilyName), 1, 1);
+
+            // Act
+            var people = repository.Find(filter, paginator);
+
+            // Assert
+            Assert.AreEqual(1, people.Count());
+            Assert.AreEqual("Randall Bloom", people.Single().FullName());
+        }
+
+        private static void SeedRepositoryWithData(IRepository<Person> repository)
+        {
+            foreach (var person in new[]
+            {
+                new Person(1) { GivenName = "Hollie", FamilyName = "Marin" },
+                new Person(2) { GivenName = "Randall", FamilyName = "Bloom" },
+                new Person(3) { GivenName = "Glen", FamilyName = "Hensley" }
+            })
+            {
+                repository.Add(person);
+            }
+            repository.UnitOfWork.Complete();
         }
     }
 }
