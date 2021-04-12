@@ -11,7 +11,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Developist.Core.Persistence.Tester
+namespace Developist.Core.Persistence.Samples
 {
     class Program : ConsoleHostedServiceBase
     {

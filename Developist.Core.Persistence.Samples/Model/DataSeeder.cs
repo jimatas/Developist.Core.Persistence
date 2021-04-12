@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Developist.Core.Persistence.Tester
+namespace Developist.Core.Persistence.Samples
 {
     public class DataSeeder
     {

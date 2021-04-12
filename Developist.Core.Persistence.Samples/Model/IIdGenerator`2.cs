@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Developist.Core.Persistence.Tester
+namespace Developist.Core.Persistence.Samples
 {
     public interface IIdGenerator<TEntity, TIdentifier>
     where TEntity : IEntity<TIdentifier>

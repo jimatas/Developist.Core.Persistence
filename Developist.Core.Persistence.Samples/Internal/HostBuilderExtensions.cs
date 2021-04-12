@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 
 using System;
 
-namespace Developist.Core.Persistence.Tester
+namespace Developist.Core.Persistence.Samples
 {
     internal static class HostBuilderExtensions
     {

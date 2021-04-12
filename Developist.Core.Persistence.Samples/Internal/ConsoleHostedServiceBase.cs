@@ -13,7 +13,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Developist.Core.Persistence.Tester
+namespace Developist.Core.Persistence.Samples
 {
     #region Sample Program.cs
     // public class Program : ConsoleHostedServiceBase
