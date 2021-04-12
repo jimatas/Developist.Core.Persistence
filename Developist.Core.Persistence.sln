@@ -9,11 +9,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Developist.Core.Persistence.sln.licenseheader = Developist.Core.Persistence.sln.licenseheader
 		License.txt = License.txt
+		ReadMe.md = ReadMe.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.Infrastructure", "Developist.Core.Persistence.Infrastructure\Developist.Core.Persistence.Infrastructure.csproj", "{D4229E43-8347-4E43-8ED1-CB2E30990C5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Developist.Core.Persistence.Samples", "Developist.Core.Persistence.Samples\Developist.Core.Persistence.Samples.csproj", "{015B059A-BA0B-4C41-80B1-9823B6DEBB4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.Samples", "Developist.Core.Persistence.Samples\Developist.Core.Persistence.Samples.csproj", "{015B059A-BA0B-4C41-80B1-9823B6DEBB4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
