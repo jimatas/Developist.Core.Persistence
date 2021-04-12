@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Concurrent;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,7 +28,6 @@ namespace Developist.Core.Persistence.InMemory
         public Task CompleteAsync(CancellationToken cancellationToken = default)
         {
             Completed?.Invoke(this, new UnitOfWorkCompletedEventArgs(this));
-
             return Task.CompletedTask;
         }
 
@@ -42,14 +40,12 @@ namespace Developist.Core.Persistence.InMemory
         protected override void ReleaseManagedResources()
         {
             repositories.Clear();
-
             base.ReleaseManagedResources();
         }
 
         protected override ValueTask ReleaseManagedResourcesAsync()
         {
             repositories.Clear();
-
             return base.ReleaseManagedResourcesAsync();
         }
     }
