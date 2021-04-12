@@ -19,6 +19,8 @@ namespace Developist.Core.Persistence.Tester
 
             services.Add(new ServiceDescriptor(typeof(IRepositoryFactory), typeof(InMemory.RepositoryFactory), ServiceLifetime.Scoped));
             services.Add(new ServiceDescriptor(typeof(IUnitOfWork), typeof(InMemory.UnitOfWork), ServiceLifetime.Scoped));
+
+            services.AddHostedService<Program>();
         }
     }
 }

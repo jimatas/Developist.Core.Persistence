@@ -74,10 +74,7 @@ namespace Developist.Core.Persistence.InMemory
 
         private void UnitOfWorkCompleted(object sender, UnitOfWorkCompletedEventArgs e)
         {
-            if (e.UnitOfWork is UnitOfWorkDataStore uow)
-            {
-                DataStore = new HashSet<TEntity>(uow.DataStore);
-            }
+            DataStore = new HashSet<TEntity>(uow.DataStore);
         }
 
         protected class UnitOfWorkDataStore : IUnitOfWork
