@@ -3,7 +3,7 @@
 
 namespace Developist.Core.Persistence
 {
-    public interface IEntityIncludePaths<TEntity, TProperty> : IEntityIncludePaths<TEntity> where TEntity : IEntity
+    public interface IEntityIncludePaths<TEntity, out TProperty> : IEntityIncludePaths<TEntity> where TEntity : IEntity
     {
         new void Add(string path);
     }

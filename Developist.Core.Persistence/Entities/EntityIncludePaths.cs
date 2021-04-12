@@ -13,28 +13,28 @@ namespace Developist.Core.Persistence
     {
         public static IEntityIncludePaths<TEntity> ForEntity<TEntity>() where TEntity : IEntity => new IncludePaths<TEntity>();
 
-        public static IEntityIncludePaths<TEntity, TProperty> Include<TEntity, TProperty>(this IEntityIncludePaths<TEntity> includes, Expression<Func<TEntity, TProperty>> propertySelector) where TEntity : IEntity
+        public static IEntityIncludePaths<TEntity, TProperty> Include<TEntity, TProperty>(this IEntityIncludePaths<TEntity> includePaths, Expression<Func<TEntity, TProperty>> propertySelector) where TEntity : IEntity
         {
-            return new IncludePaths<TEntity, TProperty>(includes.ToList()) { IncludePathExtractor.Extract(propertySelector) };
+            return new IncludePaths<TEntity, TProperty>(includePaths.ToList()) { IncludePathExtractor.Extract(propertySelector) };
         }
 
-        public static IEntityIncludePaths<TEntity, TProperty> Include<TEntity, TPreviousProperty, TProperty>(this IEntityIncludePaths<TEntity, TPreviousProperty> includes, Expression<Func<TEntity, TProperty>> propertySelector) where TEntity : IEntity
+        public static IEntityIncludePaths<TEntity, TProperty> Include<TEntity, TPreviousProperty, TProperty>(this IEntityIncludePaths<TEntity, TPreviousProperty> includePaths, Expression<Func<TEntity, TProperty>> propertySelector) where TEntity : IEntity
         {
-            return new IncludePaths<TEntity, TProperty>(includes.ToList()) { IncludePathExtractor.Extract(propertySelector) };
+            return new IncludePaths<TEntity, TProperty>(includePaths.ToList()) { IncludePathExtractor.Extract(propertySelector) };
         }
 
-        public static IEntityIncludePaths<TEntity, TProperty> ThenInclude<TEntity, TPreviousProperty, TProperty>(this IEntityIncludePaths<TEntity, TPreviousProperty> includes, Expression<Func<TPreviousProperty, TProperty>> propertySelector) where TEntity : IEntity
+        public static IEntityIncludePaths<TEntity, TProperty> ThenInclude<TEntity, TPreviousProperty, TProperty>(this IEntityIncludePaths<TEntity, TPreviousProperty> includePaths, Expression<Func<TPreviousProperty, TProperty>> propertySelector) where TEntity : IEntity
         {
-            includes.Add(IncludePathExtractor.Extract(propertySelector));
+            includePaths.Add(IncludePathExtractor.Extract(propertySelector));
 
-            return new IncludePaths<TEntity, TProperty>(includes.ToList());
+            return new IncludePaths<TEntity, TProperty>(includePaths.ToList());
         }
 
-        public static IEntityIncludePaths<TEntity, TProperty> ThenInclude<TEntity, TPreviousProperty, TProperty>(this IEntityIncludePaths<TEntity, IEnumerable<TPreviousProperty>> includes, Expression<Func<TPreviousProperty, TProperty>> propertySelector) where TEntity : IEntity
+        public static IEntityIncludePaths<TEntity, TProperty> ThenInclude<TEntity, TPreviousProperty, TProperty>(this IEntityIncludePaths<TEntity, IEnumerable<TPreviousProperty>> includePaths, Expression<Func<TPreviousProperty, TProperty>> propertySelector) where TEntity : IEntity
         {
-            includes.Add(IncludePathExtractor.Extract(propertySelector));
+            includePaths.Add(IncludePathExtractor.Extract(propertySelector));
 
-            return new IncludePaths<TEntity, TProperty>(includes.ToList());
+            return new IncludePaths<TEntity, TProperty>(includePaths.ToList());
         }
 
         #region Nested types
@@ -77,11 +77,31 @@ namespace Developist.Core.Persistence
 
             public void Add(string path)
             {
+                if (path is null)
+                {
+                    throw new ArgumentNullException(nameof(path));
+                }
+
+                if (path.Trim().Length == 0)
+                {
+                    throw new ArgumentException("Value cannot be empty or whitespace.", nameof(path));
+                }
+
                 paths.Add(path);
             }
 
             public void Remove(string path)
             {
+                if (path is null)
+                {
+                    throw new ArgumentNullException(nameof(path));
+                }
+
+                if (path.Trim().Length == 0)
+                {
+                    throw new ArgumentException("Value cannot be empty or whitespace.", nameof(path));
+                }
+
                 var i = paths.LastIndexOf(path);
                 if (i >= 0)
                 {
@@ -100,6 +120,16 @@ namespace Developist.Core.Persistence
 
             void IEntityIncludePaths<TEntity, TProperty>.Add(string path)
             {
+                if (path is null)
+                {
+                    throw new ArgumentNullException(nameof(path));
+                }
+
+                if (path.Trim().Length == 0)
+                {
+                    throw new ArgumentException("Value cannot be empty or whitespace.", nameof(path));
+                }
+
                 var previousPath = this.LastOrDefault();
                 if (previousPath is not null)
                 {

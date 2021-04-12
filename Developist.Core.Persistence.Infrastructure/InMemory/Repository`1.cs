@@ -37,7 +37,7 @@ namespace Developist.Core.Persistence.InMemory
             return filter.Filter(DataStore.AsQueryable());
         }
 
-        public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IEntityIncludePaths<TEntity> includes)
+        public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IEntityIncludePaths<TEntity> includePaths)
         {
             return Find(filter);
         }
@@ -47,7 +47,7 @@ namespace Developist.Core.Persistence.InMemory
             return filter.Filter(DataStore.AsQueryable()).Paginate(paginator);
         }
 
-        public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includes)
+        public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths)
         {
             return Find(filter, paginator);
         }
@@ -57,9 +57,9 @@ namespace Developist.Core.Persistence.InMemory
             return Task.FromResult(Find(filter));
         }
 
-        public virtual Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IEntityIncludePaths<TEntity> includes, CancellationToken cancellationToken = default)
+        public virtual Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IEntityIncludePaths<TEntity> includePaths, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(Find(filter, includes));
+            return Task.FromResult(Find(filter, includePaths));
         }
 
         public virtual Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, CancellationToken cancellationToken = default)
@@ -67,9 +67,9 @@ namespace Developist.Core.Persistence.InMemory
             return Task.FromResult(Find(filter, paginator));
         }
 
-        public virtual Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includes, CancellationToken cancellationToken = default)
+        public virtual Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(Find(filter, paginator, includes));
+            return Task.FromResult(Find(filter, paginator, includePaths));
         }
 
         private void UnitOfWorkCompleted(object sender, UnitOfWorkCompletedEventArgs e)

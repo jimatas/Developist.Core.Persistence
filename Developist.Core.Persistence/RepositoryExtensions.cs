@@ -19,11 +19,11 @@ namespace Developist.Core.Persistence
             return repository.Find(entity => entity.Id.Equals(id)).SingleOrDefault();
         }
 
-        public static TEntity Find<TEntity, TIdentifier>(this IReadOnlyRepository<TEntity> repository, TIdentifier id, IEntityIncludePaths<TEntity> includes)
+        public static TEntity Find<TEntity, TIdentifier>(this IReadOnlyRepository<TEntity> repository, TIdentifier id, IEntityIncludePaths<TEntity> includePaths)
             where TEntity : IEntity<TIdentifier>
             where TIdentifier : IEquatable<TIdentifier>
         {
-            return repository.Find(entity => entity.Id.Equals(id), includes).SingleOrDefault();
+            return repository.Find(entity => entity.Id.Equals(id), includePaths).SingleOrDefault();
         }
 
         public static IEnumerable<TEntity> Find<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate) where TEntity : IEntity
@@ -31,9 +31,9 @@ namespace Developist.Core.Persistence
             return repository.Find(new PredicateQueryableFilter<TEntity>(predicate));
         }
 
-        public static IEnumerable<TEntity> Find<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IEntityIncludePaths<TEntity> includes) where TEntity : IEntity
+        public static IEnumerable<TEntity> Find<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IEntityIncludePaths<TEntity> includePaths) where TEntity : IEntity
         {
-            return repository.Find(new PredicateQueryableFilter<TEntity>(predicate), includes);
+            return repository.Find(new PredicateQueryableFilter<TEntity>(predicate), includePaths);
         }
 
         public static IEnumerable<TEntity> Find<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IQueryablePaginator<TEntity> paginator) where TEntity : IEntity
@@ -41,9 +41,9 @@ namespace Developist.Core.Persistence
             return repository.Find(new PredicateQueryableFilter<TEntity>(predicate), paginator);
         }
 
-        public static IEnumerable<TEntity> Find<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includes) where TEntity : IEntity
+        public static IEnumerable<TEntity> Find<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths) where TEntity : IEntity
         {
-            return repository.Find(new PredicateQueryableFilter<TEntity>(predicate), paginator, includes);
+            return repository.Find(new PredicateQueryableFilter<TEntity>(predicate), paginator, includePaths);
         }
 
         public static async Task<TEntity> FindAsync<TEntity, TIdentifier>(this IReadOnlyRepository<TEntity> repository, TIdentifier id, CancellationToken cancellationToken = default)
@@ -53,11 +53,11 @@ namespace Developist.Core.Persistence
             return (await repository.FindAsync(entity => entity.Id.Equals(id), cancellationToken).ConfigureAwait(false)).SingleOrDefault();
         }
 
-        public static async Task<TEntity> FindAsync<TEntity, TIdentifier>(this IReadOnlyRepository<TEntity> repository, TIdentifier id, IEntityIncludePaths<TEntity> includes, CancellationToken cancellationToken = default)
+        public static async Task<TEntity> FindAsync<TEntity, TIdentifier>(this IReadOnlyRepository<TEntity> repository, TIdentifier id, IEntityIncludePaths<TEntity> includePaths, CancellationToken cancellationToken = default)
             where TEntity : IEntity<TIdentifier>
             where TIdentifier : IEquatable<TIdentifier>
         {
-            return (await repository.FindAsync(entity => entity.Id.Equals(id), includes, cancellationToken).ConfigureAwait(false)).SingleOrDefault();
+            return (await repository.FindAsync(entity => entity.Id.Equals(id), includePaths, cancellationToken).ConfigureAwait(false)).SingleOrDefault();
         }
 
         public static async Task<IEnumerable<TEntity>> FindAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default) where TEntity : IEntity
@@ -65,9 +65,9 @@ namespace Developist.Core.Persistence
             return await repository.FindAsync(new PredicateQueryableFilter<TEntity>(predicate), cancellationToken).ConfigureAwait(false);
         }
 
-        public static async Task<IEnumerable<TEntity>> FindAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IEntityIncludePaths<TEntity> includes, CancellationToken cancellationToken = default) where TEntity : IEntity
+        public static async Task<IEnumerable<TEntity>> FindAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IEntityIncludePaths<TEntity> includePaths, CancellationToken cancellationToken = default) where TEntity : IEntity
         {
-            return await repository.FindAsync(new PredicateQueryableFilter<TEntity>(predicate), includes, cancellationToken).ConfigureAwait(false);
+            return await repository.FindAsync(new PredicateQueryableFilter<TEntity>(predicate), includePaths, cancellationToken).ConfigureAwait(false);
         }
 
         public static async Task<IEnumerable<TEntity>> FindAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IQueryablePaginator<TEntity> paginator, CancellationToken cancellationToken = default) where TEntity : IEntity
@@ -75,9 +75,9 @@ namespace Developist.Core.Persistence
             return await repository.FindAsync(new PredicateQueryableFilter<TEntity>(predicate), paginator, cancellationToken).ConfigureAwait(false);
         }
 
-        public static async Task<IEnumerable<TEntity>> FindAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includes, CancellationToken cancellationToken = default) where TEntity : IEntity
+        public static async Task<IEnumerable<TEntity>> FindAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths, CancellationToken cancellationToken = default) where TEntity : IEntity
         {
-            return await repository.FindAsync(new PredicateQueryableFilter<TEntity>(predicate), paginator, includes, cancellationToken).ConfigureAwait(false);
+            return await repository.FindAsync(new PredicateQueryableFilter<TEntity>(predicate), paginator, includePaths, cancellationToken).ConfigureAwait(false);
         }
 
         private class PredicateQueryableFilter<T> : IQueryableFilter<T>

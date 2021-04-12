@@ -26,42 +26,42 @@ namespace Developist.Core.Persistence.EntityFramework
 
         public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter)
         {
-            return Find(filter, includes: null);
+            return Find(filter, includePaths: null);
         }
 
-        public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IEntityIncludePaths<TEntity> includes)
+        public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IEntityIncludePaths<TEntity> includePaths)
         {
-            return CreateQuery(includes).Filter(filter).ToList();
+            return CreateQuery(includePaths).Filter(filter).ToList();
         }
 
         public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator)
         {
-            return Find(filter, paginator, includes: null);
+            return Find(filter, paginator, includePaths: null);
         }
 
-        public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includes)
+        public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths)
         {
-            return CreateQuery(includes).Filter(filter).Paginate(paginator).ToList();
+            return CreateQuery(includePaths).Filter(filter).Paginate(paginator).ToList();
         }
 
         public virtual Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, CancellationToken cancellationToken = default)
         {
-            return FindAsync(filter, includes: null, cancellationToken);
+            return FindAsync(filter, includePaths: null, cancellationToken);
         }
 
-        public virtual async Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IEntityIncludePaths<TEntity> includes, CancellationToken cancellationToken = default)
+        public virtual async Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IEntityIncludePaths<TEntity> includePaths, CancellationToken cancellationToken = default)
         {
-            return await CreateQuery(includes).Filter(filter).ToListAsync(cancellationToken).ConfigureAwait(false);
+            return await CreateQuery(includePaths).Filter(filter).ToListAsync(cancellationToken).ConfigureAwait(false);
         }
 
         public virtual Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, CancellationToken cancellationToken = default)
         {
-            return FindAsync(filter, paginator, includes: null, cancellationToken);
+            return FindAsync(filter, paginator, includePaths: null, cancellationToken);
         }
 
-        public virtual async Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includes, CancellationToken cancellationToken = default)
+        public virtual async Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths, CancellationToken cancellationToken = default)
         {
-            return await CreateQuery(includes).Filter(filter).Paginate(paginator).ToListAsync(cancellationToken).ConfigureAwait(false);
+            return await CreateQuery(includePaths).Filter(filter).Paginate(paginator).ToListAsync(cancellationToken).ConfigureAwait(false);
         }
 
         public virtual void Add(TEntity entity)
@@ -74,12 +74,12 @@ namespace Developist.Core.Persistence.EntityFramework
             uow.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Deleted;
         }
 
-        protected IQueryable<TEntity> CreateQuery(IEntityIncludePaths<TEntity> includes)
+        protected IQueryable<TEntity> CreateQuery(IEntityIncludePaths<TEntity> includePaths)
         {
             var query = uow.DbContext.Set<TEntity>().AsQueryable();
-            if (includes is not null && includes.Any())
+            if (includePaths is not null && includePaths.Any())
             {
-                query = includes.Distinct().Aggregate(query, (query, path) => query.Include(path));
+                query = includePaths.Distinct().Aggregate(query, (query, path) => query.Include(path));
             }
 
             return query;
