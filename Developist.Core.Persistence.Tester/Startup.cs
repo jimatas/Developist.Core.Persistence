@@ -3,6 +3,7 @@
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Developist.Core.Persistence.Tester
 {
@@ -14,13 +15,11 @@ namespace Developist.Core.Persistence.Tester
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.Add(new ServiceDescriptor(typeof(IRepository<>), typeof(InMemory.Repository<>), ServiceLifetime.Scoped));
-            //services.Add(new ServiceDescriptor(typeof(IReadOnlyRepository<>), provider => provider.GetRequiredService(typeof(IRepository<>)), ServiceLifetime.Scoped));
+            services.AddLogging(config => config.AddConsole());
+            services.AddHostedService<Program>();
 
             services.Add(new ServiceDescriptor(typeof(IRepositoryFactory), typeof(InMemory.RepositoryFactory), ServiceLifetime.Scoped));
             services.Add(new ServiceDescriptor(typeof(IUnitOfWork), typeof(InMemory.UnitOfWork), ServiceLifetime.Scoped));
-
-            services.AddHostedService<Program>();
         }
     }
 }
