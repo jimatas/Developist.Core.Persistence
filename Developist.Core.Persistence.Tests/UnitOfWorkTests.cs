@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using System.Threading.Tasks;
+
 namespace Developist.Core.Persistence.Tests
 {
     [TestClass]
@@ -60,6 +62,47 @@ namespace Developist.Core.Persistence.Tests
 
             // Assert
             Assert.AreEqual(personRepository, anotherPersonRepository);
+        }
+
+        [TestMethod]
+        public void Repository_CalledTwiceForDifferentGenericTypes_ReturnsTwoRepositories()
+        {
+            // Arrange
+
+            // Act
+            var bookRepository = uow.Repository<Book>();
+            var personRepository = uow.Repository<Person>();
+
+            // Assert
+            Assert.AreNotEqual(bookRepository, personRepository);
+        }
+
+        [TestMethod]
+        public void Complete_ByDefault_FiresCompletedEvent()
+        {
+            // Arrange
+            var isCompleted = false;
+            uow.Completed += (sender, e) => isCompleted = true;
+
+            // Act
+            uow.Complete();
+
+            // Assert
+            Assert.IsTrue(isCompleted);
+        }
+
+        [TestMethod]
+        public async Task CompleteAsync_ByDefault_FiresCompletedEvent()
+        {
+            // Arrange
+            var isCompleted = false;
+            uow.Completed += (sender, e) => isCompleted = true;
+
+            // Act
+            await uow.CompleteAsync();
+
+            // Assert
+            Assert.IsTrue(isCompleted);
         }
     }
 }
