@@ -25,7 +25,7 @@ namespace Developist.Core.Persistence.Tester
 
         protected async override Task OnApplicationStartedAsync(CancellationToken cancellationToken)
         {
-            var uow = ServiceProvider.GetRequiredService<IUnitOfWork>();
+            using var uow = ServiceProvider.GetRequiredService<IUnitOfWork>();
 
             new DataSeeder().Seed(uow.Repository<Person>());
             await uow.CompleteAsync(cancellationToken);
