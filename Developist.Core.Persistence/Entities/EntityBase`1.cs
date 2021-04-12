@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Developist.Core.Persistence.Entities
+namespace Developist.Core.Persistence
 {
     public abstract class EntityBase<TIdentifier> : IEntity<TIdentifier> where TIdentifier : IEquatable<TIdentifier>
     {

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Developist.Core.Persistence.Entities
+namespace Developist.Core.Persistence
 {
     public static class EntityIncludePaths
     {
