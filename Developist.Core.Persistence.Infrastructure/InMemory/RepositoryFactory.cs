@@ -5,7 +5,7 @@ namespace Developist.Core.Persistence.InMemory
 {
     public class RepositoryFactory : IRepositoryFactory
     {
-        public virtual IRepository<TEntity> Create<TEntity>(IUnitOfWork uow) where TEntity:class,IEntity
+        public virtual IRepository<TEntity> Create<TEntity>(IUnitOfWork uow) where TEntity : class, IEntity
         {
             return new Repository<TEntity>(uow);
         }
