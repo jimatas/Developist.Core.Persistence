@@ -65,6 +65,11 @@ namespace Developist.Core.Persistence.Entities
             public IncludePaths() : this(new List<string>()) { }
             public IncludePaths(IList<string> paths)
             {
+                if (paths is null)
+                {
+                    throw new ArgumentNullException(nameof(paths));
+                }
+
                 this.paths = paths is not List<string> || paths.IsReadOnly
                     ? new List<string>(paths)
                     : (List<string>)paths;
