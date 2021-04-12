@@ -9,10 +9,9 @@ namespace Developist.Core.Persistence
 {
     public interface IUnitOfWork
     {
-        IRepository<TEntity> Repository<TEntity>() where TEntity : class, IEntity;
-
-        event EventHandler<UnitOfWorkEventArgs> Completed;
+        event EventHandler<UnitOfWorkCompletedEventArgs> Completed;
         void Complete();
         Task CompleteAsync(CancellationToken cancellationToken = default);
+        IRepository<TEntity> Repository<TEntity>() where TEntity : class, IEntity;
     }
 }

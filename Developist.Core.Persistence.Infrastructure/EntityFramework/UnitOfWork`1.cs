@@ -23,14 +23,14 @@ namespace Developist.Core.Persistence.EntityFramework
 
         public TDbContext DbContext { get; }
 
-        public event EventHandler<UnitOfWorkEventArgs> Completed;
+        public event EventHandler<UnitOfWorkCompletedEventArgs> Completed;
 
         public virtual void Complete()
         {
             DbContext.ValidateChangedEntities();
             DbContext.SaveChanges();
 
-            Completed?.Invoke(this, new UnitOfWorkEventArgs(this));
+            Completed?.Invoke(this, new UnitOfWorkCompletedEventArgs(this));
         }
 
         public virtual async Task CompleteAsync(CancellationToken cancellationToken = default)
@@ -38,7 +38,7 @@ namespace Developist.Core.Persistence.EntityFramework
             DbContext.ValidateChangedEntities();
             await DbContext.SaveChangesAsync(cancellationToken);
 
-            Completed?.Invoke(this, new UnitOfWorkEventArgs(this));
+            Completed?.Invoke(this, new UnitOfWorkCompletedEventArgs(this));
         }
 
         public virtual IRepository<TEntity> Repository<TEntity>() where TEntity : class, IEntity

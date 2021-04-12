@@ -18,16 +18,16 @@ namespace Developist.Core.Persistence.InMemory
             this.repositoryFactory = repositoryFactory ?? throw new ArgumentNullException(nameof(repositoryFactory));
         }
 
-        public event EventHandler<UnitOfWorkEventArgs> Completed;
+        public event EventHandler<UnitOfWorkCompletedEventArgs> Completed;
 
         public void Complete()
         {
-            Completed?.Invoke(this, new UnitOfWorkEventArgs(this));
+            Completed?.Invoke(this, new UnitOfWorkCompletedEventArgs(this));
         }
 
         public Task CompleteAsync(CancellationToken cancellationToken = default)
         {
-            Completed?.Invoke(this, new UnitOfWorkEventArgs(this));
+            Completed?.Invoke(this, new UnitOfWorkCompletedEventArgs(this));
 
             return Task.CompletedTask;
         }

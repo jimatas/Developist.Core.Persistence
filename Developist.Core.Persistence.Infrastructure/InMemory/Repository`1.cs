@@ -72,7 +72,7 @@ namespace Developist.Core.Persistence.InMemory
             return Task.FromResult(Find(filter, paginator, includes));
         }
 
-        private void UnitOfWorkCompleted(object sender, UnitOfWorkEventArgs e)
+        private void UnitOfWorkCompleted(object sender, UnitOfWorkCompletedEventArgs e)
         {
             if (e.UnitOfWork is UnitOfWorkDataStore uow)
             {
@@ -92,7 +92,7 @@ namespace Developist.Core.Persistence.InMemory
 
             public ISet<TEntity> DataStore { get; }
 
-            public event EventHandler<UnitOfWorkEventArgs> Completed
+            public event EventHandler<UnitOfWorkCompletedEventArgs> Completed
             {
                 add => uow.Completed += value;
                 remove => uow.Completed -= value;

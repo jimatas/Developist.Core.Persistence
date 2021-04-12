@@ -5,9 +5,9 @@ using System;
 
 namespace Developist.Core.Persistence
 {
-    public class UnitOfWorkEventArgs : EventArgs
+    public class UnitOfWorkCompletedEventArgs : EventArgs
     {
-        public UnitOfWorkEventArgs(IUnitOfWork uow) => UnitOfWork = uow ?? throw new ArgumentNullException(nameof(uow));
+        public UnitOfWorkCompletedEventArgs(IUnitOfWork uow) => UnitOfWork = uow ?? throw new ArgumentNullException(nameof(uow));
         public IUnitOfWork UnitOfWork { get; }
     }
 }
