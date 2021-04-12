@@ -15,10 +15,10 @@ namespace Developist.Core.Persistence.Tester
 {
     class Program : ConsoleHostedServiceBase
     {
+        #region Startup
         public Program(IHostApplicationLifetime applicationLifetime, IServiceProvider serviceProvider, IConfiguration configuration, ILogger<Program> logger)
             : base(applicationLifetime, serviceProvider, configuration, logger) { }
 
-        #region Startup
         public static async Task Main(string[] args) => await CreateHostBuilder(args).RunConsoleAsync();
         private static IHostBuilder CreateHostBuilder(string[] args) => Host.CreateDefaultBuilder(args).UseStartup<Startup>();
         #endregion
