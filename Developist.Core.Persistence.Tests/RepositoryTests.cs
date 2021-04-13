@@ -39,6 +39,7 @@ namespace Developist.Core.Persistence.Tests
             Assert.IsNotNull(uow);
         }
 
+        #region Repository<TEntity>.Find tests
         [TestMethod]
         public void Find_GivenNullFilter_ThrowsArgumentNullException()
         {
@@ -133,7 +134,9 @@ namespace Developist.Core.Persistence.Tests
             Assert.AreEqual(1, people.Count());
             Assert.AreEqual("Randall Bloom", people.Single().FullName());
         }
+        #endregion
 
+        #region Repository<TEntity>.Add tests
         [TestMethod]
         public void Add_GivenNull_ThrowsArgumentNullException()
         {
@@ -181,7 +184,9 @@ namespace Developist.Core.Persistence.Tests
             // Assert
             Assert.AreNotEqual(countBefore, countAfter);
         }
+        #endregion
 
+        #region Repository<TEntity>.Remove tests
         [TestMethod]
         public void Remove_GivenNull_ThrowsArgumentNullException()
         {
@@ -231,6 +236,7 @@ namespace Developist.Core.Persistence.Tests
             // Assert
             Assert.AreNotEqual(countBefore, countAfter);
         }
+        #endregion
 
         private static void SeedRepositoryWithData(IRepository<Person> repository)
         {
