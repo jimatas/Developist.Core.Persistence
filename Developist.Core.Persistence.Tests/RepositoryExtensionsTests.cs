@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Developist.Core.Persistence.Tests
 {
@@ -40,6 +41,7 @@ namespace Developist.Core.Persistence.Tests
             Assert.IsNotNull(uow);
         }
 
+        #region RepositoryExtensions.Find tests
         [TestMethod]
         public void Find_GivenUnknownId_ReturnsNull()
         {
@@ -127,6 +129,97 @@ namespace Developist.Core.Persistence.Tests
             // Assert
             Assert.AreEqual(2, result.Count());
         }
+        #endregion
+
+        #region RepositoryExtensions.FindAsync tests
+        [TestMethod]
+        public async Task FindAsync_GivenUnknownId_ReturnsNull()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            // Act
+            var result = await repository.FindAsync(id: 0);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public async Task FindAsync_GivenValidId_ReturnsExpectedResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            // Act
+            var result = await repository.FindAsync(id: 3);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Glen Hensley", result.FullName());
+        }
+
+        [TestMethod]
+        public async Task FindAsync_GivenNullPredicate_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            Expression<Func<Person, bool>> predicate = null;
+
+            // Act
+            async Task action() => await repository.FindAsync(predicate: predicate);
+
+            // Assert
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
+        }
+
+        [TestMethod]
+        public async Task FindAsync_GivenPredicateThatMatchesNothing_ReturnsEmptyResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            Expression<Func<Person, bool>> predicate = p => false;
+
+            // Act
+            var result = await repository.FindAsync(predicate);
+
+            // Assert
+            Assert.AreEqual(0, result.Count());
+        }
+
+        [TestMethod]
+        public async Task FindAsync_GivenPredicateMatchingOne_ReturnsExpectedResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+            Expression<Func<Person, bool>> predicate = p => p.GivenName.Equals("Hollie");
+
+            // Act
+            var result = await repository.FindAsync(predicate);
+
+            // Assert
+            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(1, result.Single().Id);
+        }
+
+        [TestMethod]
+        public async Task FindAsync_GivenPredicateMatchingMultiple_ReturnsExpectedResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+            Expression<Func<Person, bool>> predicate = p => p.GivenName.Contains("ll");
+
+            // Act
+            var result = await repository.FindAsync(predicate);
+
+            // Assert
+            Assert.AreEqual(2, result.Count());
+        }
+        #endregion
 
         private static void SeedRepositoryWithData(IRepository<Person> repository)
         {
