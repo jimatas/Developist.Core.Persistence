@@ -20,18 +20,18 @@ namespace Developist.Core.Persistence.InMemory
 
         public event EventHandler<UnitOfWorkCompletedEventArgs> Completed;
 
-        public void Complete()
+        public virtual void Complete()
         {
             Completed?.Invoke(this, new UnitOfWorkCompletedEventArgs(this));
         }
 
-        public Task CompleteAsync(CancellationToken cancellationToken = default)
+        public virtual Task CompleteAsync(CancellationToken cancellationToken = default)
         {
             Completed?.Invoke(this, new UnitOfWorkCompletedEventArgs(this));
             return Task.CompletedTask;
         }
 
-        public IRepository<TEntity> Repository<TEntity>() where TEntity : class, IEntity
+        public virtual IRepository<TEntity> Repository<TEntity>() where TEntity : class, IEntity
         {
             var wrapper = repositories.GetOrAdd(typeof(TEntity), _ => new(repositoryFactory.Create<TEntity>(this)));
             return wrapper.Repository<TEntity>();
