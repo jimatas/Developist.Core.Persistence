@@ -21,6 +21,11 @@ namespace Developist.Core.Persistence.EntityFramework
 
         public virtual IRepository<TEntity> Create<TEntity>(IUnitOfWork<TDbContext> uow) where TEntity : class, IEntity
         {
+            if (uow is null)
+            {
+                throw new ArgumentNullException(nameof(uow));
+            }
+
             var factory = ActivatorUtilities.CreateFactory(typeof(Repository<TEntity, TDbContext>), new[] { uow.GetType() });
             return (IRepository<TEntity>)factory(serviceProvider, new[] { uow });
         }

@@ -18,6 +18,11 @@ namespace Developist.Core.Persistence.InMemory
 
         public virtual IRepository<TEntity> Create<TEntity>(IUnitOfWork uow) where TEntity : class, IEntity
         {
+            if (uow is null)
+            {
+                throw new ArgumentNullException(nameof(uow));
+            }
+
             var factory = ActivatorUtilities.CreateFactory(typeof(Repository<TEntity>), new[] { uow.GetType() });
             return (IRepository<TEntity>)factory(serviceProvider, new[] { uow });
         }
