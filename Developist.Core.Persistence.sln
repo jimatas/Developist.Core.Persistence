@@ -16,7 +16,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.Samples", "Developist.Core.Persistence.Samples\Developist.Core.Persistence.Samples.csproj", "{015B059A-BA0B-4C41-80B1-9823B6DEBB4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Developist.Core.Persistence.Tests", "Developist.Core.Persistence.Tests\Developist.Core.Persistence.Tests.csproj", "{437D1C06-9658-41EC-90D2-4165ED960789}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.Tests", "Developist.Core.Persistence.Tests\Developist.Core.Persistence.Tests.csproj", "{437D1C06-9658-41EC-90D2-4165ED960789}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Developist.Core.Persistence.Tests.Integration", "Developist.Core.Persistence.Tests.Integration\Developist.Core.Persistence.Tests.Integration.csproj", "{7A41827A-6DF2-40B9-A9F4-D08EE5B5C396}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +42,10 @@ Global
 		{437D1C06-9658-41EC-90D2-4165ED960789}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{437D1C06-9658-41EC-90D2-4165ED960789}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{437D1C06-9658-41EC-90D2-4165ED960789}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A41827A-6DF2-40B9-A9F4-D08EE5B5C396}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A41827A-6DF2-40B9-A9F4-D08EE5B5C396}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A41827A-6DF2-40B9-A9F4-D08EE5B5C396}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A41827A-6DF2-40B9-A9F4-D08EE5B5C396}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
