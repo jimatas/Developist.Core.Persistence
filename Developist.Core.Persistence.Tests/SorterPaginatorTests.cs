@@ -47,7 +47,7 @@ namespace Developist.Core.Persistence.Tests
             var paginator = new SorterPaginator<object>();
 
             // Act
-            Action action = () => paginator.PageNumber = pageNumber;
+            void action() => paginator.PageNumber = pageNumber;
 
             // Assert
             Assert.ThrowsException<ArgumentOutOfRangeException>(action);
@@ -63,7 +63,7 @@ namespace Developist.Core.Persistence.Tests
             var paginator = new SorterPaginator<object>();
 
             // Act
-            Action action = () => paginator.PageSize = pageSize;
+            void action() => paginator.PageSize = pageSize;
 
             // Assert
             Assert.ThrowsException<ArgumentOutOfRangeException>(action);

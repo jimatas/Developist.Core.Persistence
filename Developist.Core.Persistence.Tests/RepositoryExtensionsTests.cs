@@ -77,7 +77,7 @@ namespace Developist.Core.Persistence.Tests
             Expression<Func<Person, bool>> predicate = null;
 
             // Act
-            Action action = () => repository.Find(predicate: predicate);
+            void action() => repository.Find(predicate: predicate);
 
             // Assert
             Assert.ThrowsException<ArgumentNullException>(action);

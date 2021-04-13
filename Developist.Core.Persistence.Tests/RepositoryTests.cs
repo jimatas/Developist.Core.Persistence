@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Developist.Core.Persistence.Tests
 {
@@ -48,7 +49,7 @@ namespace Developist.Core.Persistence.Tests
             IQueryableFilter<Person> filter = null;
 
             // Act
-            Action action = () => repository.Find(filter);
+            void action() => repository.Find(filter);
 
             // Assert
             Assert.ThrowsException<ArgumentNullException>(action);
@@ -63,7 +64,7 @@ namespace Developist.Core.Persistence.Tests
             IQueryablePaginator<Person> paginator = new SorterPaginator<Person>();
 
             // Act
-            Action action = () => repository.Find(filter, paginator);
+            void action() => repository.Find(filter, paginator);
 
             // Assert
             Assert.ThrowsException<ArgumentNullException>(action);
@@ -78,7 +79,7 @@ namespace Developist.Core.Persistence.Tests
             IQueryablePaginator<Person> paginator = null;
 
             // Act
-            Action action = () => repository.Find(filter, paginator);
+            void action() => repository.Find(filter, paginator);
 
             // Assert
             Assert.ThrowsException<ArgumentNullException>(action);
@@ -136,6 +137,103 @@ namespace Developist.Core.Persistence.Tests
         }
         #endregion
 
+        #region Repository<TEntity>.FindAsync tests
+        [TestMethod]
+        public async Task FindAsync_GivenNullFilter_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            IQueryableFilter<Person> filter = null;
+
+            // Act
+            async Task action() => await repository.FindAsync(filter);
+
+            // Assert
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
+        }
+
+        [TestMethod]
+        public async Task FindAsync_GivenNullFilterAndNonNullPaginator_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            IQueryableFilter<Person> filter = null;
+            IQueryablePaginator<Person> paginator = new SorterPaginator<Person>();
+
+            // Act
+            async Task action() => await repository.FindAsync(filter, paginator);
+
+            // Assert
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
+        }
+
+        [TestMethod]
+        public async Task FindAsync_GivenNonNullFilterAndNullPaginator_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            IQueryableFilter<Person> filter = new PersonByIdFilter(default);
+            IQueryablePaginator<Person> paginator = null;
+
+            // Act
+            async Task action() => await repository.FindAsync(filter, paginator);
+
+            // Assert
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
+        }
+
+        [TestMethod]
+        public async Task FindAsync_GivenNullIncludePaths_DoesNotThrow()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            IQueryableFilter<Person> filter = new PersonByIdFilter(default);
+            IQueryablePaginator<Person> paginator = new SorterPaginator<Person>();
+            IEntityIncludePaths<Person> includePaths = null;
+
+            // Act
+            await repository.FindAsync(filter, includePaths);
+            await repository.FindAsync(filter, paginator, includePaths);
+
+            // Assert
+        }
+
+        [TestMethod]
+        public async Task FindAsync_GivenFilter_ReturnsExpectedResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            IQueryableFilter<Person> filter = new PersonByIdFilter(id: 2);
+
+            // Act
+            var people = await repository.FindAsync(filter);
+
+            // Assert
+            Assert.AreEqual(1, people.Count());
+            Assert.AreEqual("Randall Bloom", people.Single().FullName());
+        }
+
+        [TestMethod]
+        public async Task FindAsync_GivenFilterAndPaginator_ReturnsExpectedResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            IQueryableFilter<Person> filter = new PersonByIdFilter(id: 2);
+            IQueryablePaginator<Person> paginator = new SorterPaginator<Person>(nameof(Person.FamilyName), 1, 1);
+
+            // Act
+            var people = await repository .FindAsync(filter, paginator);
+
+            // Assert
+            Assert.AreEqual(1, people.Count());
+            Assert.AreEqual("Randall Bloom", people.Single().FullName());
+        }
+        #endregion
+
         #region Repository<TEntity>.Add tests
         [TestMethod]
         public void Add_GivenNull_ThrowsArgumentNullException()
@@ -145,7 +243,7 @@ namespace Developist.Core.Persistence.Tests
             Person entity = null;
 
             // Act
-            Action action = () => repository.Add(entity);
+            void action() => repository.Add(entity);
 
             // Assert
             Assert.ThrowsException<ArgumentNullException>(action);
@@ -195,7 +293,7 @@ namespace Developist.Core.Persistence.Tests
             Person entity = null;
 
             // Act
-            Action action = () => repository.Remove(entity);
+            void action() => repository.Remove(entity);
 
             // Assert
             Assert.ThrowsException<ArgumentNullException>(action);

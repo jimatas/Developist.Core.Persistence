@@ -34,7 +34,7 @@ namespace Developist.Core.Persistence.Tests
             var includePaths = EntityIncludePaths.ForEntity<Person>();
 
             // Act
-            Action action = () => includePaths.Add(null);
+            void action() => includePaths.Add(null);
 
             // Assert
             Assert.ThrowsException<ArgumentNullException>(action);
@@ -47,7 +47,7 @@ namespace Developist.Core.Persistence.Tests
             var includePaths = EntityIncludePaths.ForEntity<Person>();
 
             // Act
-            Action action = () => includePaths.Add(string.Empty);
+            void action() => includePaths.Add(string.Empty);
 
             // Assert
             Assert.ThrowsException<ArgumentException>(action);
@@ -116,7 +116,7 @@ namespace Developist.Core.Persistence.Tests
             var includePaths = EntityIncludePaths.ForEntity<Person>();
 
             // Act
-            Action action = () => includePaths.Remove(null);
+            void action() => includePaths.Remove(null);
 
             // Assert
             Assert.ThrowsException<ArgumentNullException>(action);
@@ -129,7 +129,7 @@ namespace Developist.Core.Persistence.Tests
             var includePaths = EntityIncludePaths.ForEntity<Person>();
 
             // Act
-            Action action = () => includePaths.Remove(string.Empty);
+            void action() => includePaths.Remove(string.Empty);
 
             // Assert
             Assert.ThrowsException<ArgumentException>(action);
@@ -268,7 +268,7 @@ namespace Developist.Core.Persistence.Tests
             var includePaths = EntityIncludePaths.ForEntity<Person>();
 
             // Act
-            Action action = () => includePaths.Include(person => (string)null);
+            void action() => includePaths.Include(person => (string)null);
 
             // Assert
             Assert.ThrowsException<ArgumentNullException>(action);
@@ -281,7 +281,7 @@ namespace Developist.Core.Persistence.Tests
             var includePaths = EntityIncludePaths.ForEntity<Person>();
 
             // Act
-            Action action = () => includePaths.Include(person => "UndefinedProperty");
+            void action() => includePaths.Include(person => "UndefinedProperty");
 
             // Assert
             Assert.ThrowsException<ArgumentNullException>(action);
@@ -295,7 +295,7 @@ namespace Developist.Core.Persistence.Tests
             Expression<Func<Person, string>> propertySelector = null;
 
             // Act
-            Action action = () => includePaths.Include(propertySelector);
+            void action() => includePaths.Include(propertySelector);
 
             // Assert
             Assert.ThrowsException<ArgumentNullException>(action);
