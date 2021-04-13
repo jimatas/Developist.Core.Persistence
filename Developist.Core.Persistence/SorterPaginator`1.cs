@@ -134,7 +134,7 @@ namespace Developist.Core.Persistence
                 var property = type.GetPublicProperty(nestedPropertyName);
                 if (property is null)
                 {
-                    throw new ArgumentException($"No property '{nestedPropertyName}' on type '{type.Name}'.", nameof(SortProperty));
+                    throw new ArgumentException($"No property '{nestedPropertyName}' on type '{type.Name}'.", nameof(propertyName));
                 }
 
                 expression = Expression.Property(expression, property);
