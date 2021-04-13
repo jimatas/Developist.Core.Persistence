@@ -24,11 +24,21 @@ namespace Developist.Core.Persistence.InMemory
 
         public virtual void Add(TEntity entity)
         {
+            if (entity is null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
             uow.DataStore.Add(entity);
         }
 
         public virtual void Remove(TEntity entity)
         {
+            if (entity is null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
             uow.DataStore.Remove(entity);
         }
 

@@ -26,11 +26,21 @@ namespace Developist.Core.Persistence.EntityFramework
 
         public virtual void Add(TEntity entity)
         {
+            if (entity is null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
             uow.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Added;
         }
 
         public virtual void Remove(TEntity entity)
         {
+            if (entity is null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
             uow.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Deleted;
         }
 
