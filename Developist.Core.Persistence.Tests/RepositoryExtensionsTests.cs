@@ -6,6 +6,10 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+
 namespace Developist.Core.Persistence.Tests
 {
     [TestClass]
@@ -63,6 +67,65 @@ namespace Developist.Core.Persistence.Tests
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual("Glen Hensley", result.FullName());
+        }
+
+        [TestMethod]
+        public void Find_GivenNullPredicate_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            Expression<Func<Person, bool>> predicate = null;
+
+            // Act
+            Action action = () => repository.Find(predicate: predicate);
+
+            // Assert
+            Assert.ThrowsException<ArgumentNullException>(action);
+        }
+
+        [TestMethod]
+        public void Find_GivenPredicateThatMatchesNothing_ReturnsEmptyResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            Expression<Func<Person, bool>> predicate = p => false;
+
+            // Act
+            var result = repository.Find(predicate);
+
+            // Assert
+            Assert.AreEqual(0, result.Count());
+        }
+
+        [TestMethod]
+        public void Find_GivenPredicateMatchingOne_ReturnsExpectedResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+            Expression<Func<Person, bool>> predicate = p => p.GivenName.Equals("Hollie");
+
+            // Act
+            var result = repository.Find(predicate);
+
+            // Assert
+            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(1, result.Single().Id);
+        }
+
+        [TestMethod]
+        public void Find_GivenPredicateMatchingMultiple_ReturnsExpectedResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+            Expression<Func<Person, bool>> predicate = p => p.GivenName.Contains("ll");
+
+            // Act
+            var result = repository.Find(predicate);
+
+            // Assert
+            Assert.AreEqual(2, result.Count());
         }
 
         private static void SeedRepositoryWithData(IRepository<Person> repository)
