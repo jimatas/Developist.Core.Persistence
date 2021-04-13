@@ -134,6 +134,104 @@ namespace Developist.Core.Persistence.Tests
             Assert.AreEqual("Randall Bloom", people.Single().FullName());
         }
 
+        [TestMethod]
+        public void Add_GivenNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            Person entity = null;
+
+            // Act
+            Action action = () => repository.Add(entity);
+
+            // Assert
+            Assert.ThrowsException<ArgumentNullException>(action);
+        }
+
+        [TestMethod]
+        public void Add_WithoutComplete_DoesNotCommit()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>() as InMemory.Repository<Person>;
+            var entity = new Person(4) { GivenName = "Dwayne", FamilyName = "Welsh" };
+
+            // Act
+            var countBefore = repository.DataStore.Count;
+            repository.Add(entity);
+            var countAfter = repository.DataStore.Count;
+
+            // Assert
+            Assert.AreEqual(0, countBefore);
+            Assert.AreEqual(countBefore, countAfter);
+        }
+
+        [TestMethod]
+        public void Add_WithComplete_Commits()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>() as InMemory.Repository<Person>;
+            var entity = new Person(4) { GivenName = "Dwayne", FamilyName = "Welsh" };
+
+            // Act
+            var countBefore = repository.DataStore.Count;
+            repository.Add(entity);
+            uow.Complete();
+            var countAfter = repository.DataStore.Count;
+
+            // Assert
+            Assert.AreNotEqual(countBefore, countAfter);
+        }
+
+        [TestMethod]
+        public void Remove_GivenNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            Person entity = null;
+
+            // Act
+            Action action = () => repository.Remove(entity);
+
+            // Assert
+            Assert.ThrowsException<ArgumentNullException>(action);
+        }
+
+        [TestMethod]
+        public void Remove_WithoutComplete_DoesNotCommit()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>() as InMemory.Repository<Person>;
+            SeedRepositoryWithData(repository);
+            var entity = repository.Find(new PersonByIdFilter(1)).Single();
+
+            // Act
+            var countBefore = repository.DataStore.Count;
+            repository.Remove(entity);
+            var countAfter = repository.DataStore.Count;
+
+            // Assert
+            Assert.AreEqual(3, countBefore);
+            Assert.AreEqual(countBefore, countAfter);
+        }
+
+        [TestMethod]
+        public void Remove_WithComplete_Commits()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>() as InMemory.Repository<Person>;
+            SeedRepositoryWithData(repository);
+            var entity = repository.Find(new PersonByIdFilter(1)).Single();
+
+            // Act
+            var countBefore = repository.DataStore.Count;
+            repository.Remove(entity);
+            uow.Complete();
+            var countAfter = repository.DataStore.Count;
+
+            // Assert
+            Assert.AreNotEqual(countBefore, countAfter);
+        }
+
         private static void SeedRepositoryWithData(IRepository<Person> repository)
         {
             foreach (var person in new[]
