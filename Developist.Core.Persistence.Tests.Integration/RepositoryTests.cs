@@ -83,5 +83,36 @@ namespace Developist.Core.Persistence.Tests
             // Assert
             Assert.IsTrue(result.Any());
         }
+
+        [TestMethod]
+        public void Add_PersonWithMessages_AddsMessagesAsWell()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+
+            var hollie = new Person
+            {
+                GivenName = "Hollie",
+                FamilyName = "Marin"
+            };
+            
+            hollie.SentMessages.Add(new Message
+            {
+                Sender = hollie,
+                Text = "Hello world!"
+            });
+
+            // Act
+            repository.Add(hollie);
+            uow.Complete();
+
+            var result = repository.Find(new PersonByNameFilter { FamilyName = "Marin" }, EntityIncludePaths.ForEntity<Person>().Include(p => p.ReceivedMessages));
+            hollie = result.Single();
+
+            // Assert
+            Assert.AreEqual(hollie.GivenName, "Hollie");
+            Assert.IsTrue(hollie.SentMessages.Any());
+            Assert.IsFalse(hollie.ReceivedMessages.Any());
+        }
     }
 }
