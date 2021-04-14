@@ -28,7 +28,7 @@ namespace Developist.Core.Persistence.Samples
             using var uow = ServiceProvider.GetRequiredService<IUnitOfWork>();
 
             new DataSeeder().Seed(uow.Repository<Person>());
-            await uow.CompleteAsync(cancellationToken);
+            await uow.CompleteAsync(cancellationToken).ConfigureAwait(true);
 
             var person = uow.Repository<Person>().Find(p => p.FamilyName.Contains("Welsh")).SingleOrDefault();
         }

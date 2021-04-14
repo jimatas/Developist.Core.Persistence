@@ -146,10 +146,10 @@ namespace Developist.Core.Persistence.Tests
             IQueryableFilter<Person> filter = null;
 
             // Act
-            async Task action() => await repository.FindAsync(filter);
+            async Task action() => await repository.FindAsync(filter).ConfigureAwait(false);
 
             // Assert
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action).ConfigureAwait(false);
         }
 
         [TestMethod]
@@ -161,10 +161,10 @@ namespace Developist.Core.Persistence.Tests
             IQueryablePaginator<Person> paginator = new SorterPaginator<Person>();
 
             // Act
-            async Task action() => await repository.FindAsync(filter, paginator);
+            async Task action() => await repository.FindAsync(filter, paginator).ConfigureAwait(false);
 
             // Assert
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action).ConfigureAwait(false);
         }
 
         [TestMethod]
@@ -176,10 +176,10 @@ namespace Developist.Core.Persistence.Tests
             IQueryablePaginator<Person> paginator = null;
 
             // Act
-            async Task action() => await repository.FindAsync(filter, paginator);
+            async Task action() => await repository.FindAsync(filter, paginator).ConfigureAwait(false);
 
             // Assert
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action).ConfigureAwait(false);
         }
 
         [TestMethod]
@@ -192,8 +192,8 @@ namespace Developist.Core.Persistence.Tests
             IEntityIncludePaths<Person> includePaths = null;
 
             // Act
-            await repository.FindAsync(filter, includePaths);
-            await repository.FindAsync(filter, paginator, includePaths);
+            await repository.FindAsync(filter, includePaths).ConfigureAwait(false);
+            await repository.FindAsync(filter, paginator, includePaths).ConfigureAwait(false);
 
             // Assert
         }
@@ -208,7 +208,7 @@ namespace Developist.Core.Persistence.Tests
             IQueryableFilter<Person> filter = new PersonByIdFilter(id: 2);
 
             // Act
-            var people = await repository.FindAsync(filter);
+            var people = await repository.FindAsync(filter).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, people.Count());
@@ -226,7 +226,7 @@ namespace Developist.Core.Persistence.Tests
             IQueryablePaginator<Person> paginator = new SorterPaginator<Person>(nameof(Person.FamilyName), 1, 1);
 
             // Act
-            var people = await repository .FindAsync(filter, paginator);
+            var people = await repository .FindAsync(filter, paginator).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, people.Count());
