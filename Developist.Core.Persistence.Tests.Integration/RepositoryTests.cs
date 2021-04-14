@@ -114,5 +114,34 @@ namespace Developist.Core.Persistence.Tests
             Assert.IsTrue(hollie.SentMessages.Any());
             Assert.IsFalse(hollie.ReceivedMessages.Any());
         }
+
+        [TestMethod]
+        public void SampleUsage()
+        {
+            var hollie = new Person { GivenName = "Hollie", FamilyName = "Marin" };
+            var randall = new Person { GivenName = "Randall", FamilyName = "Bloom" };
+            var glen = new Person { GivenName = "Glen", FamilyName = "Hensley" };
+
+            var message = new Message
+            {
+                Sender = hollie,
+                Text = "Hello world!"
+            };
+
+            message.Recipients.Add(randall);
+            message.Recipients.Add(glen);
+            
+            var messageRepository = uow.Repository<Message>();
+            messageRepository.Add(message);
+            uow.Complete();
+
+            var personRepository = uow.Repository<Person>();
+
+            hollie = personRepository.Find(p => p.FamilyName == "Marin", EntityIncludePaths.ForEntity<Person>().Include(p => p.SentMessages)).Single();
+            Assert.IsTrue(hollie.SentMessages.Any());
+
+            glen = personRepository.Find(p => p.FamilyName == "Hensley", EntityIncludePaths.ForEntity<Person>().Include(p => p.ReceivedMessages)).Single();
+            Assert.IsTrue(glen.ReceivedMessages.Any());
+        }
     }
 }
