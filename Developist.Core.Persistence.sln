@@ -18,7 +18,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.Tests", "Developist.Core.Persistence.Tests\Developist.Core.Persistence.Tests.csproj", "{437D1C06-9658-41EC-90D2-4165ED960789}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Developist.Core.Persistence.Tests.Integration", "Developist.Core.Persistence.Tests.Integration\Developist.Core.Persistence.Tests.Integration.csproj", "{7A41827A-6DF2-40B9-A9F4-D08EE5B5C396}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.Tests.Integration", "Developist.Core.Persistence.Tests.Integration\Developist.Core.Persistence.Tests.Integration.csproj", "{7A41827A-6DF2-40B9-A9F4-D08EE5B5C396}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{CFDEC1DA-4079-4FC6-BE23-61BC08E4CE67}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DB1399BF-D541-4188-A4BE-A4F449CD4A0E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{BA959363-3B8C-4925-ABCC-3B70D8F90ED3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +55,13 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4E2EBFE4-C559-4EB8-B2D4-F9442B2C1405} = {CFDEC1DA-4079-4FC6-BE23-61BC08E4CE67}
+		{D4229E43-8347-4E43-8ED1-CB2E30990C5A} = {CFDEC1DA-4079-4FC6-BE23-61BC08E4CE67}
+		{015B059A-BA0B-4C41-80B1-9823B6DEBB4D} = {BA959363-3B8C-4925-ABCC-3B70D8F90ED3}
+		{437D1C06-9658-41EC-90D2-4165ED960789} = {DB1399BF-D541-4188-A4BE-A4F449CD4A0E}
+		{7A41827A-6DF2-40B9-A9F4-D08EE5B5C396} = {DB1399BF-D541-4188-A4BE-A4F449CD4A0E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {746B6BA7-4640-44D4-80EC-1DB64C8B0A38}
