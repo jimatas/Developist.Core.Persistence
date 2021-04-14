@@ -125,6 +125,29 @@ namespace Developist.Core.Persistence.Tests
         }
 
         [TestMethod]
+        public void Paginate_SortedByGivenNameDescending_ReturnsExpectedResult()
+        {
+            // Arrange
+            var sequence = new[]
+            {
+                new Person { GivenName = "Hollie", FamilyName = "Marin" },
+                new Person { GivenName = "Randall", FamilyName = "Bloom" },
+                new Person { GivenName = "Glen", FamilyName = "Hensley" },
+
+            }.AsQueryable();
+
+            var paginator = new SorterPaginator<Person>("GivenName", descending: true, pageNumber: 1, pageSize: 2);
+
+            // Act
+            var result = paginator.Paginate(sequence);
+
+            // Assert
+            Assert.AreEqual(2, result.Count());
+            Assert.AreEqual("Randall", result.First().GivenName);
+            Assert.AreEqual("Hollie", result.Last().GivenName);
+        }
+
+        [TestMethod]
         public void Paginate_SortedByFamilyNameAndPageSizeOf5_ReturnsExpectedResult()
         {
             // Arrange
