@@ -24,8 +24,8 @@ namespace Developist.Core.Persistence
             private readonly ParameterExpression replacement;
             public ParameterReplacer(ParameterExpression replacement) => this.replacement = replacement;
             protected override Expression VisitParameter(ParameterExpression parameter) => base.VisitParameter(replacement);
-            public static TExpression Replace<TExpression>(ParameterExpression replacement, TExpression expression)
-                where TExpression : Expression => (TExpression)new ParameterReplacer(replacement).Visit(expression);
+            public static TExpression Replace<TExpression>(ParameterExpression replacement, TExpression expression) where TExpression : Expression
+                => (TExpression)new ParameterReplacer(replacement).Visit(expression);
         }
     }
 }
