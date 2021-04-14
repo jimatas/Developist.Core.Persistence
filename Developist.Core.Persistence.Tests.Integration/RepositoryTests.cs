@@ -34,10 +34,15 @@ namespace Developist.Core.Persistence.Tests
             var serviceProvider = services.BuildServiceProvider();
 
             var dbContext = serviceProvider.GetRequiredService<SampleDbContext>();
-            dbContext.Database.EnsureDeleted();
             dbContext.Database.EnsureCreated();
 
             uow = serviceProvider.GetRequiredService<IUnitOfWork>();
+        }
+
+        [TestCleanup]
+        public void CleanUp()
+        {
+            (uow as EntityFramework.IUnitOfWork<SampleDbContext>)?.DbContext.Database.EnsureDeleted();
         }
 
         [TestMethod]
