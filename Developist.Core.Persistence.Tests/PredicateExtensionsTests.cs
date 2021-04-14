@@ -2,19 +2,75 @@
 // Licensed under the MIT License. See License.txt in the project root for details.
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace Developist.Core.Persistence.Tests
 {
     [TestClass]
     public class PredicateExtensionsTests
     {
+        [TestMethod]
+        public void AndAlso_GivenFunc_ReturnsExpectedResult()
+        {
+            // Arrange
+            Func<Person, bool> givenNameStartsWithN = p => p.GivenName.StartsWith("N", StringComparison.OrdinalIgnoreCase);
+            Func<Person, bool> favoriteBookGenreIsAdventure = p => p.FavoriteBook.Genre == Genre.Adventure;
+
+            // Act
+            var result = People.Where(givenNameStartsWithN.AndAlso(favoriteBookGenreIsAdventure));
+
+            // Assert
+            Assert.AreEqual(1, result.Count());
+        }
+
+        [TestMethod]
+        public void OrElse_GivenFunc_ReturnsExpectedResult()
+        {
+            // Arrange
+            Func<Person, bool> givenNameStartsWithN = p => p.GivenName.StartsWith("N", StringComparison.OrdinalIgnoreCase);
+            Func<Person, bool> favoriteBookGenreIsAdventure = p => p.FavoriteBook.Genre == Genre.Adventure;
+
+            // Act
+            var result = People.Where(givenNameStartsWithN.OrElse(favoriteBookGenreIsAdventure));
+
+            // Assert
+            Assert.AreEqual(3, result.Count());
+        }
+
+        [TestMethod]
+        public void AndAlso_GivenExpression_ReturnsExpectedResult()
+        {
+            // Arrange
+            Expression<Func<Person, bool>> givenNameStartsWithN = p => p.GivenName.StartsWith("N", StringComparison.OrdinalIgnoreCase);
+            Expression<Func<Person, bool>> favoriteBookGenreIsAdventure = p => p.FavoriteBook.Genre == Genre.Adventure;
+
+            // Act
+            var result = People.AsQueryable().Where(givenNameStartsWithN.AndAlso(favoriteBookGenreIsAdventure));
+
+            // Assert
+            Assert.AreEqual(1, result.Count());
+        }
+
+        [TestMethod]
+        public void OrElse_GivenExpression_ReturnsExpectedResult()
+        {
+            // Arrange
+            Expression<Func<Person, bool>> givenNameStartsWithN = p => p.GivenName.StartsWith("N", StringComparison.OrdinalIgnoreCase);
+            Expression<Func<Person, bool>> favoriteBookGenreIsAdventure = p => p.FavoriteBook.Genre == Genre.Adventure;
+
+            // Act
+            var result = People.AsQueryable().Where(givenNameStartsWithN.OrElse(favoriteBookGenreIsAdventure));
+
+            // Assert
+            Assert.AreEqual(3, result.Count());
+        }
+
         #region People Data
-        private IEnumerable<Person> People
+        private static IEnumerable<Person> People
         {
             get
             {
