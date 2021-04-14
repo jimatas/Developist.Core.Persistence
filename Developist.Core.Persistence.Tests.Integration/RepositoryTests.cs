@@ -143,5 +143,42 @@ namespace Developist.Core.Persistence.Tests
             glen = personRepository.Find(p => p.FamilyName == "Hensley", EntityIncludePaths.ForEntity<Person>().Include(p => p.ReceivedMessages)).Single();
             Assert.IsTrue(glen.ReceivedMessages.Any());
         }
+
+        [TestMethod]
+        public void Find_UsingPaginator_ReturnsExpectedResult()
+        {
+            // Arrange
+            var people = new[]
+            {
+                new Person { GivenName = "Dwayne", FamilyName = "Welsh" },
+                new Person { GivenName = "Ed", FamilyName = "Stuart" },
+                new Person { GivenName = "Hollie", FamilyName = "Marin" },
+                new Person { GivenName = "Randall", FamilyName = "Bloom" },
+                new Person { GivenName = "Glenn", FamilyName = "Hensley" },
+                new Person { GivenName = "Phillipa", FamilyName = "Connor" },
+                new Person { GivenName = "Ana", FamilyName = "Bryan" },
+                new Person { GivenName = "Edgar", FamilyName = "Bernard" }
+            };
+
+            uow.People().AddRange(people);
+            uow.Complete();
+
+            IQueryablePaginator<Person> paginator = new SorterPaginator<Person>
+            {
+                SortProperty = nameof(Person.FamilyName),
+                PageNumber = 1,
+                PageSize = 2
+            };
+
+            // Act
+            var result = uow.People().Find(p => p.GivenName.Contains("ll")); // 3
+            var paginatedResult = uow.People().Find(p => p.GivenName.Contains("ll"), paginator); // 2
+
+            // Assert
+            Assert.AreEqual(3, result.Count());
+            Assert.AreEqual(2, paginatedResult.Count());
+            Assert.AreEqual("Randall", paginatedResult.First().GivenName);
+            Assert.AreEqual("Phillipa", paginatedResult.Last().GivenName);
+        }
     }
 }
