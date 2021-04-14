@@ -116,7 +116,7 @@ namespace Developist.Core.Persistence.Tests
         }
 
         [TestMethod]
-        public void SampleUsage()
+        public void Add_GivenMessageWithRecipientsAndSender_AddsMessageRecipientsAndSender()
         {
             var hollie = new Person { GivenName = "Hollie", FamilyName = "Marin" };
             var randall = new Person { GivenName = "Randall", FamilyName = "Bloom" };
