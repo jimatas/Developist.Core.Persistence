@@ -5,6 +5,10 @@ using System;
 
 namespace Developist.Core.Persistence
 {
+    /// <summary>
+    /// Convenience base class for entity types that have a single Id property to inherit from.
+    /// </summary>
+    /// <typeparam name="TIdentifier">The type of the identifier.</typeparam>
     public abstract class EntityBase<TIdentifier> : IEntity<TIdentifier> where TIdentifier : IEquatable<TIdentifier>
     {
         private int? hashCode;

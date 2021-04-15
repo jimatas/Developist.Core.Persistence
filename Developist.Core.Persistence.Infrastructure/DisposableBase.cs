@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Developist.Core.Persistence
 {
+    /// <summary>
+    /// Provides the boiler plate code for implementing the dispose/async dispose pattern.
+    /// </summary>
     public class DisposableBase : IDisposable, IAsyncDisposable
     {
         ~DisposableBase()
@@ -57,8 +60,20 @@ namespace Developist.Core.Persistence
         }
 
         #region Overridable hooks
+        /// <summary>
+        /// Override to release any managed resources held by this instance.
+        /// </summary>
         protected virtual void ReleaseManagedResources() { }
+
+        /// <summary>
+        /// Override to release any native (unmanaged) resources held by this instance.
+        /// </summary>
         protected virtual void ReleaseNativeResources() { }
+
+        /// <summary>
+        /// Override to asynchronously release any managed resources held by this instance.
+        /// </summary>
+        /// <returns>An awaitable value task representing the asynchronous operation.</returns>
         protected virtual ValueTask ReleaseManagedResourcesAsync() => default;
         #endregion
     }
