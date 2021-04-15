@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Developist.Core.Persistence
 {
     /// <summary>
-    /// Defines the interface to implement by a class in order to realize the unit of work pattern.
+    /// Defines the interface that must be implemented by a class in order to realize the unit of work pattern.
     /// </summary>
     public interface IUnitOfWork : IDisposable, IAsyncDisposable
     {
