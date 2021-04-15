@@ -14,14 +14,14 @@ namespace Developist.Core.Persistence
     public interface IReadOnlyRepository<TEntity> where TEntity : IEntity
     {
         /// <summary>
-        /// Fetches all entities from the data store that pass the specified filter criteria.
+        /// Retrieves all entities from the data store that pass the specified filter criteria.
         /// </summary>
         /// <param name="filter">The criteria by which to filter the entities to return.</param>
         /// <returns>The entities that were retrieved.</returns>
         IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter);
 
         /// <summary>
-        /// Fetches all entities from the data store that pass the specified filter criteria.
+        /// Retrieves all entities from the data store that pass the specified filter criteria.
         /// </summary>
         /// <param name="filter">The criteria by which to filter the entities to return.</param>
         /// <param name="includePaths">The navigation properties of <typeparamref name="TEntity"/> to include in the result.</param>
@@ -29,7 +29,7 @@ namespace Developist.Core.Persistence
         IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IEntityIncludePaths<TEntity> includePaths);
 
         /// <summary>
-        /// Fetches a subset of the entities from the data store that pass the specified filter criteria.
+        /// Retrieves a subset of the entities from the data store that pass the specified filter criteria.
         /// </summary>
         /// <param name="filter">The criteria by which to filter the entities to return.</param>
         /// <param name="paginator">The pagination instructions to apply to the result set.</param>
@@ -37,7 +37,7 @@ namespace Developist.Core.Persistence
         IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator);
 
         /// <summary>
-        /// Fetches a subset of the entities from the data store that pass the specified filter criteria.
+        /// Retrieves a subset of the entities from the data store that pass the specified filter criteria.
         /// </summary>
         /// <param name="filter">The criteria by which to filter the entities to return.</param>
         /// <param name="paginator">The pagination instructions to apply to the result set.</param>
@@ -48,7 +48,7 @@ namespace Developist.Core.Persistence
         /// <summary>
         /// Async version of <see cref="Find(IQueryableFilter{TEntity})"/>
         /// <para>
-        /// Fetches all entities from the data store that pass the specified filter criteria.
+        /// Retrieves all entities from the data store that pass the specified filter criteria.
         /// </para>
         /// </summary>
         /// <param name="filter">The criteria by which to filter the entities to return.</param>
@@ -59,7 +59,7 @@ namespace Developist.Core.Persistence
         /// <summary>
         /// Async version of <see cref="Find(IQueryableFilter{TEntity}, IEntityIncludePaths{TEntity})"/>
         /// <para>
-        /// Fetches all entities from the data store that pass the specified filter criteria.
+        /// Retrieves all entities from the data store that pass the specified filter criteria.
         /// </para>
         /// </summary>
         /// <param name="filter">The criteria by which to filter the entities to return.</param>
@@ -71,7 +71,7 @@ namespace Developist.Core.Persistence
         /// <summary>
         /// Async version of <see cref="Find(IQueryableFilter{TEntity}, IQueryablePaginator{TEntity})"/>
         /// <para>
-        /// Fetches a subset of the entities from the data store that pass the specified filter criteria.
+        /// Retrieves a subset of the entities from the data store that pass the specified filter criteria.
         /// </para>
         /// </summary>
         /// <param name="filter">The criteria by which to filter the entities to return.</param>
@@ -83,11 +83,11 @@ namespace Developist.Core.Persistence
         /// <summary>
         /// Async version of <see cref="Find(IQueryableFilter{TEntity}, IQueryablePaginator{TEntity}, IEntityIncludePaths{TEntity})"/>
         /// <para>
-        /// Fetches a subset of the entities from the data store that pass the specified filter criteria.
+        /// Retrieves a subset of the entities from the data store that pass the specified filter criteria.
         /// </para>
         /// </summary>
         /// <param name="filter">The criteria by which to filter the entities to return.</param>
-        /// <param name="paginator">The pagination instructions to apply to the result set.</par
+        /// <param name="paginator">The pagination instructions to apply to the result set.</param>
         /// <param name="includePaths">The navigation properties of <typeparamref name="TEntity"/> to include in the result.</param>
         /// <param name="cancellationToken">The cancellation token to observe.</param>
         /// <returns>An awaitable task representing the asynchronous operation. The task result will contain the entities that were retrieved.</returns>

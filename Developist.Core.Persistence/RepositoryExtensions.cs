@@ -44,7 +44,7 @@ namespace Developist.Core.Persistence
         }
 
         /// <summary>
-        /// Fetches entities from the data store using a predicate expression.
+        /// Supports the retrieval of entities from the data store using a predicate expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entities to retrieve.</typeparam>
         /// <param name="repository">The repository to retrieve the entities with.</param>
@@ -56,7 +56,7 @@ namespace Developist.Core.Persistence
         }
 
         /// <summary>
-        /// Fetches entities from the data store using a predicate expression.
+        /// Supports the retrieval of entities from the data store using a predicate expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entities to retrieve.</typeparam>
         /// <param name="repository">The repository to retrieve the entities with.</param>
@@ -69,7 +69,7 @@ namespace Developist.Core.Persistence
         }
 
         /// <summary>
-        /// Fetches entities from the data store using a predicate expression.
+        /// Supports the retrieval of entities from the data store using a predicate expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entities to retrieve.</typeparam>
         /// <param name="repository">The repository to retrieve the entities with.</param>
@@ -82,7 +82,7 @@ namespace Developist.Core.Persistence
         }
 
         /// <summary>
-        /// Fetches entities from the data store using a predicate expression.
+        /// Supports the retrieval of entities from the data store using a predicate expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entities to retrieve.</typeparam>
         /// <param name="repository">The repository to retrieve the entities with.</param>
@@ -137,7 +137,7 @@ namespace Developist.Core.Persistence
         /// <summary>
         /// Async version of <see cref="Find{TEntity}(IReadOnlyRepository{TEntity}, Expression{Func{TEntity, bool}})"/>
         /// <para>
-        /// Fetches entities from the data store using a predicate expression.
+        /// Supports the retrieval of entities from the data store using a predicate expression.
         /// </para>
         /// </summary>
         /// <typeparam name="TEntity">The type of the entities to retrieve.</typeparam>
@@ -153,7 +153,7 @@ namespace Developist.Core.Persistence
         /// <summary>
         /// Async version of <see cref="Find{TEntity}(IReadOnlyRepository{TEntity}, Expression{Func{TEntity, bool}}, IEntityIncludePaths{TEntity})"/>
         /// <para>
-        /// Fetches entities from the data store using a predicate expression.
+        /// Supports the retrieval of entities from the data store using a predicate expression.
         /// </para>
         /// </summary>
         /// <typeparam name="TEntity">The type of the entities to retrieve.</typeparam>
@@ -170,7 +170,7 @@ namespace Developist.Core.Persistence
         /// <summary>
         /// Async version of <see cref="Find{TEntity}(IReadOnlyRepository{TEntity}, Expression{Func{TEntity, bool}}, IQueryablePaginator{TEntity})"/>
         /// <para>
-        /// Fetches entities from the data store using a predicate expression.
+        /// Supports the retrieval of entities from the data store using a predicate expression.
         /// </para>
         /// </summary>
         /// <typeparam name="TEntity">The type of the entities to retrieve.</typeparam>
@@ -187,7 +187,7 @@ namespace Developist.Core.Persistence
         /// <summary>
         /// Async version of <see cref="Find{TEntity}(IReadOnlyRepository{TEntity}, Expression{Func{TEntity, bool}}, IQueryablePaginator{TEntity}, IEntityIncludePaths{TEntity})"/>
         /// <para>
-        /// Fetches entities from the data store using a predicate expression.
+        /// Supports the retrieval of entities from the data store using a predicate expression.
         /// </para>
         /// </summary>
         /// <typeparam name="TEntity">The type of the entities to retrieve.</typeparam>
