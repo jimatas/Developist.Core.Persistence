@@ -4,7 +4,7 @@
 namespace Developist.Core.Persistence
 {
     /// <summary>
-    /// Defines the interface to implement by a class in order to realize the repository pattern.
+    /// Defines the interface that must be implemented by a class in order to realize the repository pattern.
     /// </summary>
     /// <typeparam name="TEntity">The type of entities retrieved and persisted through this repository.</typeparam>
     public interface IRepository<TEntity> : IReadOnlyRepository<TEntity> where TEntity : class, IEntity
