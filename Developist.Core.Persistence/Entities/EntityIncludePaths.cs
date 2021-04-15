@@ -28,7 +28,7 @@ namespace Developist.Core.Persistence
         /// <typeparam name="TProperty">The type of the related data to include.</typeparam>
         /// <param name="includePaths">The source <see cref="IEntityIncludePaths{TEntity, TProperty}"/> object to add the include path to.</param>
         /// <param name="propertySelector">A lambda expression that selects the navigation property to include.</param>
-        /// <returns>A new <see cref="IEntityIncludePaths{TEntity, TProperty}"/> object containing both the previously added include paths as well as the new one.</returns>
+        /// <returns>A new <see cref="IEntityIncludePaths{TEntity, TProperty}"/> object containing both the previous include paths and the newly added one.</returns>
         public static IEntityIncludePaths<TEntity, TProperty> Include<TEntity, TProperty>(this IEntityIncludePaths<TEntity> includePaths, Expression<Func<TEntity, TProperty>> propertySelector) where TEntity : IEntity
         {
             return new IncludePaths<TEntity, TProperty>(includePaths.ToList()) { IncludePathExtractor.Extract(propertySelector) };
@@ -42,7 +42,7 @@ namespace Developist.Core.Persistence
         /// <typeparam name="TProperty">The type of the related data to include.</typeparam>
         /// <param name="includePaths">The source <see cref="IEntityIncludePaths{TEntity, TProperty}"/> object to add the include path to.</param>
         /// <param name="propertySelector">A lambda expression that selects the navigation property to include.</param>
-        /// <returns>A new <see cref="IEntityIncludePaths{TEntity, TProperty}"/> object containing both the previously added include paths as well as the new one.</returns>
+        /// <returns>A new <see cref="IEntityIncludePaths{TEntity, TProperty}"/> object containing both the previous include paths and the newly added one.</returns>
         public static IEntityIncludePaths<TEntity, TProperty> Include<TEntity, TPreviousProperty, TProperty>(this IEntityIncludePaths<TEntity, TPreviousProperty> includePaths, Expression<Func<TEntity, TProperty>> propertySelector) where TEntity : IEntity
         {
             return new IncludePaths<TEntity, TProperty>(includePaths.ToList()) { IncludePathExtractor.Extract(propertySelector) };
@@ -56,7 +56,7 @@ namespace Developist.Core.Persistence
         /// <typeparam name="TProperty">The type of the related data to include.</typeparam>
         /// <param name="includePaths">The source <see cref="IEntityIncludePaths{TEntity, TProperty}"/> object to add the include path to.</param>
         /// <param name="propertySelector">A lambda expression that selects the navigation property to include.</param>
-        /// <returns>A new <see cref="IEntityIncludePaths{TEntity, TProperty}"/> object containing both the previously added include paths as well as the new one.</returns>
+        /// <returns>A new <see cref="IEntityIncludePaths{TEntity, TProperty}"/> object containing both the previous include paths and the newly added one.</returns>
         public static IEntityIncludePaths<TEntity, TProperty> ThenInclude<TEntity, TPreviousProperty, TProperty>(this IEntityIncludePaths<TEntity, TPreviousProperty> includePaths, Expression<Func<TPreviousProperty, TProperty>> propertySelector) where TEntity : IEntity
         {
             includePaths.Add(IncludePathExtractor.Extract(propertySelector));
@@ -72,7 +72,7 @@ namespace Developist.Core.Persistence
         /// <typeparam name="TProperty">The type of the related data to include.</typeparam>
         /// <param name="includePaths">The source <see cref="IEntityIncludePaths{TEntity, TProperty}"/> object to add the include path to.</param>
         /// <param name="propertySelector">A lambda expression that selects the navigation property to include.</param>
-        /// <returns>A new <see cref="IEntityIncludePaths{TEntity, TProperty}"/> object containing both the previously added include paths as well as the new one.</returns>
+        /// <returns>A new <see cref="IEntityIncludePaths{TEntity, TProperty}"/> object containing both the previous include paths and the newly added one.</returns>
         public static IEntityIncludePaths<TEntity, TProperty> ThenInclude<TEntity, TPreviousProperty, TProperty>(this IEntityIncludePaths<TEntity, IEnumerable<TPreviousProperty>> includePaths, Expression<Func<TPreviousProperty, TProperty>> propertySelector) where TEntity : IEntity
         {
             includePaths.Add(IncludePathExtractor.Extract(propertySelector));
