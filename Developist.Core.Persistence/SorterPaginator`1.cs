@@ -7,6 +7,10 @@ using System.Linq.Expressions;
 
 namespace Developist.Core.Persistence
 {
+    /// <summary>
+    /// Default implementation of the <see cref="IQueryablePaginator{T}"/> interface that can both sort and paginate the elements in a sequence.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
     public class SorterPaginator<T> : IQueryablePaginator<T>
     {
         public const int DefaultPageSize = 20;
@@ -39,6 +43,9 @@ namespace Developist.Core.Persistence
         }
         #endregion
 
+        /// <summary>
+        /// The page number. The first page is 1, the second 2 etc.
+        /// </summary>
         public int PageNumber
         {
             get => pageNumber;
@@ -52,6 +59,9 @@ namespace Developist.Core.Persistence
             }
         }
 
+        /// <summary>
+        /// The number of elements per page.
+        /// </summary>
         public int PageSize
         {
             get => pageSize;
@@ -65,8 +75,14 @@ namespace Developist.Core.Persistence
             }
         }
 
+        /// <summary>
+        /// The number of pages needed to paginate all the elements in the result set.
+        /// </summary>
         public int PageCount { get; private set; }
 
+        /// <summary>
+        /// The total number of elements in the result set.
+        /// </summary>
         public int ItemCount
         {
             get => itemCount;
@@ -82,6 +98,12 @@ namespace Developist.Core.Persistence
             }
         }
 
+        /// <summary>
+        /// The name of the property to sort by.
+        /// </summary>
+        /// <remarks>
+        /// Provides some basic support for specifying nested properties using dot notation.
+        /// </remarks>
         public string SortProperty
         {
             get => sortProperty;
@@ -95,8 +117,14 @@ namespace Developist.Core.Persistence
             }
         }
 
+        /// <summary>
+        /// A lambda expression that selects the property to sort by.
+        /// </summary>
         public Expression<Func<T, object>> SortExpression { get; internal set; }
 
+        /// <summary>
+        /// Indicates whether sorting will be in descending order instead of the (default) ascending.
+        /// </summary>
         public bool SortDescending { get; set; }
 
         public IOrderedQueryable<T> Paginate(IQueryable<T> sequence)
