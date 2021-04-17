@@ -50,7 +50,6 @@ namespace Developist.Core.Persistence.Samples
         protected IConfiguration Configuration { get; }
         protected ILogger Logger { get; }
 
-        [DebuggerStepThrough]
         public Task StartAsync(CancellationToken cancellationToken)
         {
             applicationLifetime.ApplicationStarted.Register(() =>

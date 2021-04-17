@@ -18,7 +18,7 @@ namespace Developist.Core.Persistence.EntityFramework
         private readonly IRepositoryFactory<TDbContext> repositoryFactory;
         private readonly ILogger logger;
 
-        public UnitOfWork(TDbContext dbContext, IRepositoryFactory<TDbContext> repositoryFactory, ILogger<UnitOfWork<TDbContext>> logger)
+        public UnitOfWork(TDbContext dbContext, IRepositoryFactory<TDbContext> repositoryFactory, ILogger<UnitOfWork<TDbContext>> logger = null)
         {
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             this.repositoryFactory = repositoryFactory ?? throw new ArgumentNullException(nameof(repositoryFactory));
