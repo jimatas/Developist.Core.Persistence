@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Developist.Core.Persistence
 {
     /// <summary>
-    /// Defines the read-only part of the interface that must be implemented by a class in order to realize the repository pattern.
+    /// Defines the read-only version of the interface that must be implemented by a class in order to realize the repository pattern.
     /// </summary>
     /// <typeparam name="TEntity">The type of entities retrieved through this repository.</typeparam>
     public interface IReadOnlyRepository<TEntity> where TEntity : IEntity
