@@ -26,10 +26,7 @@ namespace Developist.Core.Persistence.Tests
                 builder => builder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=DevelopistCorePersistence_TestDb;Trusted_Connection=true;MultipleActiveResultSets=true"),
                 ServiceLifetime.Scoped);
 
-            services.AddScoped<EntityFramework.IRepositoryFactory<SampleDbContext>, EntityFramework.RepositoryFactory<SampleDbContext>>();
-            services.AddScoped<IRepositoryFactory>(provider => provider.GetService<EntityFramework.IRepositoryFactory<SampleDbContext>>());
-            services.AddScoped<EntityFramework.IUnitOfWork<SampleDbContext>, EntityFramework.UnitOfWork<SampleDbContext>>();
-            services.AddScoped<IUnitOfWork>(provider => provider.GetService<EntityFramework.IUnitOfWork<SampleDbContext>>());
+            services.AddPersistence<SampleDbContext>();
 
             var serviceProvider = services.BuildServiceProvider();
 

@@ -22,9 +22,7 @@ namespace Developist.Core.Persistence.Tests
         {
             var services = new ServiceCollection();
             services.AddLogging(config => config.AddConsole());
-
-            services.Add(new ServiceDescriptor(typeof(IRepositoryFactory), typeof(InMemory.RepositoryFactory), ServiceLifetime.Scoped));
-            services.Add(new ServiceDescriptor(typeof(IUnitOfWork), typeof(InMemory.UnitOfWork), ServiceLifetime.Scoped));
+            services.AddPersistence();
 
             uow = services.BuildServiceProvider().GetRequiredService<IUnitOfWork>();
         }
