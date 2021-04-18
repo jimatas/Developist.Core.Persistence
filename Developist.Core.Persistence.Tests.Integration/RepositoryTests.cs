@@ -180,5 +180,39 @@ namespace Developist.Core.Persistence.Tests
             Assert.AreEqual("Randall", paginatedResult.First().GivenName);
             Assert.AreEqual("Phillipa", paginatedResult.Last().GivenName);
         }
+
+        [TestMethod]
+        public void Count_ByDefaultAndGivenFilter_ReturnsExpectedResult()
+        {
+            // Arrange
+            var people = new[]
+            {
+                new Person { GivenName = "Dwayne", FamilyName = "Welsh" },
+                new Person { GivenName = "Ed", FamilyName = "Stuart" },
+                new Person { GivenName = "Hollie", FamilyName = "Marin" },
+                new Person { GivenName = "Randall", FamilyName = "Bloom" },
+                new Person { GivenName = "Glenn", FamilyName = "Hensley" },
+                new Person { GivenName = "Phillipa", FamilyName = "Connor" },
+                new Person { GivenName = "Ana", FamilyName = "Bryan" },
+                new Person { GivenName = "Edgar", FamilyName = "Bernard" }
+            };
+
+            uow.People().AddRange(people);
+            uow.Complete();
+
+            // Act
+            var unfilteredResult = uow.People().Count();
+            var filteredResult = uow.People().Count(new PersonByNameFilter(andAlso: true)
+            {
+                GivenName = "Glenn",
+                FamilyName = "Hensley"
+            });
+            var filteredByPredicateResult = uow.People().Count(predicate: p => p.GivenName.Equals("Ed") || p.GivenName.Equals("Glenn"));
+
+            // Assert
+            Assert.AreEqual(people.Length, unfilteredResult);
+            Assert.AreEqual(1, filteredResult);
+            Assert.AreEqual(2, filteredByPredicateResult);
+        }
     }
 }
