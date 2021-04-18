@@ -17,9 +17,7 @@ namespace Developist.Core.Persistence.Samples
         {
             services.AddLogging(config => config.AddConsole());
             services.AddHostedService<Program>();
-
-            services.Add(new ServiceDescriptor(typeof(IRepositoryFactory), typeof(InMemory.RepositoryFactory), ServiceLifetime.Scoped));
-            services.Add(new ServiceDescriptor(typeof(IUnitOfWork), typeof(InMemory.UnitOfWork), ServiceLifetime.Scoped));
+            services.AddPersistence();
         }
     }
 }

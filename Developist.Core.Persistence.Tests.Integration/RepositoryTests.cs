@@ -19,13 +19,10 @@ namespace Developist.Core.Persistence.Tests
         public void Initialize()
         {
             var services = new ServiceCollection();
-
             services.AddLogging(config => config.AddConsole());
-
             services.AddDbContext<SampleDbContext>(
                 builder => builder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=DevelopistCorePersistence_TestDb;Trusted_Connection=true;MultipleActiveResultSets=true"),
                 ServiceLifetime.Scoped);
-
             services.AddPersistence<SampleDbContext>();
 
             var serviceProvider = services.BuildServiceProvider();
