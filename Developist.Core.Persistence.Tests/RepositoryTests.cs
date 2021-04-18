@@ -40,6 +40,112 @@ namespace Developist.Core.Persistence.Tests
             Assert.IsNotNull(uow);
         }
 
+        #region Repository<TEntity>.Count tests
+        [TestMethod]
+        public void Count_ByDefault_ReturnsExpectedResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            // Act
+            var count = repository.Count();
+
+            // Assert
+            Assert.AreEqual(3, count);
+        }
+
+        [TestMethod]
+        public void Count_GivenNullFilter_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            IQueryableFilter<Person> filter = null;
+
+            // Act
+            void action() => repository.Count(filter);
+
+            // Assert
+            Assert.ThrowsException<ArgumentNullException>(action);
+        }
+
+        [DataTestMethod]
+        [DataRow("ll", true, 2)]
+        [DataRow("Hollie", false, 1)]
+        [DataRow("Dwayne", false, 0)]
+        public void Count_GivenFilter_ReturnsExpectedResult(string givenName, bool usePartialMatching, int expectedResult)
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            IQueryableFilter<Person> filter = new PersonByNameFilter
+            {
+                GivenName = givenName,
+                UsePartialMatching = usePartialMatching
+            };
+
+            // Act
+            var result = repository.Count(filter);
+
+            // Assert
+            Assert.AreEqual(expectedResult, result);
+        }
+        #endregion
+
+        #region Repository<TEntity>.CountAsync tests
+        [TestMethod]
+        public async Task CountAsync_ByDefault_ReturnsExpectedResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            // Act
+            var count = await repository.CountAsync().ConfigureAwait(false);
+
+            // Assert
+            Assert.AreEqual(3, count);
+        }
+
+        [TestMethod]
+        public async Task CountAsync_GivenNullFilter_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            IQueryableFilter<Person> filter = null;
+
+            // Act
+            async Task action() => await repository.CountAsync(filter).ConfigureAwait(false);
+
+            // Assert
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action).ConfigureAwait(false);
+        }
+
+        [DataTestMethod]
+        [DataRow("ll", true, 2)]
+        [DataRow("Hollie", false, 1)]
+        [DataRow("Dwayne", false, 0)]
+        public async Task CountAsync_GivenFilter_ReturnsExpectedResult(string givenName, bool usePartialMatching, int expectedResult)
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            IQueryableFilter<Person> filter = new PersonByNameFilter
+            {
+                GivenName = givenName,
+                UsePartialMatching = usePartialMatching
+            };
+
+            // Act
+            var result = await repository.CountAsync(filter).ConfigureAwait(false);
+
+            // Assert
+            Assert.AreEqual(expectedResult, result);
+        }
+        #endregion
+
         #region Repository<TEntity>.Find tests
         [TestMethod]
         public void Find_GivenNullFilter_ThrowsArgumentNullException()

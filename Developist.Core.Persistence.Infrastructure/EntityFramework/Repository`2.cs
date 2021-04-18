@@ -44,6 +44,16 @@ namespace Developist.Core.Persistence.EntityFramework
             uow.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Deleted;
         }
 
+        public virtual int Count()
+        {
+            return CreateQuery(includePaths: null).Count();
+        }
+
+        public virtual int Count(IQueryableFilter<TEntity> filter)
+        {
+            return CreateQuery(includePaths: null).Filter(filter).Count();
+        }
+
         public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter)
         {
             return Find(filter, includePaths: null);
@@ -62,6 +72,16 @@ namespace Developist.Core.Persistence.EntityFramework
         public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths)
         {
             return CreateQuery(includePaths).Filter(filter).Paginate(paginator).ToList();
+        }
+
+        public virtual async Task<int> CountAsync()
+        {
+            return await CreateQuery(includePaths: null).CountAsync().ConfigureAwait(false);
+        }
+
+        public virtual async Task<int> CountAsync(IQueryableFilter<TEntity> filter)
+        {
+            return await CreateQuery(includePaths: null).Filter(filter).CountAsync().ConfigureAwait(false);
         }
 
         public virtual Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, CancellationToken cancellationToken = default)
@@ -91,7 +111,7 @@ namespace Developist.Core.Persistence.EntityFramework
             {
                 query = includePaths.Distinct().Aggregate(query, (query, path) => query.Include(path));
             }
-
+            
             return query;
         }
     }

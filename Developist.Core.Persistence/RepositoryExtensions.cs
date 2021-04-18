@@ -13,6 +13,18 @@ namespace Developist.Core.Persistence
     public static class RepositoryExtensions
     {
         /// <summary>
+        /// Counts the number of entities of generic type <typeparamref name="TEntity"/> in the data store that satisfy the specified condition.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entities to count.</typeparam>
+        /// <param name="repository">The repository with which to count the entities.</param>
+        /// <param name="predicate">The criteria by which to filter the entities to include in the count, specified as a predicate expression.</param>
+        /// <returns>The number of entities counted.</returns>
+        public static int Count<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate) where TEntity : IEntity
+        {
+            return repository.Count(new PredicateQueryableFilter<TEntity>(predicate));
+        }
+
+        /// <summary>
         /// Rerieves a single entity from the data store using its unique Id property.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity to retrieve.</typeparam>
@@ -93,6 +105,21 @@ namespace Developist.Core.Persistence
         public static IEnumerable<TEntity> Find<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths) where TEntity : IEntity
         {
             return repository.Find(new PredicateQueryableFilter<TEntity>(predicate), paginator, includePaths);
+        }
+
+        /// <summary>
+        /// Async version of <see cref="Count{TEntity}(IReadOnlyRepository{TEntity}, Expression{Func{TEntity, bool}})"/>
+        /// <para>
+        /// Counts the number of entities of generic type <typeparamref name="TEntity"/> in the data store that satisfy the specified condition.
+        /// </para>
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entities to count.</typeparam>
+        /// <param name="repository">The repository with which to count the entities.</param>
+        /// <param name="predicate">The criteria by which to filter the entities to include in the count, specified as a predicate expression.</param>
+        /// <returns>The number of entities counted.</returns>
+        public static async Task<int> CountAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate) where TEntity : IEntity
+        {
+            return await repository.CountAsync(new PredicateQueryableFilter<TEntity>(predicate)).ConfigureAwait(false);
         }
 
         /// <summary>

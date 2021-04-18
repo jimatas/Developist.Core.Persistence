@@ -14,6 +14,19 @@ namespace Developist.Core.Persistence
     public interface IReadOnlyRepository<TEntity> where TEntity : IEntity
     {
         /// <summary>
+        /// Counts the number of entities of generic type <typeparamref name="TEntity"/> in the data store.
+        /// </summary>
+        /// <returns>The number of entities counted.</returns>
+        public int Count();
+
+        /// <summary>
+        /// Counts the number of entities of generic type <typeparamref name="TEntity"/> in the data store that pass the specified filter criteria.
+        /// </summary>
+        /// <param name="filter">The criteria by which to filter the entities to include in the count.</param>
+        /// <returns>The number of entities counted.</returns>
+        public int Count(IQueryableFilter<TEntity> filter);
+
+        /// <summary>
         /// Retrieves all entities from the data store that pass the specified filter criteria.
         /// </summary>
         /// <param name="filter">The criteria by which to filter the entities to return.</param>
@@ -44,6 +57,25 @@ namespace Developist.Core.Persistence
         /// <param name="includePaths">The navigation properties of <typeparamref name="TEntity"/> to include in the result.</param>
         /// <returns>The entities that were retrieved.</returns>
         IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths);
+
+        /// <summary>
+        /// Async version of <see cref="Count"/>
+        /// <para>
+        /// Counts the number of entities of generic type <typeparamref name="TEntity"/> in the data store.
+        /// </para>
+        /// </summary>
+        /// <returns>The number of entities counted.</returns>
+        public Task<int> CountAsync();
+
+        /// <summary>
+        /// Async version of <see cref="Count(IQueryableFilter{TEntity})"/>
+        /// <para>
+        /// Counts the number of entities of generic type <typeparamref name="TEntity"/> in the data store that pass the specified filter criteria.
+        /// </para>
+        /// </summary>
+        /// <param name="filter">The criteria by which to filter the entities to include in the count.</param>
+        /// <returns>The number of entities counted.</returns>
+        public Task<int> CountAsync(IQueryableFilter<TEntity> filter);
 
         /// <summary>
         /// Async version of <see cref="Find(IQueryableFilter{TEntity})"/>

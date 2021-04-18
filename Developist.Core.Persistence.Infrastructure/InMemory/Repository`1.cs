@@ -42,6 +42,16 @@ namespace Developist.Core.Persistence.InMemory
             uow.DataStore.Remove(entity);
         }
 
+        public virtual int Count()
+        {
+            return DataStore.Count;
+        }
+
+        public virtual int Count(IQueryableFilter<TEntity> filter)
+        {
+            return DataStore.AsQueryable().Filter(filter).Count();
+        }
+
         public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter)
         {
             return DataStore.AsQueryable().Filter(filter);
@@ -60,6 +70,16 @@ namespace Developist.Core.Persistence.InMemory
         public virtual IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths)
         {
             return Find(filter, paginator);
+        }
+
+        public virtual Task<int> CountAsync()
+        {
+            return Task.FromResult(Count());
+        }
+
+        public virtual Task<int> CountAsync(IQueryableFilter<TEntity> filter)
+        {
+            return Task.FromResult(Count(filter));
         }
 
         public virtual Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, CancellationToken cancellationToken = default)

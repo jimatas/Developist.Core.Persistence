@@ -41,6 +41,94 @@ namespace Developist.Core.Persistence.Tests
             Assert.IsNotNull(uow);
         }
 
+        #region RepositoryExtensions.Count tests
+        [TestMethod]
+        public void Count_GivenNullPredicate_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            Expression<Func<Person, bool>> nullPredicate = null;
+
+            // Act
+            void action() => repository.Count(predicate: nullPredicate);
+
+            // Assert
+            Assert.ThrowsException<ArgumentNullException>(action);
+        }
+
+        [TestMethod]
+        public void Count_GivenPredicateMatchingOne_ReturnsExpectedResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            // Act
+            var result = repository.Count(predicate: p => p.FamilyName.Equals("Bloom"));
+
+            // Assert
+            Assert.AreEqual(1, result);
+        }
+
+        [TestMethod]
+        public void Count_GivenPredicateMatchingMultiple_ReturnsExpectedResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            // Act
+            var result = repository.Count(predicate: p => p.FamilyName.Equals("Bloom") || p.FamilyName.Equals("Marin"));
+
+            // Assert
+            Assert.AreEqual(2, result);
+        }
+        #endregion
+
+        #region RepositoryExtensions.CountAsync tests
+        [TestMethod]
+        public async Task CountAsync_GivenNullPredicate_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            Expression<Func<Person, bool>> nullPredicate = null;
+
+            // Act
+            async Task action() => await repository.CountAsync(predicate: nullPredicate).ConfigureAwait(false);
+
+            // Assert
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task CountAsync_GivenPredicateMatchingOne_ReturnsExpectedResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            // Act
+            var result = await repository.CountAsync(predicate: p => p.FamilyName.Equals("Bloom")).ConfigureAwait(false);
+
+            // Assert
+            Assert.AreEqual(1, result);
+        }
+
+        [TestMethod]
+        public async Task CountAsync_GivenPredicateMatchingMultiple_ReturnsExpectedResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            // Act
+            var result = await repository.CountAsync(predicate: p => p.FamilyName.Equals("Bloom") || p.FamilyName.Equals("Marin")).ConfigureAwait(false);
+
+            // Assert
+            Assert.AreEqual(2, result);
+        }
+        #endregion
+
         #region RepositoryExtensions.Find tests
         [TestMethod]
         public void Find_GivenUnknownId_ReturnsNull()
