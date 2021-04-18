@@ -27,7 +27,7 @@ namespace Developist.Core.Persistence
             {
                 if (repositoryFactoryType is not null && !(repositoryFactoryType.IsAssignableTo(typeof(IRepositoryFactory)) && repositoryFactoryType.IsConcrete()))
                 {
-                    throw new ArgumentException($"Parameter '{nameof(repositoryFactoryType)}' must be a conrete type that derives from {nameof(IRepositoryFactory)}.", nameof(repositoryFactoryType));
+                    throw new ArgumentException($"Parameter '{nameof(repositoryFactoryType)}' must be a conrete type that derives from the {nameof(IRepositoryFactory)} interface.", nameof(repositoryFactoryType));
                 }
                 return repositoryFactoryType;
             }
@@ -53,7 +53,7 @@ namespace Developist.Core.Persistence
             {
                 if (repositoryFactoryType is not null && !(repositoryFactoryType.DerivesFromGenericParent(typeof(EntityFramework.IRepositoryFactory<>)) && repositoryFactoryType.IsConcrete()))
                 {
-                    throw new ArgumentException($"Parameter '{nameof(repositoryFactoryType)}' must be a concrete type that derives from {nameof(EntityFramework.IRepositoryFactory<TDbContext>)}<{nameof(TDbContext)}>.", nameof(repositoryFactoryType));
+                    throw new ArgumentException($"Parameter '{nameof(repositoryFactoryType)}' must be a concrete type that derives from the {nameof(EntityFramework.IRepositoryFactory<TDbContext>)}<{nameof(TDbContext)}> interface.", nameof(repositoryFactoryType));
                 }
                 return repositoryFactoryType;
             }
