@@ -14,7 +14,7 @@ public class Person : EntityBase<int>
 }
 ```
 
-2. Define your `DbContext` subclass and any custom configuration that is needed to map your entities to the database schema.
+2. Define your `DbContext` subclass, including any custom configuration that is needed to map your entities to the database schema, and register it with the dependency injection system using the `AddDbContext` method.
 
 ```csharp
 public class MyDbContext : DbContext
