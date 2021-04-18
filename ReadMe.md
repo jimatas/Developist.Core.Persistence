@@ -27,11 +27,10 @@ public class MyDbContext : DbContext
 3. Register the `IUnitOfWork` and `IRepositoryFactory` dependencies with the built-in dependency injection container. You can do this by using the `AddPersistence<TDbContext>` extension method, which is provided for convenience, or by manually adding the dependencies through the `IServiceCollection`'s Add methods.
 
 ```csharp
-// To use the Entity Framework version:
 services.AddPersistence<MyDbContext>();
 
 // Or to use the in-memory version:
-services.AddPersistence(ServiceLifetime.Transient);
+services.AddPersistence();
 ```
 
 You can optionally specify a custom `IRepositoryFactory` type, which will be used instead of the default factory to create the repositories that are returned by the `IUnitOfWork`'s `Repository<TEntity>()` method. The other optional parameter specifies the lifetime to register the `IUnitOfWork` dependency with. The default lifetime is `ServiceLifetime.Scoped`.
