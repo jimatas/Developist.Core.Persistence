@@ -2,7 +2,6 @@
 // Licensed under the MIT License. See License.txt in the project root for details.
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
