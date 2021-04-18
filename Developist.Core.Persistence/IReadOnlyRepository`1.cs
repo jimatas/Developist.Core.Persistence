@@ -17,14 +17,14 @@ namespace Developist.Core.Persistence
         /// Counts the number of entities of generic type <typeparamref name="TEntity"/> in the data store.
         /// </summary>
         /// <returns>The number of entities counted.</returns>
-        public int Count();
+        int Count();
 
         /// <summary>
         /// Counts the number of entities of generic type <typeparamref name="TEntity"/> in the data store that pass the specified filter criteria.
         /// </summary>
         /// <param name="filter">The criteria by which to filter the entities to include in the count.</param>
         /// <returns>The number of entities counted.</returns>
-        public int Count(IQueryableFilter<TEntity> filter);
+        int Count(IQueryableFilter<TEntity> filter);
 
         /// <summary>
         /// Retrieves all entities from the data store that pass the specified filter criteria.
@@ -65,7 +65,7 @@ namespace Developist.Core.Persistence
         /// </para>
         /// </summary>
         /// <returns>The number of entities counted.</returns>
-        public Task<int> CountAsync();
+        Task<int> CountAsync();
 
         /// <summary>
         /// Async version of <see cref="Count(IQueryableFilter{TEntity})"/>
@@ -75,7 +75,7 @@ namespace Developist.Core.Persistence
         /// </summary>
         /// <param name="filter">The criteria by which to filter the entities to include in the count.</param>
         /// <returns>The number of entities counted.</returns>
-        public Task<int> CountAsync(IQueryableFilter<TEntity> filter);
+        Task<int> CountAsync(IQueryableFilter<TEntity> filter);
 
         /// <summary>
         /// Async version of <see cref="Find(IQueryableFilter{TEntity})"/>
