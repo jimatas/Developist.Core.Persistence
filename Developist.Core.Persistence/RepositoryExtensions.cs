@@ -116,10 +116,11 @@ namespace Developist.Core.Persistence
         /// <typeparam name="TEntity">The type of the entities to count.</typeparam>
         /// <param name="repository">The repository with which to count the entities.</param>
         /// <param name="predicate">The criteria by which to filter the entities to include in the count, specified as a predicate expression.</param>
-        /// <returns>The number of entities counted.</returns>
-        public static async Task<int> CountAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate) where TEntity : IEntity
+        /// <param name="cancellationToken">The cancellation token to observe.</param>
+        /// <returns>An awaitable task representing the asynchronous operation. The task result will contain the number of entities counted.</returns>
+        public static async Task<int> CountAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default) where TEntity : IEntity
         {
-            return await repository.CountAsync(new PredicateQueryableFilter<TEntity>(predicate)).ConfigureAwait(false);
+            return await repository.CountAsync(new PredicateQueryableFilter<TEntity>(predicate), cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

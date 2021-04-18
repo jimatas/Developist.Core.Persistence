@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 
 namespace Developist.Core.Persistence.EntityFramework
 {
-    public class Repository<TEntity, TDbContext> : IRepository<TEntity> 
-        where TEntity : class, IEntity 
+    public class Repository<TEntity, TDbContext> : IRepository<TEntity>
+        where TEntity : class, IEntity
         where TDbContext : DbContext
     {
         private readonly IUnitOfWork<TDbContext> uow;
@@ -74,14 +74,14 @@ namespace Developist.Core.Persistence.EntityFramework
             return CreateQuery(includePaths).Filter(filter).Paginate(paginator).ToList();
         }
 
-        public virtual async Task<int> CountAsync()
+        public virtual async Task<int> CountAsync(CancellationToken cancellationToken = default)
         {
-            return await CreateQuery(includePaths: null).CountAsync().ConfigureAwait(false);
+            return await CreateQuery(includePaths: null).CountAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public virtual async Task<int> CountAsync(IQueryableFilter<TEntity> filter)
+        public virtual async Task<int> CountAsync(IQueryableFilter<TEntity> filter, CancellationToken cancellationToken = default)
         {
-            return await CreateQuery(includePaths: null).Filter(filter).CountAsync().ConfigureAwait(false);
+            return await CreateQuery(includePaths: null).Filter(filter).CountAsync(cancellationToken).ConfigureAwait(false);
         }
 
         public virtual Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, CancellationToken cancellationToken = default)
@@ -111,7 +111,7 @@ namespace Developist.Core.Persistence.EntityFramework
             {
                 query = includePaths.Distinct().Aggregate(query, (query, path) => query.Include(path));
             }
-            
+
             return query;
         }
     }

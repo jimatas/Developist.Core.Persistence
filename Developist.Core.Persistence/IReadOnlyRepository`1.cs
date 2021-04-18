@@ -64,8 +64,9 @@ namespace Developist.Core.Persistence
         /// Counts the number of entities of generic type <typeparamref name="TEntity"/> in the data store.
         /// </para>
         /// </summary>
-        /// <returns>The number of entities counted.</returns>
-        Task<int> CountAsync();
+        /// <param name="cancellationToken">The cancellation token to observe.</param>
+        /// <returns>An awaitable task representing the asynchronous operation. The task result will contain the number of entities counted.</returns>
+        Task<int> CountAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Async version of <see cref="Count(IQueryableFilter{TEntity})"/>
@@ -74,8 +75,9 @@ namespace Developist.Core.Persistence
         /// </para>
         /// </summary>
         /// <param name="filter">The criteria by which to filter the entities to include in the count.</param>
-        /// <returns>The number of entities counted.</returns>
-        Task<int> CountAsync(IQueryableFilter<TEntity> filter);
+        /// <param name="cancellationToken">The cancellation token to observe.</param>
+        /// <returns>An awaitable task representing the asynchronous operation. The task result will contain the number of entities counted.</returns>
+        Task<int> CountAsync(IQueryableFilter<TEntity> filter, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Async version of <see cref="Find(IQueryableFilter{TEntity})"/>

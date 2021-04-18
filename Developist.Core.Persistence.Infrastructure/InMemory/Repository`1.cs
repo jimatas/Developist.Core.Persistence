@@ -72,12 +72,12 @@ namespace Developist.Core.Persistence.InMemory
             return Find(filter, paginator);
         }
 
-        public virtual Task<int> CountAsync()
+        public virtual Task<int> CountAsync(CancellationToken cancellationToken = default)
         {
             return Task.FromResult(Count());
         }
 
-        public virtual Task<int> CountAsync(IQueryableFilter<TEntity> filter)
+        public virtual Task<int> CountAsync(IQueryableFilter<TEntity> filter, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(Count(filter));
         }
