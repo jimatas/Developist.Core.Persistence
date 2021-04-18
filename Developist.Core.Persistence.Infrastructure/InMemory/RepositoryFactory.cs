@@ -23,8 +23,16 @@ namespace Developist.Core.Persistence.InMemory
                 throw new ArgumentNullException(nameof(uow));
             }
 
-            var factory = ActivatorUtilities.CreateFactory(typeof(Repository<TEntity>), new[] { uow.GetType() });
+            var factory = ActivatorUtilities.CreateFactory(GetRepositoryImplementationType<TEntity>(), new[] { uow.GetType() });
             return (IRepository<TEntity>)factory(serviceProvider, new[] { uow });
         }
+
+        /// <summary>
+        /// Override this method in order to return a custom <see cref="IRepository{TEntity}"/> implementation type with which entities of the specified generic type are persisted.
+        /// </summary>
+        /// <typeparam name="TEntity">The entitity type for which to return a repository type.</typeparam>
+        /// <returns>A repository type for the specified entity type.</returns>
+        protected virtual Type GetRepositoryImplementationType<TEntity>() where TEntity : class, IEntity
+            => typeof(Repository<TEntity>);
     }
 }

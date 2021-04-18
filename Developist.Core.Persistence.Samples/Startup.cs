@@ -17,7 +17,7 @@ namespace Developist.Core.Persistence.Samples
         {
             services.AddLogging(config => config.AddConsole());
             services.AddHostedService<Program>();
-            services.AddPersistence();
+            services.AddPersistence(typeof(CustomRepositoryFactory));
         }
     }
 }
