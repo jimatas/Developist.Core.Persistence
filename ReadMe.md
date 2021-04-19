@@ -89,6 +89,7 @@ For impromptu queries, there's also some extension methods provided that wrap a 
 ```csharp
 var person = repository.Find(p => p.GivenName.Equals("Jim")).FirstOrDefault();
 ```
+To further assist with this, there's also a couple of extension methods provided for logically combining predicates using AND (`AndAlso`) and OR (`OrElse`).
 
 ### Persisting changes
 Any changes made to the entities that have been retrieved through the `IRepository<TEntity>` instance will be committed back to the database upon calling the `IUnitOfWork`'s `Complete` method, or its async counterpart, `CompleteAsync`.
