@@ -84,3 +84,7 @@ public class PeopleByName : IQueryableFilter<T>
 ```
 The `Find` method and its async counterpart, `FindAsync`, have numerous overloads that accept different parameters in order to customize the returned result. Among these overloads are those that accept an `IQueryablePaginator<T>`, to partition large result sets, and those that accept an `IEntityIncludePaths<TEntity>`, through which any related data to eager load can be specified.
 
+### Persisting changes
+Any changes made to the entities that have been retrieved through the `IRepository<TEntity>` instance will be committed back to the database upon calling the `IUnitOfWork`'s `Complete` method, or its async counterpart, `CompleteAsync`.
+
+New entities can be added using the `IRepository<TEntity>`'s `Add` method and existing entities can be removed using its `Remove` method. Again, these changes will only be persisted after calling the `IUnitOfWork`'s `Complete` or `CompleteAsync` method.
