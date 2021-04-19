@@ -24,11 +24,11 @@ public class MyDbContext : DbContext
    // other entity sets...
 }
 
-// And in the ConfigureServices method of your Startup.cs:
+// Register the DbContext in the ConfigureServices method of your Startup.cs:
 services.AddDbContext<MyDbContext>(options => options.UseSqlServer("MyDbConnectionString"));
 ```
 
-3. Register the `IUnitOfWork` and `IRepositoryFactory` dependencies with the built-in dependency injection container. You can do this by using the `AddPersistence<TDbContext>` extension method, which is provided for convenience, or by manually adding the dependencies through the `IServiceCollection`'s Add methods.
+3. Register the `IUnitOfWork` and `IRepositoryFactory` dependencies with the built-in dependency injection container. You can do this by using the `AddPersistence<TDbContext>` extension method, which is provided for convenience, or by manually adding the dependencies through the `IServiceCollection`'s `Add` methods.
 
 ```csharp
 // To use the Entity Framework Core version:
