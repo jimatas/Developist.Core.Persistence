@@ -98,3 +98,6 @@ New entities can be added using the `IRepository<TEntity>`'s `Add` method and ex
 
 ## Further examples
 For more examples, please see the unit tests and integration tests as well as the samples project inside the solution.
+
+## TODO
+Add support for transactions on the underlying `DbContext` for `IUnitOfWork<TDbContext>`. Either explicitly (muddying up the interface) or implicitly, by hooking into the `Completed` event and starting up a new one after each call to `Complete`.
