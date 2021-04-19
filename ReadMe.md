@@ -11,6 +11,7 @@ public class Person : EntityBase<int>
     public string GivenName { get; set; } 
     public string FamilyName { get; set; } 
     public DateTime BirthDate { get; set; } 
+    // Additional state and behavior...
 }
 ```
 
@@ -27,6 +28,7 @@ public class MyDbContext : DbContext
 3. Register the `IUnitOfWork` and `IRepositoryFactory` dependencies with the built-in dependency injection container. You can do this by using the `AddPersistence<TDbContext>` extension method, which is provided for convenience, or by manually adding the dependencies through the `IServiceCollection`'s Add methods.
 
 ```csharp
+// To use the Entity Framework Core version:
 services.AddPersistence<MyDbContext>();
 
 // Or to use the in-memory version:
