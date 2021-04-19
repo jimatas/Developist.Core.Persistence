@@ -34,3 +34,46 @@ services.AddPersistence();
 ```
 
 You can optionally specify a custom `IRepositoryFactory` type, which will be used instead of the default factory to create the repositories that are returned by the `IUnitOfWork`'s `Repository<TEntity>()` method. The other optional parameter specifies the lifetime to register the `IUnitOfWork` dependency with. The default lifetime is `ServiceLifetime.Scoped`.
+
+## Usage
+A typical usage scenario involves injecting the `IUnitOfWork` dependency through the consumer's constructor and subsequently querying for entities, and persisting them, using the `IRepository<TEntity>` instances that are obtained through the `IUnitOfWork`'s `Repository<TEntity>()` method as in the following example.
+
+```csharp
+public ConsumingService(IUnitOfWork uow) 
+{
+    this.uow = uow;
+}
+
+public void EnumeratePeopleWithName(string familyName) 
+{
+    IQueryableFilter<Person> byFamilyName = new PeopleByName { FamilyName = familyName };
+    
+    IEnumerable<Person> people = uow.Repository<Person>().Find(byFamilyName);
+}
+```
+
+The `IQueryableFilter<T>` interface is essentially an implementation of the Specification pattern. The interface exposes a single method, `Filter(IQueryable<T> sequence)`, which accepts an `IQueryable<T>` to which the filtering criteria are to be applied. How that is done is completely up to the implementor, but typically it will be something along the lines of.
+
+```csharp
+public class PeopleByName : IQueryableFilter<T>
+{
+    // The filtering criteria are simply properties.
+    public string GivenName { get; set; }
+    public string FamilyName { get; set; }
+    
+    public IQueryable<T> Filter(IQueryable<T> sequence)
+    {
+        if (GivenName is not null)
+        {
+            sequence = sequence.Where(p => p.GivenName.Equals(GivenName));
+        }
+        
+        if (FamilyName is not null)
+        {
+            sequence = sequence.Where(p => p.FamilyName.Equals(FamilyName));
+        }
+
+        return sequence;
+    }
+}
+```
