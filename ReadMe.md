@@ -41,7 +41,7 @@ services.AddPersistence();
 You can optionally specify a custom `IRepositoryFactory` type, which will be used instead of the default factory to create the repositories that are returned by the `IUnitOfWork`'s `Repository<TEntity>()` method. The other optional parameter specifies the lifetime to register the `IUnitOfWork` dependency with. The default lifetime is `ServiceLifetime.Scoped`.
 
 ## Usage
-A typical usage scenario involves injecting the `IUnitOfWork` dependency through the consumer's constructor and subsequently querying for entities, and persisting them, using the `IRepository<TEntity>` instances that are obtained through the `IUnitOfWork`'s `Repository<TEntity>()` method as in the following example.
+A typical usage scenario involves injecting the `IUnitOfWork` dependency through the consumer's constructor. You can subsequently query for entities, and persist them, using the `IRepository<TEntity>` instances that are obtained through the `IUnitOfWork`'s `Repository<TEntity>()` method as in the following example.
 
 ```csharp
 public ConsumingService(IUnitOfWork uow) 
@@ -95,4 +95,5 @@ Any changes made to the entities that have been retrieved through the `IReposito
 
 New entities can be added using the `IRepository<TEntity>`'s `Add` method and existing entities can be removed using its `Remove` method. Again, these changes will only be persisted after calling the `IUnitOfWork`'s `Complete` or `CompleteAsync` method.
 
+## Further examples
 For more examples, please see the unit tests and integration tests as well as the samples project inside the solution.
