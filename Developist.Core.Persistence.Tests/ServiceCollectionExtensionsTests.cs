@@ -11,13 +11,7 @@ namespace Developist.Core.Persistence.Tests
     [TestClass]
     public class ServiceCollectionExtensionsTests
     {
-        private IServiceCollection services;
-
-        [TestInitialize]
-        public void Initialize()
-        {
-            services = new ServiceCollection();
-        }
+        private IServiceCollection services = new ServiceCollection();
 
         #region AddPersistence tests
         [TestMethod]
@@ -43,6 +37,19 @@ namespace Developist.Core.Persistence.Tests
 
             // Act
             void action() => services.AddPersistence(invalidRepositoryFactoryType);
+
+            // Assert
+            Assert.ThrowsException<ArgumentException>(action);
+        }
+
+        [TestMethod]
+        public void AddPersistence_GivenRepositoryFactoryInterfaceType_ThrowsArgumentException()
+        {
+            // Arrange
+            var repositoryFactoryInterfaceType = typeof(IRepositoryFactory);
+
+            // Act
+            void action() => services.AddPersistence(repositoryFactoryInterfaceType);
 
             // Assert
             Assert.ThrowsException<ArgumentException>(action);
@@ -114,6 +121,19 @@ namespace Developist.Core.Persistence.Tests
 
             // Act
             void action() => services.AddPersistence<SampleDbContext>(invalidRepositoryFactoryType);
+
+            // Assert
+            Assert.ThrowsException<ArgumentException>(action);
+        }
+
+        [TestMethod]
+        public void AddPersistenceOfTDbContext_GivenRepositoryFactoryInterfaceType_ThrowsArgumentException()
+        {
+            // Arrange
+            var repositoryFactoryInterfaceType = typeof(EntityFramework.IRepositoryFactory<SampleDbContext>);
+
+            // Act
+            void action() => services.AddPersistence<SampleDbContext>(repositoryFactoryInterfaceType);
 
             // Assert
             Assert.ThrowsException<ArgumentException>(action);
