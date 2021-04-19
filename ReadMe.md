@@ -23,6 +23,9 @@ public class MyDbContext : DbContext
    public DbSet<Person> People { get; set; }
    // other entity sets...
 }
+
+// In ConfigureServices:
+services.AddDbContext<MyDbContext>(options => options.UseSqlServer("MyDbConnectionString"));
 ```
 
 3. Register the `IUnitOfWork` and `IRepositoryFactory` dependencies with the built-in dependency injection container. You can do this by using the `AddPersistence<TDbContext>` extension method, which is provided for convenience, or by manually adding the dependencies through the `IServiceCollection`'s Add methods.
