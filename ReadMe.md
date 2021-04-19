@@ -77,5 +77,5 @@ public class PeopleByName : IQueryableFilter<T>
     }
 }
 ```
-The `Find` method and its async counterpart, `FindAsync`, have numerous overloads that accept different arguments in order to customize the returned result. Among these overloads are those that accept an `IQueryablePaginator<T>`, to partition large result sets, and those that accept an `IEntityIncludePaths<TEntity>`, through which any related data to eager load can be specified.
+The `Find` method and its async counterpart, `FindAsync`, have numerous overloads that accept different parameters in order to customize the returned result. Among these overloads are those that accept an `IQueryablePaginator<T>`, to partition large result sets, and those that accept an `IEntityIncludePaths<TEntity>`, through which any related data to eager load can be specified.
 
