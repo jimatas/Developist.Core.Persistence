@@ -84,6 +84,12 @@ public class PeopleByName : IQueryableFilter<T>
 ```
 The `Find` method and its async counterpart, `FindAsync`, have numerous overloads that accept different parameters in order to customize the returned result. Among these overloads are those that accept an `IQueryablePaginator<T>`, to partition large result sets, and those that accept an `IEntityIncludePaths<TEntity>`, through which any related data to eager load can be specified.
 
+For impromptu queries, there's also some extension methods provided that wrap a predicate expression in an `IQueryableFilter<T>` instance such as in the following example.
+
+```csharp
+var person = repository.Find(p => p.GivenName.Equals("Jim")).FirstOrDefault();
+```
+
 ### Persisting changes
 Any changes made to the entities that have been retrieved through the `IRepository<TEntity>` instance will be committed back to the database upon calling the `IUnitOfWork`'s `Complete` method, or its async counterpart, `CompleteAsync`.
 
