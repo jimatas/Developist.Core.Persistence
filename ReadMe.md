@@ -94,3 +94,5 @@ var person = repository.Find(p => p.GivenName.Equals("Jim")).FirstOrDefault();
 Any changes made to the entities that have been retrieved through the `IRepository<TEntity>` instance will be committed back to the database upon calling the `IUnitOfWork`'s `Complete` method, or its async counterpart, `CompleteAsync`.
 
 New entities can be added using the `IRepository<TEntity>`'s `Add` method and existing entities can be removed using its `Remove` method. Again, these changes will only be persisted after calling the `IUnitOfWork`'s `Complete` or `CompleteAsync` method.
+
+For more examples, please see the unit tests and integration tests as well as the samples project inside the solution.
