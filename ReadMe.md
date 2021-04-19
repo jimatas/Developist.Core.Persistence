@@ -24,7 +24,7 @@ public class MyDbContext : DbContext
    // other entity sets...
 }
 
-// In ConfigureServices:
+// And in ConfigureServices in your Startup:
 services.AddDbContext<MyDbContext>(options => options.UseSqlServer("MyDbConnectionString"));
 ```
 
