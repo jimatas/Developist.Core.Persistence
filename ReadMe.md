@@ -24,11 +24,11 @@ public class MyDbContext : DbContext
    // other entity sets...
 }
 
-// And in the ConfigureServices method of your Startup.cs:
+// Register the DbContext in the ConfigureServices method of your Startup.cs:
 services.AddDbContext<MyDbContext>(options => options.UseSqlServer("MyDbConnectionString"));
 ```
 
-3. Register the `IUnitOfWork` and `IRepositoryFactory` dependencies with the built-in dependency injection container. You can do this by using the `AddPersistence<TDbContext>` extension method, which is provided for convenience, or by manually adding the dependencies through the `IServiceCollection`'s Add methods.
+3. Register the `IUnitOfWork` and `IRepositoryFactory` dependencies with the built-in dependency injection container. You can do this by using the `AddPersistence<TDbContext>` extension method, which is provided for convenience, or by manually adding the dependencies through the `IServiceCollection`'s `Add` methods.
 
 ```csharp
 // To use the Entity Framework Core version:
@@ -41,7 +41,7 @@ services.AddPersistence();
 You can optionally specify a custom `IRepositoryFactory` type, which will be used instead of the default factory to create the repositories that are returned by the `IUnitOfWork`'s `Repository<TEntity>()` method. The other optional parameter specifies the lifetime to register the `IUnitOfWork` dependency with. The default lifetime is `ServiceLifetime.Scoped`.
 
 ## Usage
-A typical usage scenario involves injecting the `IUnitOfWork` dependency through the consumer's constructor. You can subsequently query for entities, and persist them, using the `IRepository<TEntity>` instances that are obtained through the `IUnitOfWork`'s `Repository<TEntity>()` method as in the following example.
+A typical usage scenario involves injecting the `IUnitOfWork` dependency through the consumer's constructor. You can subsequently query for entities and persist them using the `IRepository<TEntity>` instances that are obtained through the `IUnitOfWork`'s `Repository<TEntity>()` method as in the following example.
 
 ```csharp
 public ConsumingService(IUnitOfWork uow) 
@@ -99,5 +99,5 @@ New entities can be added using the `IRepository<TEntity>`'s `Add` method and ex
 ## Further examples
 For more examples, please see the unit tests and integration tests as well as the samples project inside the solution.
 
-## TODO
+## // TODO:
 Add support for transactions on the underlying `DbContext` for `IUnitOfWork<TDbContext>`. Either explicitly (muddying up the interface) or implicitly, by hooking into the `Completed` event and starting up a new one after each call to `Complete`.
