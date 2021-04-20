@@ -1,6 +1,6 @@
 # Developist.Core.Persistence
 Lightweight persistence library providing Entity Framework Core and in-memory (through HashSet) implementations of the Repository and Unit of Work patterns.  
-Targets .NET 5.0
+Targets .NET 5.0.
 
 ## Quick start
 1. Define your entities by implementing either the `IEntity` or `IEntity<TIdentifier>` interface, or alternatively, by inheriting from the `EntityBase<TIdentifier>` base class.
@@ -100,7 +100,7 @@ public class Author : EntityBase<Guid>
 }
 ```
 
-The following query will then retrieve a `Book` object by its title using a predicate expression. The book that is returned will have its `Author` navigation property loaded, as well as all the items in the `Books` navigation property of that `Author`.
+The following query will then retrieve a `Book` entity by its title using a predicate expression. The book that is returned will have its `Author` navigation property loaded, as well as all the items in the `Books` navigation property of that `Author`.
 
 ```csharp
 var includePaths = EntityIncludePaths.ForEntity<Book>()
