@@ -1,6 +1,5 @@
 # Developist.Core.Persistence
-Lightweight persistence library providing Entity Framework Core and in-memory (through HashSet) implementations of the Repository and Unit of Work patterns.  
-Targets .NET 5.0.
+Lightweight persistence library providing Entity Framework Core and in-memory (through HashSet) implementations of the Repository and Unit of Work patterns.
 
 ## Quick start
 1. Define your entities by implementing either the `IEntity` or `IEntity<TIdentifier>` interface, or alternatively, by inheriting from the `EntityBase<TIdentifier>` base class.
