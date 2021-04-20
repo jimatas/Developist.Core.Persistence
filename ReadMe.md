@@ -101,17 +101,15 @@ public class Author : EntityBase<Guid>
 The following query will then retrieve a `Book` object by its title using a predicate expression. The book that is returned will have its `Author` navigation property loaded, as well as all the items in the `Books` navigation property of that `Author`.
 
 ```csharp
-var includePaths = EntityIncludePaths.ForEntity<Book>().Include(b => b.Author).ThenInclude(a => a.Books);
+var includePaths = EntityIncludePaths.ForEntity<Book>()
+    .Include(b => b.Author)
+        .ThenInclude(a => a.Books);
+
 var book = repository.Find(b => b.Title.Equals("The Old Man and the Sea"), includePaths);
 var allBooksByHemingway = book.Author.Books;
 ```
 
-For impromptu queries, there's also some extension methods provided that wrap a predicate expression in an `IQueryableFilter<T>` instance such as in the following example.
-
-```csharp
-var person = repository.Find(p => p.GivenName.Equals("Jim")).FirstOrDefault();
-```
-To further assist with this, there's also a couple of extension methods provided for logically combining predicates using AND (`AndAlso`) and OR (`OrElse`).
+For impromptu queries, such as the one above, there's some extension methods provided that wrap a predicate expression in an `IQueryableFilter<T>` instance. To further assist with this, there's also a couple of extension methods provided for logically combining predicates using AND (`AndAlso`) and OR (`OrElse`).
 
 ### Persisting changes
 Any changes made to the entities that have been retrieved through the `IRepository<TEntity>` instance will be committed back to the database upon calling the `IUnitOfWork`'s `Complete` method, or its async counterpart, `CompleteAsync`.
