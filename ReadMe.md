@@ -82,7 +82,29 @@ public class PeopleByName : IQueryableFilter<T>
     }
 }
 ```
-The `Find` method and its async counterpart, `FindAsync`, have numerous overloads that accept different parameters in order to customize the returned result. Among these overloads are those that accept an `IQueryablePaginator<T>`, to partition large result sets, and those that accept an `IEntityIncludePaths<TEntity>`, through which any related data to eager load can be specified.
+The `Find` method and its async counterpart, `FindAsync`, have numerous overloads that accept different parameters in order to customize the returned result. Among these overloads are those that accept an `IQueryablePaginator<T>`, to partition large result sets, and those that accept an `IEntityIncludePaths<TEntity>`, through which any related data to eager load can be specified. For example, suppose the following simplified model.
+
+```csharp
+public class Book : EntityBase<Guid>
+{
+    public string Title { get; set; }
+    public Author Author { get; set; }
+}
+
+public class Author : EntityBase<Guid>
+{
+    public string Name { get; set; }
+    public IEnumerable<Book> Books { get; set; }
+}
+```
+
+The following query will then retrieve a `Book` object by its title using a predicate expression. The book that is returned will have its `Author` navigation property loaded, as well as all the items in the `Books` navigation property of that `Author`.
+
+```csharp
+var includePaths = EntityIncludePaths.ForEntity<Book>().Include(b => b.Author).ThenInclude(a => a.Books);
+var book = repository.Find(b => b.Title.Equals("The Old Man and the Sea"), includePaths);
+var allBooksByHemingway = book.Author.Books;
+```
 
 For impromptu queries, there's also some extension methods provided that wrap a predicate expression in an `IQueryableFilter<T>` instance such as in the following example.
 
