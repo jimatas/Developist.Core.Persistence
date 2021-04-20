@@ -107,7 +107,7 @@ var includePaths = EntityIncludePaths.ForEntity<Book>()
     .Include(b => b.Author)
         .ThenInclude(a => a.Books);
 
-var book = repository.Find(b => b.Title.Equals("The Old Man and the Sea"), includePaths);
+var book = repository.Find(b => b.Title.Equals("The Old Man and the Sea"), includePaths).Single();
 var allBooksByHemingway = book.Author.Books;
 ```
 
