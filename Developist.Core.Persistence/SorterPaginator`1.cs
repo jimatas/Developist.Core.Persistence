@@ -127,7 +127,7 @@ namespace Developist.Core.Persistence
         /// </summary>
         public bool SortDescending { get; set; }
 
-        public IOrderedQueryable<T> Paginate(IQueryable<T> sequence)
+        public IQueryable<T> Paginate(IQueryable<T> sequence)
         {
             ItemCount = sequence.Count();
 
@@ -142,12 +142,13 @@ namespace Developist.Core.Persistence
                     sequence = sequence.OrderBy(SortExpression);
                 }
 
+                // Skip will thrown an exception in Linq-to-entities if the sequence is unsorted.
                 sequence = sequence.Skip((PageNumber - 1) * PageSize);
             }
 
             sequence = sequence.Take(PageSize);
 
-            return (IOrderedQueryable<T>)sequence;
+            return sequence;
         }
 
         private static Expression<Func<T, object>> GetPropertySelector(string propertyName)

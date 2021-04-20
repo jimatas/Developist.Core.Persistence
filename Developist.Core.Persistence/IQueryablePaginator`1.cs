@@ -16,6 +16,6 @@ namespace Developist.Core.Persistence
         /// </summary>
         /// <param name="sequence">The sequence to paginate.</param>
         /// <returns>A subsequence of the elements.</returns>
-        IOrderedQueryable<T> Paginate(IQueryable<T> sequence);
+        IQueryable<T> Paginate(IQueryable<T> sequence);
     }
 }
