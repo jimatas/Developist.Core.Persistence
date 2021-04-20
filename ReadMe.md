@@ -20,10 +20,10 @@ public class Person : EntityBase<int>
 public class MyDbContext : DbContext
 {
    public DbSet<Person> People { get; set; }
-   // other entity sets...
+   // Other entity sets...
 }
 
-// Register the DbContext in the ConfigureServices method of your Startup.cs:
+// In the ConfigureServices method of your Startup.cs:
 services.AddDbContext<MyDbContext>(options => options.UseSqlServer("MyDbConnectionString"));
 ```
 
