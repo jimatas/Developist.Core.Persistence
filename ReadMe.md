@@ -122,3 +122,4 @@ For more examples, please see the unit tests and integration tests as well as th
 
 ## `// TODO:`
 Add support for transactions on the underlying `DbContext` for `IUnitOfWork<TDbContext>`. Either explicitly (muddying up the interface) or implicitly, by hooking into the `Completed` event and starting up a new one after each call to `Complete`.
+Possibly drop the `TEntity : IEntity` constraint.
