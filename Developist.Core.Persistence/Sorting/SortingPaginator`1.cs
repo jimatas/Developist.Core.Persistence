@@ -87,7 +87,7 @@ namespace Developist.Core.Persistence
         /// <summary>
         /// The properties to sort by including their sort directions.
         /// </summary>
-        public ICollection<SortProperty<T>> SortProperties { get; } = new HashSet<SortProperty<T>>();
+        public ICollection<SortProperty<T>> SortProperties { get; } = new List<SortProperty<T>>();
 
         public IQueryable<T> Paginate(IQueryable<T> sequence)
         {

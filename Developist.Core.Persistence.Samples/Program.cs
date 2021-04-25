@@ -32,7 +32,7 @@ namespace Developist.Core.Persistence.Samples
 
             var person = uow.Repository<Person>().Find(p => p.FamilyName.Contains("Welsh")).SingleOrDefault();
 
-            var sortingPaginator = new SortingPaginator<Person>(1, 3).SortedBy("FamilyName").SortedBy("Contact.HomeAddress.State", SortDirection.Descending);
+            var sortingPaginator = new SortingPaginator<Person>(1, 3).SortedBy("FamilyName").SortedBy("Contact.HomeAddress.State", SortDirection.Descending).SortedBy(p => p.Contact.Email);
             var result = uow.Repository<Person>().Find(p => true, sortingPaginator);
         }
     }
