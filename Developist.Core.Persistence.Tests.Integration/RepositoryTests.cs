@@ -157,12 +157,7 @@ namespace Developist.Core.Persistence.Tests
             uow.People().AddRange(people);
             uow.Complete();
 
-            IQueryablePaginator<Person> paginator = new SorterPaginator<Person>
-            {
-                SortProperty = nameof(Person.FamilyName),
-                PageNumber = 1,
-                PageSize = 2
-            };
+            IQueryablePaginator<Person> paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 2).SortedBy(nameof(Person.FamilyName));
 
             // Act
             var result = uow.People().Find(p => p.GivenName.Contains("ll")); // 3
