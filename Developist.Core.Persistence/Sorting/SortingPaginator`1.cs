@@ -85,7 +85,7 @@ namespace Developist.Core.Persistence
         }
 
         /// <summary>
-        /// The properties to sort the result set by, including the sort directions.
+        /// The properties to sort by, including their sort directions.
         /// </summary>
         public ICollection<SortProperty<T>> SortProperties { get; } = new List<SortProperty<T>>();
 
