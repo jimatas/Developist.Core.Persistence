@@ -59,7 +59,7 @@ namespace Developist.Core.Persistence
 
             foreach (var nestedPropertyName in name.Split('.'))
             {
-                var property = type.GetProperty(nestedPropertyName);
+                var property = type.GetPublicProperty(nestedPropertyName);
                 if (property is null)
                 {
                     throw new ArgumentException($"No property '{nestedPropertyName}' on type '{type.Name}'.", nameof(name));
