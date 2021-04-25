@@ -30,7 +30,7 @@ namespace Developist.Core.Persistence
         #endregion
 
         /// <summary>
-        /// The 1-based page number.
+        /// The page number. The first page is 1, the second is 2, etc.
         /// </summary>
         public int PageNumber
         {
@@ -85,7 +85,7 @@ namespace Developist.Core.Persistence
         }
 
         /// <summary>
-        /// The properties to sort by including their sort directions.
+        /// The properties to sort the result set by, including the sort directions.
         /// </summary>
         public ICollection<SortProperty<T>> SortProperties { get; } = new List<SortProperty<T>>();
 

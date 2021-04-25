@@ -12,7 +12,7 @@ namespace Developist.Core.Persistence.Tests
     public class SorterPaginatorTests
     {
         [TestMethod]
-        public void NewInstance_ByDefault_SortdAscending()
+        public void NewInstance_ByDefault_SortsAscending()
         {
             // Arrange
             var paginator = new SorterPaginator<object>();
