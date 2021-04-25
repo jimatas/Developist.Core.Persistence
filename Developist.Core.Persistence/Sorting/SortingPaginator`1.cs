@@ -39,7 +39,7 @@ namespace Developist.Core.Persistence
             {
                 if (value < 1)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(PageNumber), "Value cannot be less than one.");
+                    throw new ArgumentOutOfRangeException(nameof(PageNumber), "Value cannot be negative or zero.");
                 }
                 pageNumber = value;
             }
@@ -55,7 +55,7 @@ namespace Developist.Core.Persistence
             {
                 if (value < 1)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(PageSize), "Value cannot be less than one.");
+                    throw new ArgumentOutOfRangeException(nameof(PageSize), "Value cannot be negative or zero.");
                 }
                 pageSize = value;
             }
