@@ -30,7 +30,7 @@ namespace Developist.Core.Persistence.Samples
             new DataSeeder().Seed(uow.Repository<Person>());
             await uow.CompleteAsync(cancellationToken).ConfigureAwait(true);
 
-            var person = uow.Repository<Person>().Find(p => p.FamilyName.Contains("Welsh")).SingleOrDefault();
+            var person = uow.Repository<Person>().Find(new FilterByName { FamilyName = "Welsh" }).SingleOrDefault();
 
             var sortingPaginator = new SortingPaginator<Person>(1, 3).SortedBy("FamilyName").SortedBy("Contact.HomeAddress.State", SortDirection.Descending).SortedBy(p => p.Contact.Email);
             var result = uow.Repository<Person>().Find(p => true, sortingPaginator);
