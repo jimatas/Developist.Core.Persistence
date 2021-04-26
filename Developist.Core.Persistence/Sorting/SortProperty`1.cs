@@ -8,7 +8,7 @@ using LinqExpression = System.Linq.Expressions.Expression;
 namespace Developist.Core.Persistence
 {
     /// <summary>
-    /// Specifies the property to sort by and in which direction.
+    /// Specifies a property to sort by and in which direction.
     /// </summary>
     /// <typeparam name="T">The type of the object whose property to sort by.</typeparam>
     public class SortProperty<T>
