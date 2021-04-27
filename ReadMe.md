@@ -50,7 +50,7 @@ public ConsumingService(IUnitOfWork uow)
 
 public void EnumeratePeopleWithName(string familyName) 
 {
-    IQueryableFilter<Person> byFamilyName = new PeopleByName { FamilyName = familyName };
+    IQueryableFilter<Person> byFamilyName = new FilterByName { FamilyName = familyName };
     
     IEnumerable<Person> people = uow.Repository<Person>().Find(byFamilyName);
 }
@@ -59,13 +59,13 @@ public void EnumeratePeopleWithName(string familyName)
 The `IQueryableFilter<T>` interface is essentially an implementation of the Specification pattern. The interface exposes a single method, `Filter(IQueryable<T> sequence)`, which accepts an `IQueryable<T>` to which the filtering criteria are to be applied. How that is done is completely up to the implementor, but typically it will be something along the lines of.
 
 ```csharp
-public class PeopleByName : IQueryableFilter<T>
+public class FilterByName : IQueryableFilter<Person>
 {
     // The filtering criteria are simply properties.
     public string GivenName { get; set; }
     public string FamilyName { get; set; }
     
-    public IQueryable<T> Filter(IQueryable<T> sequence)
+    public IQueryable<Person> Filter(IQueryable<Person> sequence)
     {
         if (GivenName is not null)
         {
