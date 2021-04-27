@@ -28,6 +28,8 @@ namespace Developist.Core.Persistence
         /// Completes the unit of work by persisting all changes made inside of it to the data store.
         /// </para>
         /// </summary>
+        /// <param name="cancellationToken">The cancellation token to observe.</param>
+        /// <returns>An awaitable task representing the asynchronous operation.</returns>
         Task CompleteAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
