@@ -24,7 +24,7 @@ namespace Developist.Core.Persistence.Tests
             services.AddDbContext<SampleDbContext>(
                 builder => builder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=DevelopistCorePersistence_TestDb;Trusted_Connection=true;MultipleActiveResultSets=true"),
                 ServiceLifetime.Scoped);
-            services.AddPersistence<SampleDbContext>();
+            services.AddPersistence<SampleDbContext>(lifetime: ServiceLifetime.Transient);
 
             var serviceProvider = services.BuildServiceProvider();
 
@@ -207,12 +207,26 @@ namespace Developist.Core.Persistence.Tests
         }
 
         [TestMethod]
-        public void StartNew_MultipleCalls_ReturnsRegisteredInstance()
+        public void StartNew_MultipleCallsWhileRegisteredAsTransient_ReturnsDistinctInstances()
         {
             using var uow1 = uowManager.StartNew();
             using var uow2 = uowManager.StartNew();
 
-            Assert.AreEqual(uow1, uow2);
+            Assert.AreNotEqual(uow1, uow2);
+
+            uow1.People().Add(new()
+            {
+                GivenName = "Glenn",
+                FamilyName = "Hensley"
+            });
+
+            var result = uow2.People().Find(new PersonByNameFilter { FamilyName = "Hensley" });
+            Assert.IsFalse(result.Any());
+
+            uow1.Complete();
+            result = uow2.People().Find(new PersonByNameFilter { FamilyName = "Hensley" });
+
+            Assert.IsTrue(result.Any());
         }
     }
 }
