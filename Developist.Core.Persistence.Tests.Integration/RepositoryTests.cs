@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Developist.Core.Persistence.Tests
 {
@@ -202,6 +203,36 @@ namespace Developist.Core.Persistence.Tests
             Assert.AreEqual(people.Length, unfilteredResult);
             Assert.AreEqual(1, filteredResult);
             Assert.AreEqual(2, filteredByPredicateResult);
+        }
+
+        [TestMethod]
+        public async Task Add_WithExplicitTransaction_Commits()
+        {
+            await uow.BeginTransactionAsync();
+
+            uow.People().Add(new()
+            {
+                GivenName = "Glenn",
+                FamilyName = "Hensley"
+            });
+
+            var result = await uow.People().FindAsync(new PersonByNameFilter
+            {
+                GivenName = "Glenn",
+                FamilyName = "Hensley"
+            });
+
+            Assert.IsFalse(result.Any());
+
+            await uow.CompleteAsync();
+
+            result = await uow.People().FindAsync(new PersonByNameFilter
+            {
+                GivenName = "Glenn",
+                FamilyName = "Hensley"
+            });
+
+            Assert.IsTrue(result.Any());
         }
     }
 }

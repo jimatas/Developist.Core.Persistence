@@ -15,6 +15,7 @@ namespace Developist.Core.Persistence.EntityFramework
 {
     public class UnitOfWork<TDbContext> : DisposableBase, IUnitOfWork<TDbContext> where TDbContext : DbContext
     {
+        private readonly SemaphoreLocker semaphore = new();
         private readonly ConcurrentDictionary<Type, RepositoryWrapper> repositories = new();
         private readonly IRepositoryFactory<TDbContext> repositoryFactory;
         private readonly ILogger logger;
@@ -76,62 +77,78 @@ namespace Developist.Core.Persistence.EntityFramework
         #region Transaction management
         public virtual void BeginTransaction()
         {
-            if (dbContextTransaction is not null)
+            semaphore.Lock(() =>
             {
-                throw new InvalidOperationException("An active transaction is already in progress. Nested transactions are not supported.");
-            }
-
-            dbContextTransaction = DbContext.Database.BeginTransaction();
+                if (dbContextTransaction is not null)
+                {
+                    throw new InvalidOperationException("An active transaction is already in progress. Nested transactions are not supported.");
+                }
+                dbContextTransaction = DbContext.Database.BeginTransaction();
+            });
         }
 
         public async virtual Task BeginTransactionAsync(CancellationToken cancellationToken = default)
         {
-            if (dbContextTransaction is not null)
+            await semaphore.LockAsync(async () =>
             {
-                throw new InvalidOperationException("An active transaction is already in progress. Nested transactions are not supported.");
-            }
-
-            dbContextTransaction = await DbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+                if (dbContextTransaction is not null)
+                {
+                    throw new InvalidOperationException("An active transaction is already in progress. Nested transactions are not supported.");
+                }
+                dbContextTransaction = await DbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+            });
         }
 
         protected void CommitTransaction()
         {
-            if (dbContextTransaction is not null)
+            semaphore.Lock(() =>
             {
-                dbContextTransaction.Commit();
-                dbContextTransaction.Dispose();
-                dbContextTransaction = null;
-            }
+                if (dbContextTransaction is not null)
+                {
+                    dbContextTransaction.Commit();
+                    dbContextTransaction.Dispose();
+                    dbContextTransaction = null;
+                }
+            });
         }
 
         protected void RollbackTransaction()
         {
-            if (dbContextTransaction is not null)
+            semaphore.Lock(() =>
             {
-                dbContextTransaction.Rollback();
-                dbContextTransaction.Dispose();
-                dbContextTransaction = null;
-            }
+                if (dbContextTransaction is not null)
+                {
+                    dbContextTransaction.Rollback();
+                    dbContextTransaction.Dispose();
+                    dbContextTransaction = null;
+                }
+            });
         }
 
         protected async Task CommitTransactionAsync(CancellationToken cancellationToken)
         {
-            if (dbContextTransaction is not null)
+            await semaphore.LockAsync(async () =>
             {
-                await dbContextTransaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-                await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
-                dbContextTransaction = null;
-            }
+                if (dbContextTransaction is not null)
+                {
+                    await dbContextTransaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                    await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
+                    dbContextTransaction = null;
+                }
+            });
         }
 
         protected async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
         {
-            if (dbContextTransaction is not null)
+            await semaphore.LockAsync(async () =>
             {
-                await dbContextTransaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
-                dbContextTransaction = null;
-            }
+                if (dbContextTransaction is not null)
+                {
+                    await dbContextTransaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
+                    await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
+                    dbContextTransaction = null;
+                }
+            });
         }
         #endregion
 
