@@ -72,5 +72,11 @@ namespace Developist.Core.Persistence.EntityFramework
             repositories.Clear();
             base.ReleaseManagedResources();
         }
+
+        protected async override ValueTask ReleaseManagedResourcesAsync()
+        {
+            repositories.Clear();
+            await base.ReleaseManagedResourcesAsync().ConfigureAwait(false);
+        }
     }
 }
