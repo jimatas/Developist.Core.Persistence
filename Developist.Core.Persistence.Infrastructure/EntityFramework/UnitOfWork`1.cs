@@ -73,6 +73,7 @@ namespace Developist.Core.Persistence.EntityFramework
             return wrapper.Repository<TEntity>();
         }
 
+        #region Transaction management
         public virtual void BeginTransaction()
         {
             if (dbContextTransaction is not null)
@@ -93,7 +94,6 @@ namespace Developist.Core.Persistence.EntityFramework
             dbContextTransaction = await DbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        #region Transaction management
         protected void CommitTransaction()
         {
             if (dbContextTransaction is not null)
