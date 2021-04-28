@@ -70,17 +70,7 @@ namespace Developist.Core.Persistence.EntityFramework
         protected override void ReleaseManagedResources()
         {
             repositories.Clear();
-            DbContext.Dispose();
-
             base.ReleaseManagedResources();
-        }
-
-        protected async override ValueTask ReleaseManagedResourcesAsync()
-        {
-            repositories.Clear();
-            await DbContext.DisposeAsync().ConfigureAwait(false);
-            
-            await base.ReleaseManagedResourcesAsync().ConfigureAwait(false);
         }
     }
 }
