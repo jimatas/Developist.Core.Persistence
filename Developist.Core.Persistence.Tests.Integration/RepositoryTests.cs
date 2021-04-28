@@ -13,6 +13,7 @@ namespace Developist.Core.Persistence.Tests
     [TestClass]
     public class RepositoryTests
     {
+        private IUnitOfWorkManager uowManager;
         private IUnitOfWork uow;
 
         [TestInitialize]
@@ -31,6 +32,7 @@ namespace Developist.Core.Persistence.Tests
             dbContext.Database.EnsureCreated();
 
             uow = serviceProvider.GetRequiredService<IUnitOfWork>();
+            uowManager = serviceProvider.GetRequiredService<IUnitOfWorkManager>();
         }
 
         [TestCleanup]
@@ -202,6 +204,15 @@ namespace Developist.Core.Persistence.Tests
             Assert.AreEqual(people.Length, unfilteredResult);
             Assert.AreEqual(1, filteredResult);
             Assert.AreEqual(2, filteredByPredicateResult);
+        }
+
+        [TestMethod]
+        public void StartNew_MultipleCalls_ReturnsRegisteredInstance()
+        {
+            using var uow1 = uowManager.StartNew();
+            using var uow2 = uowManager.StartNew();
+
+            Assert.AreEqual(uow1, uow2);
         }
     }
 }

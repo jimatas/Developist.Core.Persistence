@@ -36,8 +36,9 @@ namespace Developist.Core.Persistence.EntityFramework
         {
             try
             {
-                BeginTransaction();
                 DbContext.ValidateChangedEntities();
+                
+                BeginTransaction();
                 DbContext.SaveChanges();
                 CommitTransaction();
             }
@@ -55,8 +56,9 @@ namespace Developist.Core.Persistence.EntityFramework
         {
             try
             {
-                await BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
                 DbContext.ValidateChangedEntities();
+
+                await BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
                 await DbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                 await CommitTransactionAsync(cancellationToken).ConfigureAwait(false);
             }
@@ -81,20 +83,14 @@ namespace Developist.Core.Persistence.EntityFramework
         protected override void ReleaseManagedResources()
         {
             repositories.Clear();
-
             RollbackTransaction();
-            DbContext.Dispose();
-
             base.ReleaseManagedResources();
         }
 
         protected async override ValueTask ReleaseManagedResourcesAsync()
         {
             repositories.Clear();
-
             await RollbackTransactionAsync().ConfigureAwait(false);
-            await DbContext.DisposeAsync().ConfigureAwait(false);
-            
             await base.ReleaseManagedResourcesAsync().ConfigureAwait(false);
         }
 
