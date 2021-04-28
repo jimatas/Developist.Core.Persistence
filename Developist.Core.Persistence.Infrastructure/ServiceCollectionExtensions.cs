@@ -21,7 +21,6 @@ namespace Developist.Core.Persistence
         {
             services.Add(new ServiceDescriptor(typeof(IRepositoryFactory), EnsureRepositoryFactoryType() ?? typeof(InMemory.RepositoryFactory), lifetime));
             services.Add(new ServiceDescriptor(typeof(IUnitOfWork), typeof(InMemory.UnitOfWork), lifetime));
-            services.Add(new ServiceDescriptor(typeof(IUnitOfWorkManager), typeof(UnitOfWorkManager), lifetime));
             return services;
 
             Type EnsureRepositoryFactoryType()
@@ -48,7 +47,6 @@ namespace Developist.Core.Persistence
             services.Add(new ServiceDescriptor(typeof(IRepositoryFactory), provider => provider.GetService<EntityFramework.IRepositoryFactory<TDbContext>>(), lifetime));
             services.Add(new ServiceDescriptor(typeof(EntityFramework.IUnitOfWork<TDbContext>), typeof(EntityFramework.UnitOfWork<TDbContext>), lifetime));
             services.Add(new ServiceDescriptor(typeof(IUnitOfWork), provider => provider.GetService<EntityFramework.IUnitOfWork<TDbContext>>(), lifetime));
-            services.Add(new ServiceDescriptor(typeof(IUnitOfWorkManager), typeof(EntityFramework.UnitOfWorkManager<TDbContext>), lifetime));
             return services;
 
             Type EnsureRepositoryFactoryType()

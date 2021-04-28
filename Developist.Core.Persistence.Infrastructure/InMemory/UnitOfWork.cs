@@ -37,6 +37,15 @@ namespace Developist.Core.Persistence.InMemory
             return wrapper.Repository<TEntity>();
         }
 
+        public virtual void BeginTransaction()
+        {
+        }
+
+        public virtual Task BeginTransactionAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
+        }
+
         protected override void ReleaseManagedResources()
         {
             repositories.Clear();

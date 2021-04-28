@@ -18,7 +18,6 @@ namespace Developist.Core.Persistence.EntityFramework
         private readonly ConcurrentDictionary<Type, RepositoryWrapper> repositories = new();
         private readonly IRepositoryFactory<TDbContext> repositoryFactory;
         private readonly ILogger logger;
-        private bool isTransactional;
         private IDbContextTransaction dbContextTransaction;
 
         public UnitOfWork(TDbContext dbContext, IRepositoryFactory<TDbContext> repositoryFactory, ILogger<UnitOfWork<TDbContext>> logger = null)
@@ -37,8 +36,6 @@ namespace Developist.Core.Persistence.EntityFramework
             try
             {
                 DbContext.ValidateChangedEntities();
-                
-                BeginTransaction();
                 DbContext.SaveChanges();
                 CommitTransaction();
             }
@@ -57,8 +54,6 @@ namespace Developist.Core.Persistence.EntityFramework
             try
             {
                 DbContext.ValidateChangedEntities();
-
-                await BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
                 await DbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                 await CommitTransactionAsync(cancellationToken).ConfigureAwait(false);
             }
@@ -78,7 +73,67 @@ namespace Developist.Core.Persistence.EntityFramework
             return wrapper.Repository<TEntity>();
         }
 
-        public void EnsureTransactional() => isTransactional = true;
+        public virtual void BeginTransaction()
+        {
+            if (dbContextTransaction is not null)
+            {
+                throw new InvalidOperationException("An active transaction is already in progress. Nested transactions are not supported.");
+            }
+
+            dbContextTransaction = DbContext.Database.BeginTransaction();
+        }
+
+        public async virtual Task BeginTransactionAsync(CancellationToken cancellationToken = default)
+        {
+            if (dbContextTransaction is not null)
+            {
+                throw new InvalidOperationException("An active transaction is already in progress. Nested transactions are not supported.");
+            }
+
+            dbContextTransaction = await DbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        #region Transaction management
+        protected void CommitTransaction()
+        {
+            if (dbContextTransaction is not null)
+            {
+                dbContextTransaction.Commit();
+                dbContextTransaction.Dispose();
+                dbContextTransaction = null;
+            }
+        }
+
+        protected void RollbackTransaction()
+        {
+            if (dbContextTransaction is not null)
+            {
+                dbContextTransaction.Rollback();
+                dbContextTransaction.Dispose();
+                dbContextTransaction = null;
+            }
+        }
+
+        protected async Task CommitTransactionAsync(CancellationToken cancellationToken)
+        {
+            if (dbContextTransaction is not null)
+            {
+                await dbContextTransaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
+                dbContextTransaction = null;
+            }
+        }
+
+        protected async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
+        {
+            if (dbContextTransaction is not null)
+            {
+                await dbContextTransaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
+                await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
+                dbContextTransaction = null;
+            }
+        }
+        #endregion
 
         protected override void ReleaseManagedResources()
         {
@@ -93,63 +148,5 @@ namespace Developist.Core.Persistence.EntityFramework
             await RollbackTransactionAsync().ConfigureAwait(false);
             await base.ReleaseManagedResourcesAsync().ConfigureAwait(false);
         }
-
-        #region Transaction management
-        private void BeginTransaction()
-        {
-            if (isTransactional)
-            {
-                dbContextTransaction = DbContext.Database.BeginTransaction();
-            }
-        }
-
-        private void CommitTransaction()
-        {
-            if (isTransactional && dbContextTransaction is not null)
-            {
-                dbContextTransaction.Commit();
-                dbContextTransaction.Dispose();
-                dbContextTransaction = null;
-            }
-        }
-
-        private void RollbackTransaction()
-        {
-            if (isTransactional && dbContextTransaction is not null)
-            {
-                dbContextTransaction.Rollback();
-                dbContextTransaction.Dispose();
-                dbContextTransaction = null;
-            }
-        }
-
-        private async Task BeginTransactionAsync(CancellationToken cancellationToken)
-        {
-            if (isTransactional)
-            {
-                dbContextTransaction = await DbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-            }
-        }
-
-        private async Task CommitTransactionAsync(CancellationToken cancellationToken)
-        {
-            if (isTransactional && dbContextTransaction is not null)
-            {
-                await dbContextTransaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-                await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
-                dbContextTransaction = null;
-            }
-        }
-
-        private async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
-        {
-            if (isTransactional && dbContextTransaction is not null)
-            {
-                await dbContextTransaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
-                dbContextTransaction = null;
-            }
-        }
-        #endregion
     }
 }

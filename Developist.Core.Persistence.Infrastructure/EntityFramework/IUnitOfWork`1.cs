@@ -15,10 +15,5 @@ namespace Developist.Core.Persistence.EntityFramework
         /// This unit of work's underlying DbContext.
         /// </summary>
         TDbContext DbContext { get; }
-
-        /// <summary>
-        /// Ensures all non-read operations on the DbContext will be wrapped in a database transaction.
-        /// </summary>
-        void EnsureTransactional();
     }
 }

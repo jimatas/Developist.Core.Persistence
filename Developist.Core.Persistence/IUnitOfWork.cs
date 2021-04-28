@@ -18,6 +18,27 @@ namespace Developist.Core.Persistence
         event EventHandler<UnitOfWorkCompletedEventArgs> Completed;
 
         /// <summary>
+        /// If supported by the data store, will start an explicit transaction that all the write operations will be wrapped in upon the next call to <see cref="Complete"/> or <see cref="CompleteAsync"/>.
+        /// </summary>
+        /// <remarks>
+        /// This method may throw an exception when it is called while an active transaction is already underway.
+        /// </remarks>
+        void BeginTransaction();
+
+        /// <summary>
+        /// Async version of <see cref="BeginTransaction"/>
+        /// <para>
+        /// If supported by the data store, will start an explicit transaction that all the write operations will be wrapped in upon the next call to <see cref="Complete"/> or <see cref="CompleteAsync"/>.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// This method may throw an exception when it is called while an active transaction is already underway.
+        /// </remarks>
+        /// <param name="cancellationToken">The cancellation token to observe.</param>
+        /// <returns>An awaitable task representing the asynchronous operation.</returns>
+        Task BeginTransactionAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Completes the unit of work by persisting all changes made inside of it to the data store.
         /// </summary>
         void Complete();
