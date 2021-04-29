@@ -18,7 +18,7 @@ namespace Developist.Core.Persistence
         event EventHandler<UnitOfWorkCompletedEventArgs> Completed;
 
         /// <summary>
-        /// If supported by the data store, will start an explicit transaction that all the write operations will be wrapped in upon the next call to <see cref="Complete"/> or <see cref="CompleteAsync"/>.
+        /// If supported by the data store, will start an explicit transaction in which all the write operations will be wrapped upon the next call to <see cref="Complete"/> or <see cref="CompleteAsync"/>.
         /// </summary>
         /// <remarks>
         /// This method may throw an exception when it is called while an active transaction is already underway.
@@ -28,7 +28,7 @@ namespace Developist.Core.Persistence
         /// <summary>
         /// Async version of <see cref="BeginTransaction"/>
         /// <para>
-        /// If supported by the data store, will start an explicit transaction that all the write operations will be wrapped in upon the next call to <see cref="Complete"/> or <see cref="CompleteAsync"/>.
+        /// If supported by the data store, will start an explicit transaction in which all the write operations will be wrapped upon the next call to <see cref="Complete"/> or <see cref="CompleteAsync"/>.
         /// </para>
         /// </summary>
         /// <remarks>
