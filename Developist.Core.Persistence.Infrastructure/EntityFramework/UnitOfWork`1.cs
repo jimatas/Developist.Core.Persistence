@@ -15,11 +15,11 @@ namespace Developist.Core.Persistence.EntityFramework
 {
     public class UnitOfWork<TDbContext> : DisposableBase, IUnitOfWork<TDbContext> where TDbContext : DbContext
     {
-        private readonly SemaphoreLocker semaphore = new();
         private readonly ConcurrentDictionary<Type, RepositoryWrapper> repositories = new();
         private readonly IRepositoryFactory<TDbContext> repositoryFactory;
         private readonly ILogger logger;
         private IDbContextTransaction dbContextTransaction;
+        private readonly SemaphoreLocker semaphore = new();
 
         public UnitOfWork(TDbContext dbContext, IRepositoryFactory<TDbContext> repositoryFactory, ILogger<UnitOfWork<TDbContext>> logger = null)
         {
@@ -96,7 +96,7 @@ namespace Developist.Core.Persistence.EntityFramework
                     throw new InvalidOperationException("An active transaction is already in progress. Nested transactions are not supported.");
                 }
                 dbContextTransaction = await DbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-            });
+            }, cancellationToken);
         }
 
         protected void CommitTransaction()
@@ -135,7 +135,7 @@ namespace Developist.Core.Persistence.EntityFramework
                     await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
                     dbContextTransaction = null;
                 }
-            });
+            }, cancellationToken);
         }
 
         protected async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
@@ -148,7 +148,7 @@ namespace Developist.Core.Persistence.EntityFramework
                     await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
                     dbContextTransaction = null;
                 }
-            });
+            }, cancellationToken);
         }
         #endregion
 

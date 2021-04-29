@@ -24,16 +24,20 @@ namespace Developist.Core.Persistence
             }
         }
 
-        public async Task LockAsync(Func<Task> action)
+        public async Task LockAsync(Func<Task> action, CancellationToken cancellationToken = default)
         {
-            await semaphore.WaitAsync().ConfigureAwait(false);
+            var waitTask = semaphore.WaitAsync(cancellationToken);
+            await waitTask.ConfigureAwait(false);
             try
             {
                 await action().ConfigureAwait(false);
             }
             finally
             {
-                semaphore.Release();
+                if (waitTask.IsCompletedSuccessfully || (waitTask.IsFaulted && !waitTask.IsCanceled))
+                {
+                    semaphore.Release();
+                }
             }
         }
     }
