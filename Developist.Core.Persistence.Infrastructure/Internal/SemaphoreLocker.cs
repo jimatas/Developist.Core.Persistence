@@ -26,18 +26,16 @@ namespace Developist.Core.Persistence
 
         public async Task LockAsync(Func<Task> action, CancellationToken cancellationToken = default)
         {
-            var waitTask = semaphore.WaitAsync(cancellationToken);
-            await waitTask.ConfigureAwait(false);
+            await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
             try
             {
                 await action().ConfigureAwait(false);
             }
             finally
             {
-                if (waitTask.IsCompletedSuccessfully || (waitTask.IsFaulted && !waitTask.IsCanceled))
-                {
-                    semaphore.Release();
-                }
+                // Safe to release. If WaitAsync completed successfully, the semaphore will have acquired the lock.
+                // If it threw a (TaskCanceled)Exception, we wouldn't even be here.
+                semaphore.Release();
             }
         }
     }
