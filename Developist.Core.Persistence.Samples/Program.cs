@@ -32,10 +32,10 @@ namespace Developist.Core.Persistence.Samples
 
             var person = uow.Repository<Person>().Find(new FilterByName { FamilyName = "Welsh" }).SingleOrDefault();
 
-            var sortingPaginator = new SortingPaginator<Person>(1, 3).SortedBy("FamilyName").SortedBy("Contact.HomeAddress.State", SortDirection.Descending).SortedBy(p => p.Contact.Email);
-            var result = uow.Repository<Person>().Find(p => true, sortingPaginator);
+            var paginator = new SortingPaginator<Person>(1, 3).SortedBy("FamilyName").SortedBy("Contact.HomeAddress.State", SortDirection.Descending).SortedBy(p => p.Contact.Email);
+            var result = uow.Repository<Person>().Find(p => true, paginator);
 
-            var list = new PaginatedList<Person>(result, sortingPaginator);
+            IPaginatedList<Person> list = new PaginatedList<Person>(result, paginator);
         }
     }
 }
