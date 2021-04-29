@@ -25,8 +25,8 @@ namespace Developist.Core.Persistence.Samples
 
         protected async override Task OnApplicationStartedAsync(CancellationToken cancellationToken)
         {
-            using var uow = ServiceProvider.GetRequiredService<IUnitOfWork>();
-
+            var uow = ServiceProvider.GetRequiredService<IUnitOfWork>();
+            await uow.BeginTransactionAsync(cancellationToken);
             new DataSeeder().Seed(uow.Repository<Person>());
             await uow.CompleteAsync(cancellationToken).ConfigureAwait(true);
 
