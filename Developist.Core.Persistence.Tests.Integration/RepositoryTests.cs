@@ -37,6 +37,7 @@ namespace Developist.Core.Persistence.Tests
         [TestCleanup]
         public void CleanUp()
         {
+            uow.Dispose();
             (uow as EntityFramework.IUnitOfWork<SampleDbContext>)?.DbContext.Database.EnsureDeleted();
         }
 

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System;
+using System.Threading.Tasks;
 
 namespace Developist.Core.Persistence.Tests
 {
@@ -36,6 +37,7 @@ namespace Developist.Core.Persistence.Tests
         [TestCleanup]
         public void CleanUp()
         {
+            uow.Dispose();
             (uow as EntityFramework.IUnitOfWork<SampleDbContext>)?.DbContext.Database.EnsureDeleted();
         }
 
@@ -50,6 +52,19 @@ namespace Developist.Core.Persistence.Tests
 
             // Assert
             Assert.ThrowsException<InvalidOperationException>(action);
+        }
+
+        [TestMethod]
+        public async Task BeginTransactionAsync_CalledTwice_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            await uow.BeginTransactionAsync().ConfigureAwait(false);
+
+            // Act
+            async Task action() => await uow.BeginTransactionAsync().ConfigureAwait(false);
+
+            // Assert
+            await Assert.ThrowsExceptionAsync<InvalidOperationException>(action).ConfigureAwait(false);
         }
     }
 }
