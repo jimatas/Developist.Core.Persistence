@@ -10,15 +10,15 @@ namespace Developist.Core.Persistence.Samples
 {
     public class PaginatedList<T> : IPaginatedList<T>
     {
-        public PaginatedList(IEnumerable<T> result, SortingPaginator<T> paginator)
+        public PaginatedList(IEnumerable<T> currentPage, SortingPaginator<T> paginator)
         {
-            if (result is not IList<T> list)
+            if (currentPage is not IList<T> list)
             {
-                if (result is null)
+                if (currentPage is null)
                 {
-                    throw new ArgumentNullException(nameof(result));
+                    throw new ArgumentNullException(nameof(currentPage));
                 }
-                list = result.ToList();
+                list = currentPage.ToList();
             }
             InnerList = list;
             Paginator = paginator ?? throw new ArgumentNullException(nameof(paginator));
