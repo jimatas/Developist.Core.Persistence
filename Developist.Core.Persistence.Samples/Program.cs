@@ -26,18 +26,20 @@ namespace Developist.Core.Persistence.Samples
         protected async override Task OnApplicationStartedAsync(CancellationToken cancellationToken)
         {
             var uow = ServiceProvider.GetRequiredService<IUnitOfWork>();
-            if (uow.IsTransactional)
+            if (!uow.IsTransactional)
             {
-
+                await uow.BeginTransactionAsync(cancellationToken);
             }
-            await uow.BeginTransactionAsync(cancellationToken);
-            new DataSeeder().Seed(uow.Repository<Person>());
+
+            IRepository<Person> repository = uow.Repository<Person>();
+            
+            new DataSeeder().Seed(repository);
             await uow.CompleteAsync(cancellationToken).ConfigureAwait(true);
 
-            var person = uow.Repository<Person>().Find(new FilterByName { FamilyName = "Welsh" }).SingleOrDefault();
+            var person = repository.Find(new FilterByName { FamilyName = "Welsh" }).SingleOrDefault();
 
             var paginator = new SortingPaginator<Person>(1, 3).SortedBy("FamilyName").SortedBy("Contact.HomeAddress.State", SortDirection.Descending).SortedBy(p => p.Contact.Email);
-            var result = uow.Repository<Person>().Find(p => true, paginator);
+            var result = repository.Find(p => true, paginator);
 
             IPaginatedList<Person> list = new PaginatedList<Person>(result, paginator);
         }
