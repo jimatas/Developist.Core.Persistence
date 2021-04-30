@@ -37,6 +37,8 @@ namespace Developist.Core.Persistence.InMemory
             return wrapper.Repository<TEntity>();
         }
 
+        public bool IsTransactional => false;
+
         public virtual void BeginTransaction()
         {
         }

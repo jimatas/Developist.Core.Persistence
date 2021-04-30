@@ -18,10 +18,16 @@ namespace Developist.Core.Persistence
         event EventHandler<UnitOfWorkCompletedEventArgs> Completed;
 
         /// <summary>
+        /// Indicates whether an explicit transaction has been started on this unit of work through the <see cref="BeginTransaction"/> or <see cref="BeginTransactionAsync"/> method.
+        /// </summary>
+        bool IsTransactional { get; }
+
+        /// <summary>
         /// If supported by the data store, will start an explicit transaction in which all the write operations will be wrapped upon the next call to <see cref="Complete"/> or <see cref="CompleteAsync"/>.
         /// </summary>
         /// <remarks>
         /// This method may throw an exception when it is called while an active transaction is already underway.
+        /// Consult the <see cref="IsTransactional"/> property to see if that is the case.
         /// </remarks>
         void BeginTransaction();
 
@@ -33,6 +39,7 @@ namespace Developist.Core.Persistence
         /// </summary>
         /// <remarks>
         /// This method may throw an exception when it is called while an active transaction is already underway.
+        /// Consult the <see cref="IsTransactional"/> property to see if that is the case.
         /// </remarks>
         /// <param name="cancellationToken">The cancellation token to observe.</param>
         /// <returns>An awaitable task representing the asynchronous operation.</returns>

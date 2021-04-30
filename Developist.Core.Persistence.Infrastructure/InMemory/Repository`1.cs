@@ -125,6 +125,8 @@ namespace Developist.Core.Persistence.InMemory
                 remove => uow.Completed -= value;
             }
 
+            public bool IsTransactional => uow.IsTransactional;
+
             public void BeginTransaction() => uow.BeginTransaction();
             public Task BeginTransactionAsync(CancellationToken cancellationToken = default) => uow.BeginTransactionAsync(cancellationToken);
             public void Complete() => uow.Complete();

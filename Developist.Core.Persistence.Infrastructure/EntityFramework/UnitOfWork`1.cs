@@ -75,11 +75,13 @@ namespace Developist.Core.Persistence.EntityFramework
         }
 
         #region Transaction management
+        public bool IsTransactional => dbContextTransaction is not null;
+
         public virtual void BeginTransaction()
         {
             semaphore.Lock(() =>
             {
-                if (dbContextTransaction is not null)
+                if (IsTransactional)
                 {
                     throw new InvalidOperationException("An active transaction is already in progress. Nested transactions are not supported.");
                 }
@@ -91,7 +93,7 @@ namespace Developist.Core.Persistence.EntityFramework
         {
             await semaphore.LockAsync(async () =>
             {
-                if (dbContextTransaction is not null)
+                if (IsTransactional)
                 {
                     throw new InvalidOperationException("An active transaction is already in progress. Nested transactions are not supported.");
                 }
@@ -103,7 +105,7 @@ namespace Developist.Core.Persistence.EntityFramework
         {
             semaphore.Lock(() =>
             {
-                if (dbContextTransaction is not null)
+                if (IsTransactional)
                 {
                     dbContextTransaction.Commit();
                     dbContextTransaction.Dispose();
@@ -116,7 +118,7 @@ namespace Developist.Core.Persistence.EntityFramework
         {
             semaphore.Lock(() =>
             {
-                if (dbContextTransaction is not null)
+                if (IsTransactional)
                 {
                     dbContextTransaction.Rollback();
                     dbContextTransaction.Dispose();
@@ -129,7 +131,7 @@ namespace Developist.Core.Persistence.EntityFramework
         {
             await semaphore.LockAsync(async () =>
             {
-                if (dbContextTransaction is not null)
+                if (IsTransactional)
                 {
                     await dbContextTransaction.CommitAsync(cancellationToken).ConfigureAwait(false);
                     await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
@@ -142,7 +144,7 @@ namespace Developist.Core.Persistence.EntityFramework
         {
             await semaphore.LockAsync(async () =>
             {
-                if (dbContextTransaction is not null)
+                if (IsTransactional)
                 {
                     await dbContextTransaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
                     await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
