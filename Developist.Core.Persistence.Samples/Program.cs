@@ -32,16 +32,18 @@ namespace Developist.Core.Persistence.Samples
             }
 
             IRepository<Person> repository = uow.Repository<Person>();
-            
+
             new DataSeeder().Seed(repository);
             await uow.CompleteAsync(cancellationToken).ConfigureAwait(true);
 
             var person = repository.Find(new FilterByName { FamilyName = "Welsh" }).SingleOrDefault();
 
-            var paginator = new SortingPaginator<Person>(1, 3).SortedBy("FamilyName").SortedBy("Contact.HomeAddress.State", SortDirection.Descending).SortedBy(p => p.Contact.Email);
-            var result = repository.Find(p => true, paginator);
+            var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 2).SortedBy("Contact.HomeAddress.State", SortDirection.Descending);
+            do
+            {
+                var people = repository.All(paginator);
 
-            IPaginatedList<Person> list = new PaginatedList<Person>(result, paginator);
+            } while (paginator.NextPage());
         }
     }
 }

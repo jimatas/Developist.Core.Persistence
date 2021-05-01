@@ -55,5 +55,53 @@ namespace Developist.Core.Persistence
             paginator.SortProperties.Add(new(propertySelector, direction));
             return paginator;
         }
+
+        /// <summary>
+        /// Determines whether there is another page within the result set.
+        /// </summary>
+        /// <typeparam name="T">The type of items being paginated over.</typeparam>
+        /// <param name="paginator">The result set paginator.</param>
+        /// <returns><see langword="true"/> if there is another page of items left in the result set, <see langword="false"/> otherwise.</returns>
+        public static bool HasNextPage<T>(this SortingPaginator<T> paginator) => paginator.PageNumber < paginator.PageCount;
+
+        /// <summary>
+        /// Determines whether there is a previous page within the result set.
+        /// </summary>
+        /// <typeparam name="T">The type of items being paginated over.</typeparam>
+        /// <param name="paginator">The result set paginator.</param>
+        /// <returns><see langword="true"/> if there is a preceding page of items in the result set, <see langword="false"/> otherwise.</returns>
+        public static bool HasPreviousPage<T>(this SortingPaginator<T> paginator) => paginator.PageNumber > 1;
+
+        /// <summary>
+        /// Checks if there is another page within the result set, and if so, increments the <see cref="SortingPaginator{T}.PageNumber"/> property of the <paramref name="paginator"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of items being paginated over.</typeparam>
+        /// <param name="paginator">The result set paginator.</param>
+        /// <returns><see langword="true"/> if there was another page of items left in the result set, <see langword="false"/> otherwise.</returns>
+        public static bool NextPage<T>(this SortingPaginator<T> paginator)
+        {
+            if (paginator.HasNextPage())
+            {
+                paginator.PageNumber++;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if there is a previous page within the result set, and if so, decrements the <see cref="SortingPaginator{T}.PageNumber"/> property of the <paramref name="paginator"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of items being paginated over.</typeparam>
+        /// <param name="paginator">The result set paginator.</param>
+        /// <returns><see langword="true"/> if there was a preceding page of items in the result set, <see langword="false"/> otherwise.</returns>
+        public static bool PreviousPage<T>(this SortingPaginator<T> paginator)
+        {
+            if (paginator.HasPreviousPage())
+            {
+                paginator.PageNumber--;
+                return true;
+            }
+            return false;
+        }
     }
 }
