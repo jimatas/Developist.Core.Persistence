@@ -94,6 +94,64 @@ namespace Developist.Core.Persistence.Tests
             Assert.IsFalse(result);
         }
 
+        [TestMethod]
+        public void MoveNextPage_ByDefault_DoesNotMoveToNextPage()
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 5);
+
+            // Act
+            var result = paginator.MoveNextPage();
+
+            // Assert
+            Assert.IsFalse(result);
+            Assert.AreNotEqual(2, paginator.PageNumber);
+        }
+
+        [TestMethod]
+        public void MoveNextPage_AfterPaginating_MovesToNextPage()
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 5);
+            paginator.Paginate(People);
+
+            // Act
+            var result = paginator.MoveNextPage();
+
+            // Assert
+            Assert.IsTrue(result);
+            Assert.AreEqual(2, paginator.PageNumber);
+        }
+
+        [TestMethod]
+        public void MovePreviousPage_ByDefault_DoesNotMoveToPreviousPage()
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 5);
+
+            // Act
+            var result = paginator.MovePreviousPage();
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void MovePreviousPage_AfterPaginatingStartingAtLastPage_MovesToPreviousPage()
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 5);
+            paginator.Paginate(People);
+            paginator.PageNumber = paginator.PageCount;
+
+            // Act
+            var result = paginator.MovePreviousPage();
+
+            // Assert
+            Assert.IsTrue(result);
+            Assert.AreEqual(paginator.PageCount - 1, paginator.PageNumber);
+        }
+
         private static IQueryable<Person> People =>
             new[]
             {
