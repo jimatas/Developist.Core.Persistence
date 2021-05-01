@@ -43,7 +43,7 @@ namespace Developist.Core.Persistence.Samples
             {
                 var people = repository.All(paginator);
 
-            } while (paginator.NextPage());
+            } while (paginator.MoveNextPage());
         }
     }
 }

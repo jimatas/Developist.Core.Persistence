@@ -78,7 +78,7 @@ namespace Developist.Core.Persistence
         /// <typeparam name="T">The type of items being paginated over.</typeparam>
         /// <param name="paginator">The result set paginator.</param>
         /// <returns><see langword="true"/> if there was another page of items left in the result set, <see langword="false"/> otherwise.</returns>
-        public static bool NextPage<T>(this SortingPaginator<T> paginator)
+        public static bool MoveNextPage<T>(this SortingPaginator<T> paginator)
         {
             if (paginator.HasNextPage())
             {
@@ -94,7 +94,7 @@ namespace Developist.Core.Persistence
         /// <typeparam name="T">The type of items being paginated over.</typeparam>
         /// <param name="paginator">The result set paginator.</param>
         /// <returns><see langword="true"/> if there was a preceding page of items in the result set, <see langword="false"/> otherwise.</returns>
-        public static bool PreviousPage<T>(this SortingPaginator<T> paginator)
+        public static bool MovePreviousPage<T>(this SortingPaginator<T> paginator)
         {
             if (paginator.HasPreviousPage())
             {

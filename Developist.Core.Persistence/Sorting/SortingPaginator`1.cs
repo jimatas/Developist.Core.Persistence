@@ -121,5 +121,17 @@ namespace Developist.Core.Persistence
 
             return sequence;
         }
+
+        public static SortingPaginator<T> operator ++(SortingPaginator<T> paginator)
+        {
+            paginator.PageNumber++;
+            return paginator;
+        }
+
+        public static SortingPaginator<T> operator --(SortingPaginator<T> paginator)
+        {
+            paginator.PageNumber--; // Will throw ArgumentOutOfRangeException if PageNumber < 1.
+            return paginator;
+        }
     }
 }
