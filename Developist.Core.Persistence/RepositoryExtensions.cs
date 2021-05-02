@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Developist.Core.Persistence
 {
-    public static class RepositoryExtensions
+    public static partial class RepositoryExtensions
     {
         /// <summary>
         /// Counts the number of entities of generic type <typeparamref name="TEntity"/> in the data store that satisfy the specified condition.

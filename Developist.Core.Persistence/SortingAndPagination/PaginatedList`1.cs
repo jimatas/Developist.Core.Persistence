@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Developist.Core.Persistence.Samples
+namespace Developist.Core.Persistence
 {
     /// <summary>
     /// Default implementation of the <see cref="IPaginatedList{T}"/> interface.

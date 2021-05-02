@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Developist.Core.Persistence.Samples
+namespace Developist.Core.Persistence
 {
     /// <summary>
     /// Represents a read-only list view of a single page of items taken from a larger result set.

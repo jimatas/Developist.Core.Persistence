@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Developist.Core.Persistence.Samples
+namespace Developist.Core.Persistence
 {
-    public static class RepositoryExtensions
+    public static partial class RepositoryExtensions
     {
         /// <summary>
         /// Returns an <see cref="IPaginatedList{T}"/> representing a subset of all the entities of generic type <typeparamref name="TEntity"/> in the data store.
