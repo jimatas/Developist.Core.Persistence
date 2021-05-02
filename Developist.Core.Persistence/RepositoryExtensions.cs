@@ -230,6 +230,54 @@ namespace Developist.Core.Persistence
             return await repository.FindAsync(new PredicateQueryableFilter<TEntity>(predicate), paginator, includePaths, cancellationToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Removes an entity from the data store using its unique Id property.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of entity to remove.</typeparam>
+        /// <typeparam name="TIdentifier">The type of the entity's identifier.</typeparam>
+        /// <param name="repository">The repository to remove the entity with.</param>
+        /// <param name="id">The value of the entity's Id property.</param>
+        /// <returns><see langword="true"/> if an entity with the specified identifier could be removed, <see langword="false"/> otherwise.</returns>
+        public static bool Remove<TEntity, TIdentifier>(this IRepository<TEntity> repository, TIdentifier id)
+            where TEntity : class, IEntity<TIdentifier>
+            where TIdentifier : IEquatable<TIdentifier>
+        {
+            var entity = repository.Find(id);
+            if (entity is null)
+            {
+                return false;
+            }
+
+            repository.Remove(entity);
+            return true;
+        }
+
+        /// <summary>
+        /// Async version of <see cref="Remove{TEntity, TIdentifier}(IRepository{TEntity}, TIdentifier)"/>
+        /// <para>
+        /// Removes an entity from the data store using its unique Id property.
+        /// </para>
+        /// </summary>
+        /// <typeparam name="TEntity">The type of entity to remove.</typeparam>
+        /// <typeparam name="TIdentifier">The type of the entity's identifier.</typeparam>
+        /// <param name="repository">The repository to remove the entity with.</param>
+        /// <param name="id">The value of the entity's Id property.</param>
+        /// <param name="cancellationToken">The cancellation token to observe.</param>
+        /// <returns>An awaitable task representing the asynchronous operation. The task result will contain a boolean value that indicates whether the specified entity could actually be removed.</returns>
+        public static async Task<bool> RemoveAsync<TEntity, TIdentifier>(this IRepository<TEntity> repository, TIdentifier id, CancellationToken cancellationToken = default)
+            where TEntity : class, IEntity<TIdentifier>
+            where TIdentifier : IEquatable<TIdentifier>
+        {
+            var entity = await repository.FindAsync(id, cancellationToken);
+            if (entity is null)
+            {
+                return false;
+            }
+
+            repository.Remove(entity);
+            return true;
+        }
+
         private class PredicateQueryableFilter<T> : IQueryableFilter<T>
         {
             private readonly Expression<Func<T, bool>> predicate;

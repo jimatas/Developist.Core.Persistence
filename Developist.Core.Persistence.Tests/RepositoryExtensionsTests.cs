@@ -306,6 +306,72 @@ namespace Developist.Core.Persistence.Tests
         }
         #endregion
 
+        #region RepositoryExtensions.Remove/RemoveAsync tests
+        [TestMethod]
+        public void Remove_GivenInvalidId_DoesNotRemoveEntity()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            // Act
+            var result = repository.Remove(4);
+            uow.Complete();
+
+            // Assert
+            Assert.IsFalse(result);
+            Assert.AreEqual(3, repository.Count());
+        }
+
+        [TestMethod]
+        public void Remove_GivenValidId_RemovesEntity()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            // Act
+            var result = repository.Remove(3);
+            uow.Complete();
+
+            // Assert
+            Assert.IsTrue(result);
+            Assert.AreEqual(2, repository.Count());
+        }
+
+        [TestMethod]
+        public async Task RemoveAsync_GivenInvalidId_DoesNotRemoveEntity()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            // Act
+            var result = await repository.RemoveAsync(4).ConfigureAwait(false);
+            await uow.CompleteAsync().ConfigureAwait(false);
+
+            // Assert
+            Assert.IsFalse(result);
+            Assert.AreEqual(3, await repository.CountAsync().ConfigureAwait(false));
+        }
+
+        [TestMethod]
+        public async Task RemoveAsync_GivenValidId_RemovesEntity()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            // Act
+            var result = await repository.RemoveAsync(3).ConfigureAwait(false);
+            await uow.CompleteAsync().ConfigureAwait(false);
+
+            // Assert
+            Assert.IsTrue(result);
+            Assert.AreEqual(2, await repository.CountAsync().ConfigureAwait(false));
+        }
+        #endregion
+
         private static void SeedRepositoryWithData(IRepository<Person> repository)
         {
             foreach (var person in new[]
