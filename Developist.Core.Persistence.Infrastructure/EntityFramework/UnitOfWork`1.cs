@@ -98,7 +98,7 @@ namespace Developist.Core.Persistence.EntityFramework
                     throw new InvalidOperationException("An active transaction is already in progress. Nested transactions are not supported.");
                 }
                 dbContextTransaction = await DbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-            }, cancellationToken);
+            }, cancellationToken).ConfigureAwait(false);
         }
 
         protected void CommitTransaction()
@@ -137,7 +137,7 @@ namespace Developist.Core.Persistence.EntityFramework
                     await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
                     dbContextTransaction = null;
                 }
-            }, cancellationToken);
+            }, cancellationToken).ConfigureAwait(false);
         }
 
         protected async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
@@ -150,7 +150,7 @@ namespace Developist.Core.Persistence.EntityFramework
                     await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
                     dbContextTransaction = null;
                 }
-            }, cancellationToken);
+            }, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 

@@ -268,7 +268,7 @@ namespace Developist.Core.Persistence
             where TEntity : class, IEntity<TIdentifier>
             where TIdentifier : IEquatable<TIdentifier>
         {
-            var entity = await repository.FindAsync(id, cancellationToken);
+            var entity = await repository.FindAsync(id, cancellationToken).ConfigureAwait(false);
             if (entity is null)
             {
                 return false;

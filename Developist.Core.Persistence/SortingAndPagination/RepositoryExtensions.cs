@@ -47,7 +47,7 @@ namespace Developist.Core.Persistence
         /// <returns>An awaitable task representing the asynchronous operation. The task result will contain the specified range of <typeparamref name="TEntity"/> entities that were retrieved from the data store.</returns>
         public static async Task<IPaginatedList<TEntity>> AllAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, SortingPaginator<TEntity> paginator, CancellationToken cancellationToken = default) where TEntity : class, IEntity
         {
-            return new PaginatedList<TEntity>(await repository.FindAsync(PassthroughFilter<TEntity>.Default, paginator, cancellationToken), paginator);
+            return new PaginatedList<TEntity>(await repository.FindAsync(PassthroughFilter<TEntity>.Default, paginator, cancellationToken).ConfigureAwait(false), paginator);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Developist.Core.Persistence
         /// <returns>An awaitable task representing the asynchronous operation. The task result will contain the specified range of <typeparamref name="TEntity"/> entities that were retrieved from the data store.</returns>
         public static async Task<IPaginatedList<TEntity>> AllAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, SortingPaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths, CancellationToken cancellationToken = default) where TEntity : class, IEntity
         {
-            return new PaginatedList<TEntity>(await repository.FindAsync(PassthroughFilter<TEntity>.Default, paginator, includePaths, cancellationToken), paginator);
+            return new PaginatedList<TEntity>(await repository.FindAsync(PassthroughFilter<TEntity>.Default, paginator, includePaths, cancellationToken).ConfigureAwait(false), paginator);
         }
 
         /// <summary>
