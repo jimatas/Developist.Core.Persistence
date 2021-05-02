@@ -209,7 +209,7 @@ namespace Developist.Core.Persistence.Tests
         [TestMethod]
         public async Task Add_WithExplicitTransaction_Commits()
         {
-            await uow.BeginTransactionAsync();
+            await uow.BeginTransactionAsync().ConfigureAwait(false);
 
             uow.People().Add(new()
             {
@@ -221,19 +221,51 @@ namespace Developist.Core.Persistence.Tests
             {
                 GivenName = "Glenn",
                 FamilyName = "Hensley"
-            });
+            }).ConfigureAwait(false);
 
             Assert.IsFalse(result.Any());
 
-            await uow.CompleteAsync();
+            await uow.CompleteAsync().ConfigureAwait(false);
 
             result = await uow.People().FindAsync(new PersonByNameFilter
             {
                 GivenName = "Glenn",
                 FamilyName = "Hensley"
-            });
+            }).ConfigureAwait(false);
 
             Assert.IsTrue(result.Any());
+        }
+
+        [TestMethod]
+        public async Task AllAsync_ByDefault_ReturnsPaginatedList()
+        {
+            // Arrange
+            await uow.BeginTransactionAsync().ConfigureAwait(false);
+
+            var people = new[]
+            {
+                new Person { GivenName = "Dwayne", FamilyName = "Welsh" },
+                new Person { GivenName = "Ed", FamilyName = "Stuart" },
+                new Person { GivenName = "Hollie", FamilyName = "Marin" },
+                new Person { GivenName = "Randall", FamilyName = "Bloom" },
+                new Person { GivenName = "Glenn", FamilyName = "Hensley" },
+                new Person { GivenName = "Phillipa", FamilyName = "Connor" },
+                new Person { GivenName = "Ana", FamilyName = "Bryan" },
+                new Person { GivenName = "Edgar", FamilyName = "Bernard" }
+            };
+            uow.People().AddRange(people);
+
+            await uow.CompleteAsync().ConfigureAwait(false);
+
+            // Act
+            var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 5);
+
+            var result = await uow.People().AllAsync(paginator).ConfigureAwait(false);
+
+            // Assert
+            Assert.AreEqual(5, result.Count);
+            Assert.AreEqual(paginator.PageNumber, result.PageNumber);
+            Assert.AreEqual(paginator.PageCount, result.PageCount);
         }
     }
 }
