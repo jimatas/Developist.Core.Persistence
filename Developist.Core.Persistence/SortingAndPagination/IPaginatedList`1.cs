@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Developist.Core.Persistence
 {
     /// <summary>
-    /// Represents a read-only list view of a single page of items taken from a larger result set.
+    /// Represents a read-only list view of a single page of items from a larger result set.
     /// </summary>
     /// <typeparam name="T">The item type.</typeparam>
     public interface IPaginatedList<T> : IReadOnlyList<T>
