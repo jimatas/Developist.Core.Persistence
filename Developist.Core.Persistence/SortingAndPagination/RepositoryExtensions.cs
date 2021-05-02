@@ -16,7 +16,7 @@ namespace Developist.Core.Persistence
         /// <param name="repository">The repository to retrieve the entities with.</param>
         /// <param name="paginator">The pagination instructions.</param>
         /// <returns>The specified range of <typeparamref name="TEntity"/> entities that were retrieved from the data store.</returns>
-        public static IPaginatedList<TEntity> All<TEntity>(this IRepository<TEntity> repository, SortingPaginator<TEntity> paginator) where TEntity : class, IEntity
+        public static IPaginatedList<TEntity> All<TEntity>(this IReadOnlyRepository<TEntity> repository, SortingPaginator<TEntity> paginator) where TEntity : class, IEntity
         {
             return new PaginatedList<TEntity>(repository.Find(PassthroughFilter<TEntity>.Default, paginator), paginator);
         }
@@ -29,7 +29,7 @@ namespace Developist.Core.Persistence
         /// <param name="paginator">The pagination instructions.</param>
         /// <param name="includePaths">The navigation properties of <typeparamref name="TEntity"/> to include in the result.</param>
         /// <returns>The specified range of <typeparamref name="TEntity"/> entities that were retrieved from the data store.</returns>
-        public static IPaginatedList<TEntity> All<TEntity>(this IRepository<TEntity> repository, SortingPaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths) where TEntity : class, IEntity
+        public static IPaginatedList<TEntity> All<TEntity>(this IReadOnlyRepository<TEntity> repository, SortingPaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths) where TEntity : class, IEntity
         {
             return new PaginatedList<TEntity>(repository.Find(PassthroughFilter<TEntity>.Default, paginator, includePaths), paginator);
         }
@@ -45,7 +45,7 @@ namespace Developist.Core.Persistence
         /// <param name="paginator">The pagination instructions.</param>
         /// <param name="cancellationToken">The cancellation token to observe.</param>
         /// <returns>An awaitable task representing the asynchronous operation. The task result will contain the specified range of <typeparamref name="TEntity"/> entities that were retrieved from the data store.</returns>
-        public static async Task<IPaginatedList<TEntity>> AllAsync<TEntity>(this IRepository<TEntity> repository, SortingPaginator<TEntity> paginator, CancellationToken cancellationToken = default) where TEntity : class, IEntity
+        public static async Task<IPaginatedList<TEntity>> AllAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, SortingPaginator<TEntity> paginator, CancellationToken cancellationToken = default) where TEntity : class, IEntity
         {
             return new PaginatedList<TEntity>(await repository.FindAsync(PassthroughFilter<TEntity>.Default, paginator, cancellationToken), paginator);
         }
@@ -62,7 +62,7 @@ namespace Developist.Core.Persistence
         /// <param name="includePaths">The navigation properties of <typeparamref name="TEntity"/> to include in the result.</param>
         /// <param name="cancellationToken">The cancellation token to observe.</param>
         /// <returns>An awaitable task representing the asynchronous operation. The task result will contain the specified range of <typeparamref name="TEntity"/> entities that were retrieved from the data store.</returns>
-        public static async Task<IPaginatedList<TEntity>> AllAsync<TEntity>(this IRepository<TEntity> repository, SortingPaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths, CancellationToken cancellationToken = default) where TEntity : class, IEntity
+        public static async Task<IPaginatedList<TEntity>> AllAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, SortingPaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths, CancellationToken cancellationToken = default) where TEntity : class, IEntity
         {
             return new PaginatedList<TEntity>(await repository.FindAsync(PassthroughFilter<TEntity>.Default, paginator, includePaths, cancellationToken), paginator);
         }
