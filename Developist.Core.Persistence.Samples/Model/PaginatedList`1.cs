@@ -8,6 +8,10 @@ using System.Linq;
 
 namespace Developist.Core.Persistence.Samples
 {
+    /// <summary>
+    /// Default implementation of the <see cref="IPaginatedList{T}"/> interface.
+    /// </summary>
+    /// <typeparam name="T">The type of the list items.</typeparam>
     public class PaginatedList<T> : IPaginatedList<T>
     {
         public PaginatedList(IEnumerable<T> currentPage, SortingPaginator<T> paginator)
