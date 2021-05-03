@@ -59,6 +59,9 @@ namespace Developist.Core.Persistence
         /// <summary>
         /// Determines whether there is another page within the result set.
         /// </summary>
+        /// <remarks>
+        /// The value returned by this method is only considered accurate after a call to <see cref="IQueryablePaginator{T}.Paginate"/>.
+        /// </remarks>
         /// <typeparam name="T">The type of items being paginated over.</typeparam>
         /// <param name="paginator">The result set paginator.</param>
         /// <returns><see langword="true"/> if there is another page of items left in the result set, <see langword="false"/> otherwise.</returns>
@@ -67,6 +70,9 @@ namespace Developist.Core.Persistence
         /// <summary>
         /// Determines whether there is a previous page within the result set.
         /// </summary>
+        /// <remarks>
+        /// The value returned by this method is only considered accurate after a call to <see cref="IQueryablePaginator{T}.Paginate"/>.
+        /// </remarks>
         /// <typeparam name="T">The type of items being paginated over.</typeparam>
         /// <param name="paginator">The result set paginator.</param>
         /// <returns><see langword="true"/> if there is a preceding page of items in the result set, <see langword="false"/> otherwise.</returns>
@@ -75,6 +81,9 @@ namespace Developist.Core.Persistence
         /// <summary>
         /// Checks if there is another page within the result set, and if so, increments the <see cref="SortingPaginator{T}.PageNumber"/> property of the <paramref name="paginator"/>.
         /// </summary>
+        /// <remarks>
+        /// The value returned by this method is only considered accurate after a call to <see cref="IQueryablePaginator{T}.Paginate"/>.
+        /// </remarks>
         /// <typeparam name="T">The type of items being paginated over.</typeparam>
         /// <param name="paginator">The result set paginator.</param>
         /// <returns><see langword="true"/> if there was another page of items left in the result set, <see langword="false"/> otherwise.</returns>
@@ -91,6 +100,9 @@ namespace Developist.Core.Persistence
         /// <summary>
         /// Checks if there is a previous page within the result set, and if so, decrements the <see cref="SortingPaginator{T}.PageNumber"/> property of the <paramref name="paginator"/>.
         /// </summary>
+        /// <remarks>
+        /// The value returned by this method is only considered accurate after a call to <see cref="IQueryablePaginator{T}.Paginate"/>.
+        /// </remarks>
         /// <typeparam name="T">The type of items being paginated over.</typeparam>
         /// <param name="paginator">The result set paginator.</param>
         /// <returns><see langword="true"/> if there was a preceding page of items in the result set, <see langword="false"/> otherwise.</returns>
