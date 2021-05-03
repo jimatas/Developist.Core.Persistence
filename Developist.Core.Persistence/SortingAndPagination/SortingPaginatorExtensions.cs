@@ -60,7 +60,7 @@ namespace Developist.Core.Persistence
         /// Determines whether there is another page within the result set.
         /// </summary>
         /// <remarks>
-        /// The value returned by this method is only considered accurate after a call to <see cref="IQueryablePaginator{T}.Paginate"/>.
+        /// The value returned by this method is only considered accurate after a call to <see cref="SortingPaginator{T}.Paginate"/>.
         /// </remarks>
         /// <typeparam name="T">The type of items being paginated over.</typeparam>
         /// <param name="paginator">The result set paginator.</param>
@@ -71,7 +71,7 @@ namespace Developist.Core.Persistence
         /// Determines whether there is a previous page within the result set.
         /// </summary>
         /// <remarks>
-        /// The value returned by this method is only considered accurate after a call to <see cref="IQueryablePaginator{T}.Paginate"/>.
+        /// The value returned by this method is only considered accurate after a call to <see cref="SortingPaginator{T}.Paginate"/>.
         /// </remarks>
         /// <typeparam name="T">The type of items being paginated over.</typeparam>
         /// <param name="paginator">The result set paginator.</param>
@@ -82,7 +82,7 @@ namespace Developist.Core.Persistence
         /// Checks if there is another page within the result set, and if so, increments the <see cref="SortingPaginator{T}.PageNumber"/> property of the <paramref name="paginator"/>.
         /// </summary>
         /// <remarks>
-        /// The value returned by this method is only considered accurate after a call to <see cref="IQueryablePaginator{T}.Paginate"/>.
+        /// The value returned by this method is only considered accurate after a call to <see cref="SortingPaginator{T}.Paginate"/>.
         /// </remarks>
         /// <typeparam name="T">The type of items being paginated over.</typeparam>
         /// <param name="paginator">The result set paginator.</param>
@@ -101,7 +101,7 @@ namespace Developist.Core.Persistence
         /// Checks if there is a previous page within the result set, and if so, decrements the <see cref="SortingPaginator{T}.PageNumber"/> property of the <paramref name="paginator"/>.
         /// </summary>
         /// <remarks>
-        /// The value returned by this method is only considered accurate after a call to <see cref="IQueryablePaginator{T}.Paginate"/>.
+        /// The value returned by this method is only considered accurate after a call to <see cref="SortingPaginator{T}.Paginate"/>.
         /// </remarks>
         /// <typeparam name="T">The type of items being paginated over.</typeparam>
         /// <param name="paginator">The result set paginator.</param>

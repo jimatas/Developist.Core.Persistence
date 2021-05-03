@@ -31,17 +31,15 @@ namespace Developist.Core.Persistence.Samples
                 await uow.BeginTransactionAsync(cancellationToken);
             }
 
-            IRepository<Person> repository = uow.Repository<Person>();
-
-            new DataSeeder().Seed(repository);
+            new DataSeeder().Seed(uow.People());
             await uow.CompleteAsync(cancellationToken).ConfigureAwait(true);
 
-            var person = repository.Find(new FilterByName { FamilyName = "Welsh" }).SingleOrDefault();
+            var person = uow.People().Find(new FilterByName { FamilyName = "Welsh" }).SingleOrDefault();
 
             var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 2).SortedBy("Contact.HomeAddress.State", SortDirection.Descending);
             do
             {
-                var people = repository.All(paginator);
+                var people = uow.People().All(paginator);
 
             } while (paginator.MoveNextPage());
         }
