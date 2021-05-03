@@ -237,7 +237,7 @@ namespace Developist.Core.Persistence
         /// <typeparam name="TIdentifier">The type of the entity's identifier.</typeparam>
         /// <param name="repository">The repository to remove the entity with.</param>
         /// <param name="id">The value of the entity's Id property.</param>
-        /// <returns><see langword="true"/> if an entity with the specified identifier could be removed, <see langword="false"/> otherwise.</returns>
+        /// <returns><see langword="true"/> if an entity with the specified identifier could be successfully removed, <see langword="false"/> otherwise.</returns>
         public static bool Remove<TEntity, TIdentifier>(this IRepository<TEntity> repository, TIdentifier id)
             where TEntity : class, IEntity<TIdentifier>
             where TIdentifier : IEquatable<TIdentifier>
@@ -263,7 +263,7 @@ namespace Developist.Core.Persistence
         /// <param name="repository">The repository to remove the entity with.</param>
         /// <param name="id">The value of the entity's Id property.</param>
         /// <param name="cancellationToken">The cancellation token to observe.</param>
-        /// <returns>An awaitable task representing the asynchronous operation. The task result will contain a boolean value that indicates whether the specified entity could actually be removed.</returns>
+        /// <returns>An awaitable task representing the asynchronous operation. The task result will contain a boolean value that indicates whether the specified entity could be successfully removed.</returns>
         public static async Task<bool> RemoveAsync<TEntity, TIdentifier>(this IRepository<TEntity> repository, TIdentifier id, CancellationToken cancellationToken = default)
             where TEntity : class, IEntity<TIdentifier>
             where TIdentifier : IEquatable<TIdentifier>
