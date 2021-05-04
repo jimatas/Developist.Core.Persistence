@@ -122,12 +122,14 @@ namespace Developist.Core.Persistence
             return sequence;
         }
 
+        // Note: The semantics are those of the pre-increment operator.
         public static SortingPaginator<T> operator ++(SortingPaginator<T> paginator)
         {
             paginator.PageNumber++;
             return paginator;
         }
 
+        // Note: The semantics are those of the pre-decrement operator.
         public static SortingPaginator<T> operator --(SortingPaginator<T> paginator)
         {
             paginator.PageNumber--; // Will throw ArgumentOutOfRangeException if PageNumber < 1.
