@@ -9,6 +9,32 @@ namespace Developist.Core.Persistence
     public static class SortingPaginatorExtensions
     {
         /// <summary>
+        /// Sets the <see cref="SortingPaginator{T}.PageNumber "/> property of <paramref name="paginator"/> to the specified value. 
+        /// </summary>
+        /// <typeparam name="T">The type of the items being paginated over.</typeparam>
+        /// <param name="paginator">The paginator to set the PageNumber property of.</param>
+        /// <param name="pageNumber">The desired page number.</param>
+        /// <returns>A reference to the paginator instance to allow for method chaining.</returns>
+        public static SortingPaginator<T> StartingAt<T>(this SortingPaginator<T> paginator, int pageNumber)
+        {
+            paginator.PageNumber = pageNumber;
+            return paginator;
+        }
+
+        /// <summary>
+        /// Sets the <see cref="SortingPaginator{T}.PageSize"/> property of <paramref name="paginator"/> to the specified value.
+        /// </summary>
+        /// <typeparam name="T">The type of the items being paginated over.</typeparam>
+        /// <param name="paginator">The paginator to set the PageSize property of.</param>
+        /// <param name="pageSize">The desired page size.</param>
+        /// <returns>A reference to the paginator instance to allow for method chaining.</returns>
+        public static SortingPaginator<T> WithPageSizeOf<T>(this SortingPaginator<T> paginator, int pageSize)
+        {
+            paginator.PageSize = pageSize;
+            return paginator;
+        }
+
+        /// <summary>
         /// Sorts by the property with the specified name.
         /// </summary>
         /// <typeparam name="T">The type of the items being paginated over.</typeparam>

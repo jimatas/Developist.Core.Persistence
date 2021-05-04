@@ -36,7 +36,7 @@ namespace Developist.Core.Persistence.Samples
 
             var person = uow.People().Find(new FilterByName { FamilyName = "Welsh" }).SingleOrDefault();
 
-            var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 2).SortedBy("Contact.HomeAddress.State", SortDirection.Descending);
+            var paginator = new SortingPaginator<Person>().StartingAt(1).WithPageSizeOf(2).SortedBy("Contact.HomeAddress.State", SortDirection.Descending);
             do
             {
                 var people = uow.People().All(paginator);
