@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Utilities;
+
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
@@ -15,7 +17,7 @@ namespace Developist.Core.Persistence.InMemory
 
         public UnitOfWork(IRepositoryFactory repositoryFactory)
         {
-            this.repositoryFactory = repositoryFactory ?? throw new ArgumentNullException(nameof(repositoryFactory));
+            this.repositoryFactory = Ensure.Argument.NotNull(repositoryFactory, nameof(repositoryFactory));
         }
 
         public event EventHandler<UnitOfWorkCompletedEventArgs> Completed;

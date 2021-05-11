@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Utilities;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,20 +26,14 @@ namespace Developist.Core.Persistence.InMemory
 
         public virtual void Add(TEntity entity)
         {
-            if (entity is null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            Ensure.Argument.NotNull(entity, nameof(entity));
 
             uow.DataStore.Add(entity);
         }
 
         public virtual void Remove(TEntity entity)
         {
-            if (entity is null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            Ensure.Argument.NotNull(entity, nameof(entity));
 
             uow.DataStore.Remove(entity);
         }
@@ -113,7 +109,7 @@ namespace Developist.Core.Persistence.InMemory
 
             public UnitOfWorkDataStore(IUnitOfWork uow, IEnumerable<TEntity> dataStore = null)
             {
-                this.uow = uow ?? throw new ArgumentNullException(nameof(uow));
+                this.uow = Ensure.Argument.NotNull(uow, nameof(uow));
                 DataStore = new HashSet<TEntity>(dataStore ?? Array.Empty<TEntity>());
             }
 

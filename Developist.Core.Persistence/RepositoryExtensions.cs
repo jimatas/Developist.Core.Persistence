@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Utilities;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -281,7 +283,7 @@ namespace Developist.Core.Persistence
         private class PredicateQueryableFilter<T> : IQueryableFilter<T>
         {
             private readonly Expression<Func<T, bool>> predicate;
-            public PredicateQueryableFilter(Expression<Func<T, bool>> predicate) => this.predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
+            public PredicateQueryableFilter(Expression<Func<T, bool>> predicate) => this.predicate = Ensure.Argument.NotNull(predicate, nameof(predicate));
             public IQueryable<T> Filter(IQueryable<T> sequence) => sequence.Where(predicate);
         }
     }

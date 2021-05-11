@@ -1,7 +1,8 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
-using System;
+using Developist.Core.Utilities;
+
 using System.Collections.Generic;
 
 namespace Developist.Core.Persistence.Tests
@@ -10,10 +11,7 @@ namespace Developist.Core.Persistence.Tests
     {
         public static void AddRange<TEntity>(this IRepository<TEntity> repository, IEnumerable<TEntity> entities) where TEntity : class, IEntity
         {
-            if (entities is null)
-            {
-                throw new ArgumentNullException(nameof(entities));
-            }
+            Ensure.Argument.NotNull(entities, nameof(entities));
 
             foreach (TEntity entity in entities)
             {

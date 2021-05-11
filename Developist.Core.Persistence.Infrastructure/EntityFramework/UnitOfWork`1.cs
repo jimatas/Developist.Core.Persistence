@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Utilities;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
@@ -23,8 +25,8 @@ namespace Developist.Core.Persistence.EntityFramework
 
         public UnitOfWork(TDbContext dbContext, IRepositoryFactory<TDbContext> repositoryFactory, ILogger<UnitOfWork<TDbContext>> logger = null)
         {
-            DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            this.repositoryFactory = repositoryFactory ?? throw new ArgumentNullException(nameof(repositoryFactory));
+            DbContext = Ensure.Argument.NotNull(dbContext, nameof(dbContext));
+            this.repositoryFactory = Ensure.Argument.NotNull(repositoryFactory, nameof(repositoryFactory));
             this.logger = logger ?? NullLogger<UnitOfWork<TDbContext>>.Instance;
         }
 

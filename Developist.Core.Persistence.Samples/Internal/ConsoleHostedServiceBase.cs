@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Utilities;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
 using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,10 +39,10 @@ namespace Developist.Core.Persistence.Samples
 
         protected ConsoleHostedServiceBase(IHostApplicationLifetime applicationLifetime, IServiceProvider serviceProvider, IConfiguration configuration, ILogger logger)
         {
-            this.applicationLifetime = applicationLifetime ?? throw new ArgumentNullException(nameof(applicationLifetime));
-            this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            this.applicationLifetime = Ensure.Argument.NotNull(applicationLifetime, nameof(applicationLifetime));
+            this.serviceProvider = Ensure.Argument.NotNull(serviceProvider, nameof(serviceProvider));
 
-            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            Configuration = Ensure.Argument.NotNull(configuration, nameof(configuration));
             Logger = logger ?? NullLogger.Instance;
         }
 

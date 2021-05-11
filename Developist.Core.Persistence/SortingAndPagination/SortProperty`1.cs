@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Utilities;
+
 using System;
 using System.Linq.Expressions;
 using LinqExpression = System.Linq.Expressions.Expression;
@@ -19,7 +21,7 @@ namespace Developist.Core.Persistence
 
         public SortProperty(Expression<Func<T, object>> expression, SortDirection direction)
         {
-            Expression = expression ?? throw new ArgumentNullException(nameof(expression));
+            Expression = Ensure.Argument.NotNull(expression, nameof(expression));
             Direction = direction;
         }
         #endregion
@@ -42,15 +44,7 @@ namespace Developist.Core.Persistence
 
         private static Expression<Func<T, object>> GetPropertySelector(string name)
         {
-            if (name is null)
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-
-            if (name.Trim().Length == 0)
-            {
-                throw new ArgumentException("Value cannot be empty or whitespace.", nameof(name));
-            }
+            Ensure.Argument.NotNullOrWhiteSpace(name, nameof(name));
 
             var type = typeof(T);
             var parameter = LinqExpression.Parameter(type, "p");

@@ -59,7 +59,7 @@ namespace Developist.Core.Persistence
         IEnumerable<TEntity> Find(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IEntityIncludePaths<TEntity> includePaths);
 
         /// <summary>
-        /// Async version of <see cref="Count"/>
+        /// Async version of <see cref="Count()"/>
         /// <para>
         /// Counts the number of entities of generic type <typeparamref name="TEntity"/> in the data store.
         /// </para>

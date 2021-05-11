@@ -1,9 +1,10 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Utilities;
+
 using Microsoft.EntityFrameworkCore;
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -19,27 +20,21 @@ namespace Developist.Core.Persistence.EntityFramework
 
         public Repository(IUnitOfWork<TDbContext> uow)
         {
-            this.uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            this.uow = Ensure.Argument.NotNull(uow, nameof(uow));
         }
 
         public IUnitOfWork UnitOfWork => uow;
 
         public virtual void Add(TEntity entity)
         {
-            if (entity is null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            Ensure.Argument.NotNull(entity, nameof(entity));
 
             uow.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Added;
         }
 
         public virtual void Remove(TEntity entity)
         {
-            if (entity is null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            Ensure.Argument.NotNull(entity, nameof(entity));
 
             uow.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Deleted;
         }

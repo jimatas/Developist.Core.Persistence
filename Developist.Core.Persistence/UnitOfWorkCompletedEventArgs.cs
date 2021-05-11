@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Utilities;
+
 using System;
 
 namespace Developist.Core.Persistence
@@ -10,8 +12,8 @@ namespace Developist.Core.Persistence
     /// </summary>
     public class UnitOfWorkCompletedEventArgs : EventArgs
     {
-        public UnitOfWorkCompletedEventArgs(IUnitOfWork uow) => UnitOfWork = uow ?? throw new ArgumentNullException(nameof(uow));
-        
+        public UnitOfWorkCompletedEventArgs(IUnitOfWork uow) => UnitOfWork = Ensure.Argument.NotNull(uow, nameof(uow));
+
         /// <summary>
         /// The unit of work that was completed.
         /// </summary>

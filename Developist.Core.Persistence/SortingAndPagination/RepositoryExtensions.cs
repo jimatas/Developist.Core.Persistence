@@ -35,7 +35,7 @@ namespace Developist.Core.Persistence
         }
 
         /// <summary>
-        /// Async version of <see cref="All{TEntity}(IRepository{TEntity}, SortingPaginator{TEntity})"/>
+        /// Async version of <see cref="All{TEntity}(IReadOnlyRepository{TEntity}, SortingPaginator{TEntity})"/>
         /// <para>
         /// Returns an <see cref="IPaginatedList{T}"/> representing a subset of all the entities of generic type <typeparamref name="TEntity"/> in the data store.
         /// </para>
@@ -51,7 +51,7 @@ namespace Developist.Core.Persistence
         }
 
         /// <summary>
-        /// Async version of <see cref="All{TEntity}(IRepository{TEntity}, SortingPaginator{TEntity}, IEntityIncludePaths{TEntity})"/>
+        /// Async version of <see cref="All{TEntity}(IReadOnlyRepository{TEntity}, SortingPaginator{TEntity}, IEntityIncludePaths{TEntity})"/>
         /// <para>
         /// Returns an <see cref="IPaginatedList{T}"/> representing a subset of all the entities of generic type <typeparamref name="TEntity"/> in the data store.
         /// </para>

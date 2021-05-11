@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Utilities;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,14 +37,7 @@ namespace Developist.Core.Persistence
         public int PageNumber
         {
             get => pageNumber;
-            set
-            {
-                if (value < 1)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(PageNumber), "Value cannot be negative or zero.");
-                }
-                pageNumber = value;
-            }
+            set => pageNumber = Ensure.Argument.NotOutOfRange(value, nameof(PageNumber), message: "Value cannot be negative or zero.", lowerBound: 1);
         }
 
         /// <summary>
@@ -51,14 +46,7 @@ namespace Developist.Core.Persistence
         public int PageSize
         {
             get => pageSize;
-            set
-            {
-                if (value < 1)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(PageSize), "Value cannot be negative or zero.");
-                }
-                pageSize = value;
-            }
+            set => pageSize = Ensure.Argument.NotOutOfRange(value, nameof(PageSize), message: "Value cannot be negative or zero.", lowerBound: 1);
         }
 
         /// <summary>
@@ -74,12 +62,7 @@ namespace Developist.Core.Persistence
             get => itemCount;
             private set
             {
-                if (value < 0)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(ItemCount), "Value cannot be negative.");
-                }
-                itemCount = value;
-
+                itemCount = Ensure.Argument.NotOutOfRange(value, nameof(ItemCount), message: "Value cannot be negative.", lowerBound: 0);
                 PageCount = (int)Math.Ceiling((double)itemCount / PageSize);
             }
         }

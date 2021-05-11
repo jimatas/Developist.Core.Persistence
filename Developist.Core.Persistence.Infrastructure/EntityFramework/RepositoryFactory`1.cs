@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Utilities;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,17 +16,14 @@ namespace Developist.Core.Persistence.EntityFramework
 
         public RepositoryFactory(IServiceProvider serviceProvider)
         {
-            this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            this.serviceProvider = Ensure.Argument.NotNull(serviceProvider, nameof(serviceProvider));
         }
 
         IRepository<TEntity> IRepositoryFactory.Create<TEntity>(IUnitOfWork uow) => Create<TEntity>((IUnitOfWork<TDbContext>)uow);
 
         public virtual IRepository<TEntity> Create<TEntity>(IUnitOfWork<TDbContext> uow) where TEntity : class, IEntity
         {
-            if (uow is null)
-            {
-                throw new ArgumentNullException(nameof(uow));
-            }
+            Ensure.Argument.NotNull(uow, nameof(uow));
 
             var factory = ActivatorUtilities.CreateFactory(GetRepositoryImplementationType<TEntity>(), new[] { uow.GetType() });
             return (IRepository<TEntity>)factory(serviceProvider, new[] { uow });

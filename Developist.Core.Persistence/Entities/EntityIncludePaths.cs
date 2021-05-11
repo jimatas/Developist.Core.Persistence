@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Utilities;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -108,10 +110,7 @@ namespace Developist.Core.Persistence
             public IncludePaths() : this(new List<string>()) { }
             public IncludePaths(IList<string> paths)
             {
-                if (paths is null)
-                {
-                    throw new ArgumentNullException(nameof(paths));
-                }
+                Ensure.Argument.NotNull(paths, nameof(paths));
 
                 this.paths = paths is not List<string> || paths.IsReadOnly
                     ? new List<string>(paths)
@@ -120,30 +119,14 @@ namespace Developist.Core.Persistence
 
             public void Add(string path)
             {
-                if (path is null)
-                {
-                    throw new ArgumentNullException(nameof(path));
-                }
-
-                if (path.Trim().Length == 0)
-                {
-                    throw new ArgumentException("Value cannot be empty or whitespace.", nameof(path));
-                }
+                Ensure.Argument.NotNullOrWhiteSpace(path, nameof(path));
 
                 paths.Add(path);
             }
 
             public void Remove(string path)
             {
-                if (path is null)
-                {
-                    throw new ArgumentNullException(nameof(path));
-                }
-
-                if (path.Trim().Length == 0)
-                {
-                    throw new ArgumentException("Value cannot be empty or whitespace.", nameof(path));
-                }
+                Ensure.Argument.NotNullOrWhiteSpace(path, nameof(path));
 
                 var i = paths.LastIndexOf(path);
                 if (i >= 0)
@@ -163,15 +146,7 @@ namespace Developist.Core.Persistence
 
             void IEntityIncludePaths<TEntity, TProperty>.Add(string path)
             {
-                if (path is null)
-                {
-                    throw new ArgumentNullException(nameof(path));
-                }
-
-                if (path.Trim().Length == 0)
-                {
-                    throw new ArgumentException("Value cannot be empty or whitespace.", nameof(path));
-                }
+                Ensure.Argument.NotNullOrWhiteSpace(path, nameof(path));
 
                 var previousPath = this.LastOrDefault();
                 if (previousPath is not null)

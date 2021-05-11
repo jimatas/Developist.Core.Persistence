@@ -1,7 +1,8 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
-using System;
+using Developist.Core.Utilities;
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,10 @@ namespace Developist.Core.Persistence
         {
             if (currentPage is not IList<T> list)
             {
-                if (currentPage is null)
-                {
-                    throw new ArgumentNullException(nameof(currentPage));
-                }
-                list = currentPage.ToList();
+                list = Ensure.Argument.NotNull(currentPage, nameof(currentPage)).ToList();
             }
             InnerList = list;
-            Paginator = paginator ?? throw new ArgumentNullException(nameof(paginator));
+            Paginator = Ensure.Argument.NotNull(paginator, nameof(paginator));
         }
 
         protected IList<T> InnerList { get; }
