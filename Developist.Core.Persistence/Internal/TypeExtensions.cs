@@ -13,7 +13,7 @@ namespace Developist.Core.Persistence
         {
             const BindingFlags bindingAttr = BindingFlags.Public | BindingFlags.Instance;
 
-            if (type.IsInterface)
+            if (!type.IsInterface)
             {
                 return type.GetProperty(propertyName, bindingAttr);
             }
