@@ -111,6 +111,22 @@ namespace Developist.Core.Persistence.Tests
         }
 
         [TestMethod]
+        public void Paginate_SortedByGivenNameAscendingUsingExpression_ReturnsExpectedResult()
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 2);
+            paginator.SortProperties.Add(new SortProperty<Person>(p => p.GivenName, SortDirection.Ascending));
+
+            // Act
+            var result = paginator.Paginate(People);
+
+            // Assert
+            Assert.AreEqual(2, result.Count());
+            Assert.AreEqual("Ana", result.First().GivenName);
+            Assert.AreEqual("Dwayne", result.Last().GivenName);
+        }
+
+        [TestMethod]
         public void Paginate_SortedByGivenNameAscending_ReturnsExpectedResult()
         {
             // Arrange
@@ -161,7 +177,7 @@ namespace Developist.Core.Persistence.Tests
         }
 
         [TestMethod]
-        public void Paginate_SortedByAgePropertyGivenAsString_ReturnsExpectedResult()
+        public void Paginate_SortedByAgeAscending_ReturnsExpectedResult()
         {
             // Arrange
             var paginator = new SortingPaginator<Person>().StartingAt(1).WithPageSizeOf(3);
@@ -175,6 +191,22 @@ namespace Developist.Core.Persistence.Tests
             Assert.AreEqual("Phillipa Connor", result.First().FullName()); // null < any other value
             Assert.AreEqual("Peter Connor", result.ElementAt(1).FullName());
             Assert.AreEqual("Dwayne Welsh", result.Last().FullName());
+        }
+
+        [TestMethod]
+        public void Paginate_SortedByAgeDescendingUsingExpression_ReturnsExpectedResult()
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>().StartingAt(1).WithPageSizeOf(2);
+            paginator.SortedBy(p => p.Age, SortDirection.Descending);
+
+            // Act
+            var result = paginator.Paginate(People);
+
+            // Assert
+            Assert.AreEqual(2, result.Count());
+            Assert.AreEqual("Edgar Bernard", result.First().FullName());
+            Assert.AreEqual("Randall Bloom", result.Last().FullName());
         }
 
         private static IQueryable<Person> People =>
