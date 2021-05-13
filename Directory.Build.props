@@ -10,7 +10,7 @@
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyVersion>1.0.$([System.Math]::Floor($([System.DateTime]::Now.Subtract($([System.DateTime]::Parse("01-01-2000"))).TotalDays))).$([System.Math]::Floor($([MSBuild]::Divide($([System.DateTime]::Now.Subtract($([System.DateTime]::Today)).TotalSeconds), 2.0))))</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
-    <Version>1.0.0-beta</Version>
+    <Version>1.0.0-beta.2</Version>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
