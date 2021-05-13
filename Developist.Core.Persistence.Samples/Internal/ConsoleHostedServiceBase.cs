@@ -4,7 +4,6 @@
 using Developist.Core.Utilities;
 
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -34,19 +33,18 @@ namespace Developist.Core.Persistence.Samples
     internal abstract class ConsoleHostedServiceBase : IHostedService
     {
         private readonly IHostApplicationLifetime applicationLifetime;
-        private readonly IServiceProvider serviceProvider;
         private int? exitCode;
 
         protected ConsoleHostedServiceBase(IHostApplicationLifetime applicationLifetime, IServiceProvider serviceProvider, IConfiguration configuration, ILogger logger)
         {
             this.applicationLifetime = Ensure.Argument.NotNull(applicationLifetime, nameof(applicationLifetime));
-            this.serviceProvider = Ensure.Argument.NotNull(serviceProvider, nameof(serviceProvider));
 
+            ServiceProvider = Ensure.Argument.NotNull(serviceProvider, nameof(serviceProvider));
             Configuration = Ensure.Argument.NotNull(configuration, nameof(configuration));
             Logger = logger ?? NullLogger.Instance;
         }
 
-        protected IServiceProvider ServiceProvider { get; private set; }
+        protected IServiceProvider ServiceProvider { get; }
         protected IConfiguration Configuration { get; }
         protected ILogger Logger { get; }
 
@@ -58,9 +56,6 @@ namespace Developist.Core.Persistence.Samples
                 {
                     try
                     {
-                        using var scope = serviceProvider.CreateScope();
-                        ServiceProvider = scope.ServiceProvider;
-
                         await OnApplicationStartedAsync(cancellationToken);
 
                         exitCode = 0;
