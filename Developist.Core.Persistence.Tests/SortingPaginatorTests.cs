@@ -160,18 +160,35 @@ namespace Developist.Core.Persistence.Tests
             Assert.AreEqual("Glenn", result.Last().GivenName);
         }
 
+        [TestMethod]
+        public void Paginate_SortedByAgePropertyGivenAsString_ReturnsExpectedResult()
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>().StartingAt(1).WithPageSizeOf(3);
+            paginator.SortedBy("Age", SortDirection.Ascending);
+
+            // Act
+            var result = paginator.Paginate(People);
+
+            // Assert
+            Assert.AreEqual(3, result.Count());
+            Assert.AreEqual("Phillipa Connor", result.First().FullName()); // null < any other value
+            Assert.AreEqual("Peter Connor", result.ElementAt(1).FullName());
+            Assert.AreEqual("Dwayne Welsh", result.Last().FullName());
+        }
+
         private static IQueryable<Person> People =>
             new[]
             {
-                new Person { GivenName = "Dwayne", FamilyName = "Welsh" },
-                new Person { GivenName = "Ed", FamilyName = "Stuart" },
-                new Person { GivenName = "Hollie", FamilyName = "Marin" },
-                new Person { GivenName = "Randall", FamilyName = "Bloom" },
-                new Person { GivenName = "Glenn", FamilyName = "Hensley" },
-                new Person { GivenName = "Phillipa", FamilyName = "Connor" },
-                new Person { GivenName = "Peter", FamilyName = "Connor" },
-                new Person { GivenName = "Ana", FamilyName = "Bryan" },
-                new Person { GivenName = "Edgar", FamilyName = "Bernard" }
+                new Person { GivenName = "Dwayne", FamilyName = "Welsh", Age = 18 },
+                new Person { GivenName = "Ed", FamilyName = "Stuart", Age = 24 },
+                new Person { GivenName = "Hollie", FamilyName = "Marin", Age = 36 },
+                new Person { GivenName = "Randall", FamilyName = "Bloom", Age = 55 },
+                new Person { GivenName = "Glenn", FamilyName = "Hensley", Age = 27 },
+                new Person { GivenName = "Phillipa", FamilyName = "Connor", Age = null },
+                new Person { GivenName = "Peter", FamilyName = "Connor", Age = 12 },
+                new Person { GivenName = "Ana", FamilyName = "Bryan", Age = 44 },
+                new Person { GivenName = "Edgar", FamilyName = "Bernard", Age = 80 }
 
             }.AsQueryable();
     }
