@@ -173,6 +173,32 @@ namespace Developist.Core.Persistence.Tests
         }
 
         [TestMethod]
+        public async Task AllAsync_UsingPaginator_ReturnsExpectedResult()
+        {
+            // Arrange
+            var people = new[]
+            {
+                new Person { GivenName = "Dwayne", FamilyName = "Welsh" },
+                new Person { GivenName = "Ed", FamilyName = "Stuart" },
+                new Person { GivenName = "Hollie", FamilyName = "Marin" },
+                new Person { GivenName = "Randall", FamilyName = "Bloom" },
+            };
+
+            uow.People().AddRange(people);
+            await uow.CompleteAsync();
+
+            var paginator = new SortingPaginator<Person>().StartingAt(1).WithPageSizeOf(2).SortedBy("Id", SortDirection.Descending);
+
+            // Act
+            var paginatedResult = await uow.People().AllAsync(paginator);
+
+            // Assert
+            Assert.AreEqual(2, paginatedResult.Count());
+            Assert.AreEqual("Randall", paginatedResult[0].GivenName);
+            Assert.AreEqual("Hollie", paginatedResult[1].GivenName);
+        }
+
+        [TestMethod]
         public void Count_ByDefaultAndGivenFilter_ReturnsExpectedResult()
         {
             // Arrange
