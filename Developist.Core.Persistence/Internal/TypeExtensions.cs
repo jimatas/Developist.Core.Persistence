@@ -18,7 +18,9 @@ namespace Developist.Core.Persistence
                 return type.GetProperty(propertyName, bindingAttr);
             }
 
-            return new[] { type }.Concat(type.GetInterfaces()).Select(iface => iface.GetProperty(propertyName, bindingAttr)).FirstOrDefault();
+            return new[] { type }.Concat(type.GetInterfaces())
+                .Select(iface => iface.GetProperty(propertyName, bindingAttr))
+                .FirstOrDefault(property => property is not null);
         }
     }
 }
