@@ -47,7 +47,7 @@ namespace Developist.Core.Persistence
                     throw new InvalidOperationException($"No property '{nestedProperty}' on type '{type.Name}'.");
                 }
 
-                expression = Expression.Property(expression, nestedProperty);
+                expression = Expression.Property(expression, property);
                 type = property.PropertyType;
             }
             expression = Expression.Lambda(expression, parameter);
