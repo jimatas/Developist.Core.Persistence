@@ -45,23 +45,23 @@ namespace Developist.Core.Persistence.Tests
             Expression<Func<Person, object>> propertySelector = null;
 
             // Act
-            void action() => new SortProperty<Person>(propertySelector, SortDirection.Ascending);
+            void action() => new SortProperty<Person, object>(propertySelector, SortDirection.Ascending);
 
             // Assert
             Assert.ThrowsException<ArgumentNullException>(action);
         }
 
         [TestMethod]
-        public void Initialize_GivenInvalidPropertyName_ThrowsArgumentException()
+        public void Initialize_GivenInvalidPropertyName_DoesNotThrow()
         {
             // Arrange
             var propertyName = "UndefinedProperty";
 
             // Act
-            void action() => new SortProperty<Person>(propertyName, SortDirection.Ascending);
+            var property = new SortProperty<Person>(propertyName, SortDirection.Ascending);
 
             // Assert
-            Assert.ThrowsException<ArgumentException>(action);
+            Assert.IsNotNull(property.Property);
         }
 
         [TestMethod]
@@ -71,10 +71,10 @@ namespace Developist.Core.Persistence.Tests
             var propertyName = "FamilyName";
 
             // Act
-            var paginator = new SortProperty<Person>(propertyName, SortDirection.Ascending);
+            var property = new SortProperty<Person>(propertyName, SortDirection.Ascending);
 
             // Assert
-            Assert.IsNotNull(paginator.Expression);
+            Assert.IsNotNull(property.Property);
         }
     }
 }

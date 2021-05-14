@@ -115,7 +115,7 @@ namespace Developist.Core.Persistence.Tests
         {
             // Arrange
             var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 2);
-            paginator.SortProperties.Add(new SortProperty<Person>(p => p.GivenName, SortDirection.Ascending));
+            paginator.SortProperties.Add(new SortProperty<Person, string>(p => p.GivenName, SortDirection.Ascending));
 
             // Act
             var result = paginator.Paginate(People);

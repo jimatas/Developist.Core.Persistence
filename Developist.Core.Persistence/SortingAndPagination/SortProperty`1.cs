@@ -4,67 +4,66 @@
 using Developist.Core.Utilities;
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
-using LinqExpression = System.Linq.Expressions.Expression;
 
 namespace Developist.Core.Persistence
 {
-    /// <summary>
-    /// Specifies a property to sort by and in which direction.
-    /// </summary>
-    /// <typeparam name="T">The type of the object whose property to sort by.</typeparam>
-    public class SortProperty<T>
+    public class SortProperty<T> : ISortProperty<T>
     {
         #region Constructors
-        public SortProperty(string name, SortDirection direction)
-            : this(GetPropertySelector(name), direction) => Name = name;
-
-        public SortProperty(Expression<Func<T, object>> expression, SortDirection direction)
+        public SortProperty(string property, SortDirection direction) : this(direction)
         {
-            Expression = Ensure.Argument.NotNull(expression, nameof(expression));
-            Direction = direction;
+            Property = Ensure.Argument.NotNullOrWhiteSpace(property, nameof(property));
         }
+
+        protected SortProperty(SortDirection direction) => Direction = direction;
         #endregion
 
         /// <summary>
-        /// The name of the property to sort by. 
+        /// The name of the property to sort by.
         /// </summary>
-        /// <value>Only set when a property name rather than an expression was specified in the constructor call.</value>
-        public string Name { get; }
-
-        /// <summary>
-        /// A lambda expression that selects the property to sort by on the target object.
-        /// </summary>
-        public Expression<Func<T, object>> Expression { get; }
+        /// <remarks>
+        /// Supports, to some extent, specifying nested paths using dot notation.
+        /// </remarks>
+        public string Property { get; }
 
         /// <summary>
         /// The direction in which to sort.
         /// </summary>
         public SortDirection Direction { get; }
 
-        private static Expression<Func<T, object>> GetPropertySelector(string name)
+        public virtual IOrderedQueryable<T> ApplyTo(IQueryable<T> sequence)
         {
-            Ensure.Argument.NotNullOrWhiteSpace(name, nameof(name));
-
             var type = typeof(T);
-            var parameter = LinqExpression.Parameter(type, "p");
+            var parameter = Expression.Parameter(type, "p");
 
-            LinqExpression expression = parameter;
-
-            foreach (var nestedPropertyName in name.Split('.'))
+            Expression expression = parameter;
+            foreach (var nestedProperty in Property.Split('.'))
             {
-                var property = type.GetPublicProperty(nestedPropertyName);
+                var property = type.GetProperty(nestedProperty);
                 if (property is null)
                 {
-                    throw new ArgumentException($"No property '{nestedPropertyName}' on type '{type.Name}'.", nameof(name));
+                    throw new InvalidOperationException($"No property '{nestedProperty}' on type '{type.Name}'.");
                 }
 
-                expression = LinqExpression.Property(expression, property);
+                expression = Expression.Property(expression, nestedProperty);
                 type = property.PropertyType;
             }
+            expression = Expression.Lambda(expression, parameter);
 
-            expression = LinqExpression.Convert(expression, typeof(object));
-            return LinqExpression.Lambda<Func<T, object>>(expression, parameter);
+            var sortMethodName = sequence.Expression.Type == typeof(IOrderedQueryable<T>)
+                ? Direction == SortDirection.Ascending
+                    ? "ThenBy"
+                    : "ThenByDescending"
+                : Direction == SortDirection.Ascending
+                    ? "OrderBy"
+                    : "OrderByDescending";
+
+            var sortMethod = typeof(Queryable).GetMethods().Single(method => method.Name == sortMethodName && method.GetParameters().Length == 2);
+            sortMethod = sortMethod.MakeGenericMethod(typeof(T), type);
+
+            return (IOrderedQueryable<T>)sortMethod.Invoke(null, new object[] { sequence, expression });
         }
     }
 }
