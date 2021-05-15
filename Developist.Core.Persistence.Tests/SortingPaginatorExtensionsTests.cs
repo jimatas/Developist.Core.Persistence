@@ -3,6 +3,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using System;
 using System.Linq;
 
 namespace Developist.Core.Persistence.Tests
@@ -150,6 +151,81 @@ namespace Developist.Core.Persistence.Tests
             // Assert
             Assert.IsTrue(result);
             Assert.AreEqual(paginator.PageCount - 1, paginator.PageNumber);
+        }
+
+        [TestMethod]
+        public void SortedByString_GivenNullString_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>();
+
+            // Act
+            void action() => paginator.SortedByString(null);
+
+            // Assert
+            Assert.ThrowsException<ArgumentNullException>(action);
+        }
+
+        [DataTestMethod]
+        [DataRow("")]
+        [DataRow(" \r\n")]
+        public void SortedByString_GivenEmptyOrWhiteSpaceOnlyString_ThrowsArgumentException(string value)
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>();
+
+            // Act
+            void action() => paginator.SortedByString(value);
+
+            // Assert
+            Assert.ThrowsException<ArgumentException>(action);
+        }
+
+        [DataTestMethod]
+        [DataRow("+()")]
+        [DataRow("GivenName,-( )")]
+        public void SortedByString_GivenInvalidString_ThrowsFormatException(string value)
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>();
+
+            // Act
+            void action() => paginator.SortedByString(value);
+
+            // Assert
+            Assert.ThrowsException<FormatException>(action);
+        }
+
+        [TestMethod]
+        public void SortedByString_GivenSingleDirective_AddsSortDirective()
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>();
+
+            // Act
+            paginator.SortedByString("FamilyName");
+
+            // Assert
+            Assert.AreEqual(1, paginator.SortDirectives.Count);
+            Assert.AreEqual("FamilyName", ((SortProperty<Person>)paginator.SortDirectives.First()).Property);
+            Assert.AreEqual(SortDirection.Ascending, ((SortProperty<Person>)paginator.SortDirectives.First()).Direction);
+        }
+
+        [TestMethod]
+        public void SortedByString_GivenTwoDirectives_AddsBoth()
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>();
+
+            // Act
+            paginator.SortedByString("FamilyName,-Age");
+
+            // Assert
+            Assert.AreEqual(2, paginator.SortDirectives.Count);
+            Assert.AreEqual("FamilyName", ((SortProperty<Person>)paginator.SortDirectives.First()).Property);
+            Assert.AreEqual(SortDirection.Ascending, ((SortProperty<Person>)paginator.SortDirectives.First()).Direction);
+            Assert.AreEqual("Age", ((SortProperty<Person>)paginator.SortDirectives.Last()).Property);
+            Assert.AreEqual(SortDirection.Descending, ((SortProperty<Person>)paginator.SortDirectives.Last()).Direction);
         }
 
         private static IQueryable<Person> People =>
