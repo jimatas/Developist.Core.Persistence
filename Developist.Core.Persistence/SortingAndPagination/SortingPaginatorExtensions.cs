@@ -64,6 +64,26 @@ namespace Developist.Core.Persistence
         }
 
         /// <summary>
+        /// Parses a string consisting of potentially multiple sorting directives into the equivalent <see cref="SortProperty{T}"/> objects and adds them to the <see cref="SortingPaginator{T}.SortDirectives"/> collection of the <paramref name="paginator"/>.
+        /// </summary>
+        /// <remarks>
+        /// The format supported is <c>"-DateOfBirth,FamilyName"</c>. 
+        /// Takes care of stripping enclosing parentheses, such as in <c>"-(DateOfBirth)"</c>.
+        /// </remarks>
+        /// <typeparam name="T">The type of the object whose properties to sort by.</typeparam>
+        /// <param name="paginator">The paginator to add the sorting directives to.</param>
+        /// <param name="value">A string in the form <c>"-DateOfBirth,FamilyName"</c></param>
+        /// <returns>The same paginator instance to allow for method chaining.</returns>
+        public static SortingPaginator<T> SortedByString<T>(this SortingPaginator<T> paginator, string value)
+        {
+            foreach (var property in SortPropertyHelper<T>.ParseFromString(value))
+            {
+                paginator.SortDirectives.Add(property);
+            }
+            return paginator;
+        }
+
+        /// <summary>
         /// Determines whether there is another page within the result set.
         /// </summary>
         /// <remarks>
