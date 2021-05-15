@@ -111,11 +111,39 @@ namespace Developist.Core.Persistence.Tests
         }
 
         [TestMethod]
+        public void Paginate_SortedByInvalidProperty_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>().SortedBy("UndefinedProperty");
+
+            // Act
+            void action() => paginator.Paginate(People);
+
+            // Assert
+            var exception = Assert.ThrowsException<InvalidOperationException>(action);
+            Assert.AreEqual("No property 'UndefinedProperty' on type 'Person'.", exception.Message);
+        }
+
+        [TestMethod]
+        public void Paginate_SortedByInvalidNestedProperty_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>().SortedBy("FavoriteBook.UndefinedProperty");
+
+            // Act
+            void action() => paginator.Paginate(People);
+
+            // Assert
+            var exception = Assert.ThrowsException<InvalidOperationException>(action);
+            Assert.AreEqual("No property 'UndefinedProperty' on type 'Book'.", exception.Message);
+        }
+
+        [TestMethod]
         public void Paginate_SortedByGivenNameAscendingUsingExpression_ReturnsExpectedResult()
         {
             // Arrange
             var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 2);
-            paginator.SortProperties.Add(new SortProperty<Person>(p => p.GivenName, SortDirection.Ascending));
+            paginator.SortDirectives.Add(new SortProperty<Person, string>(p => p.GivenName, SortDirection.Ascending));
 
             // Act
             var result = paginator.Paginate(People);
@@ -131,7 +159,7 @@ namespace Developist.Core.Persistence.Tests
         {
             // Arrange
             var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 2);
-            paginator.SortProperties.Add(new SortProperty<Person>("GivenName", SortDirection.Ascending));
+            paginator.SortDirectives.Add(new SortProperty<Person>("GivenName", SortDirection.Ascending));
 
             // Act
             var result = paginator.Paginate(People);
@@ -147,7 +175,7 @@ namespace Developist.Core.Persistence.Tests
         {
             // Arrange
             var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 2);
-            paginator.SortProperties.Add(new SortProperty<Person>("FamilyName", SortDirection.Descending));
+            paginator.SortDirectives.Add(new SortProperty<Person>("FamilyName", SortDirection.Descending));
 
             // Act
             var result = paginator.Paginate(People);
@@ -163,8 +191,8 @@ namespace Developist.Core.Persistence.Tests
         {
             // Arrange
             var paginator = new SortingPaginator<Person>(pageNumber: 2, pageSize: 3);
-            paginator.SortProperties.Add(new SortProperty<Person>("FamilyName", SortDirection.Ascending));
-            paginator.SortProperties.Add(new SortProperty<Person>("GivenName", SortDirection.Descending));
+            paginator.SortDirectives.Add(new SortProperty<Person>("FamilyName", SortDirection.Ascending));
+            paginator.SortDirectives.Add(new SortProperty<Person>("GivenName", SortDirection.Descending));
 
             // Act
             var result = paginator.Paginate(People);

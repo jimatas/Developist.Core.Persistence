@@ -35,50 +35,31 @@ namespace Developist.Core.Persistence
         }
 
         /// <summary>
-        /// Sorts by the property with the specified name.
+        /// Adds a new sorting directive to the <see cref="SortingPaginator{T}.SortDirectives"/> collection of the <paramref name="paginator"/>.
         /// </summary>
         /// <typeparam name="T">The type of the items being paginated over.</typeparam>
-        /// <param name="paginator">The paginator to add the sort property to.</param>
-        /// <param name="propertyName">The name of the property to sort by.</param>
-        /// <returns>A reference to the paginator to which the sort property has been added.</returns>
-        public static SortingPaginator<T> SortedBy<T>(this SortingPaginator<T> paginator, string propertyName)
-            => paginator.SortedBy(propertyName, SortDirection.Ascending);
-
-        /// <summary>
-        /// Sorts by the property with the specified name. This overload also allows for specifying the sort direction.
-        /// </summary>
-        /// <typeparam name="T">The type of the items being paginated over.</typeparam>
-        /// <param name="paginator">The paginator to add the sort property to.</param>
-        /// <param name="propertyName">The name of the property to sort by.</param>
-        /// <param name="direction">The direction in which to sort.</param>
-        /// <returns>A reference to the paginator to which the sort property has been added.</returns>
-        public static SortingPaginator<T> SortedBy<T>(this SortingPaginator<T> paginator, string propertyName, SortDirection direction)
+        /// <param name="paginator">The paginator to add the sorting directive to.</param>
+        /// <param name="property">The name of the property on the target object to sort by.</param>
+        /// <param name="direction">The direction in which to sort. Defaults to <see cref="SortDirection.Ascending"/>.</param>
+        /// <returns>A reference to the paginator to allow for chaining of method calls.</returns>
+        public static SortingPaginator<T> SortedBy<T>(this SortingPaginator<T> paginator, string property, SortDirection direction = SortDirection.Ascending)
         {
-            paginator.SortProperties.Add(new(propertyName, direction));
+            paginator.SortDirectives.Add(new SortProperty<T>(property, direction));
             return paginator;
         }
 
         /// <summary>
-        /// Sorts by the property specified by the lambda expression.
+        /// Adds a new sorting directive to the <see cref="SortingPaginator{T}.SortDirectives"/> collection of the <paramref name="paginator"/>.
         /// </summary>
         /// <typeparam name="T">The type of the items being paginated over.</typeparam>
-        /// <param name="paginator">The paginator to add the sort property to.</param>
-        /// <param name="propertySelector">A lambda expression that selects the property to sort by on the target object.</param>
-        /// <returns>A reference to the paginator to which the sort property has been added.</returns>
-        public static SortingPaginator<T> SortedBy<T>(this SortingPaginator<T> paginator, Expression<Func<T, object>> propertySelector)
-            => paginator.SortedBy(propertySelector, SortDirection.Ascending);
-
-        /// <summary>
-        /// Sorts by the property specified by the lambda expression. This overload also allows for specifying the sort direction.
-        /// </summary>
-        /// <typeparam name="T">The type of the items being paginated over.</typeparam>
-        /// <param name="paginator">The paginator to add the sort property to.</param>
-        /// <param name="propertySelector">A lambda expression that selects the property to sort by on the target object.</param>
-        /// <param name="direction">The direction in which to sort.</param>
-        /// <returns>A reference to the paginator to which the sort property has been added.</returns>
-        public static SortingPaginator<T> SortedBy<T>(this SortingPaginator<T> paginator, Expression<Func<T, object>> propertySelector, SortDirection direction)
+        /// <typeparam name="TProperty">The type of the property to sort by.</typeparam>
+        /// <param name="paginator">The paginator to add the sorting directive to.</param>
+        /// <param name="property">A lambda expression selecting the property on the target object to sort by.</param>
+        /// <param name="direction">The direction in which to sort. Defaults to <see cref="SortDirection.Ascending"/>.</param>
+        /// <returns>A reference to the paginator to allow for chaining of method calls.</returns>
+        public static SortingPaginator<T> SortedBy<T, TProperty>(this SortingPaginator<T> paginator, Expression<Func<T, TProperty>> property, SortDirection direction = SortDirection.Ascending)
         {
-            paginator.SortProperties.Add(new(propertySelector, direction));
+            paginator.SortDirectives.Add(new SortProperty<T, TProperty>(property, direction));
             return paginator;
         }
 
