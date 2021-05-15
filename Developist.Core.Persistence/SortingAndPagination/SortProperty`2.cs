@@ -28,7 +28,7 @@ namespace Developist.Core.Persistence
 
         public override IOrderedQueryable<T> ApplyTo(IQueryable<T> sequence)
         {
-            return sequence.Expression.Type == typeof(IOrderedQueryable<T>)
+            return sequence.IsOrdered()
                 ? Direction == SortDirection.Ascending
                     ? ((IOrderedQueryable<T>)sequence).ThenBy(Property)
                     : ((IOrderedQueryable<T>)sequence).ThenByDescending(Property)

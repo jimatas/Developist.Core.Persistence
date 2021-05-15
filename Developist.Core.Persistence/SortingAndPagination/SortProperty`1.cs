@@ -56,7 +56,7 @@ namespace Developist.Core.Persistence
             }
             expression = Expression.Lambda(expression, parameter);
 
-            var sortMethodName = sequence.Expression.Type == typeof(IOrderedQueryable<T>)
+            var sortMethodName = sequence.IsOrdered()
                 ? Direction == SortDirection.Ascending
                     ? "ThenBy"
                     : "ThenByDescending"
