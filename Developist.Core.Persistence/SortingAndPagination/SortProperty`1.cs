@@ -9,7 +9,11 @@ using System.Linq.Expressions;
 
 namespace Developist.Core.Persistence
 {
-    public class SortProperty<T> : ISortProperty<T>
+    /// <summary>
+    /// A sorting directive consisting of a sort property and sort direction.
+    /// </summary>
+    /// <typeparam name="T">The type of the object whose property to sort by.</typeparam>
+    public class SortProperty<T> : ISortDirective<T>
     {
         #region Constructors
         public SortProperty(string property, SortDirection direction) : this(direction)

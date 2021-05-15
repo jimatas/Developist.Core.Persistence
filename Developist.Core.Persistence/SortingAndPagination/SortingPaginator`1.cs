@@ -68,18 +68,18 @@ namespace Developist.Core.Persistence
         }
 
         /// <summary>
-        /// The properties to sort by, including their sort directions.
+        /// The instructions by which to sort the items in the result set.
         /// </summary>
-        public ICollection<ISortProperty<T>> SortProperties { get; } = new List<ISortProperty<T>>();
+        public ICollection<ISortDirective<T>> SortDirectives { get; } = new List<ISortDirective<T>>();
 
         public IQueryable<T> Paginate(IQueryable<T> sequence)
         {
             ItemCount = sequence.Count();
 
             IOrderedQueryable<T> orderedSequence = null;
-            foreach (var property in SortProperties)
+            foreach (var directive in SortDirectives)
             {
-                orderedSequence = property.ApplyTo(orderedSequence ?? sequence);
+                orderedSequence = directive.ApplyTo(orderedSequence ?? sequence);
             }
 
             if (orderedSequence is not null)

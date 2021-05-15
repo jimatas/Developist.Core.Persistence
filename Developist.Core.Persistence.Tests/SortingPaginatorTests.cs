@@ -143,7 +143,7 @@ namespace Developist.Core.Persistence.Tests
         {
             // Arrange
             var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 2);
-            paginator.SortProperties.Add(new SortProperty<Person, string>(p => p.GivenName, SortDirection.Ascending));
+            paginator.SortDirectives.Add(new SortProperty<Person, string>(p => p.GivenName, SortDirection.Ascending));
 
             // Act
             var result = paginator.Paginate(People);
@@ -159,7 +159,7 @@ namespace Developist.Core.Persistence.Tests
         {
             // Arrange
             var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 2);
-            paginator.SortProperties.Add(new SortProperty<Person>("GivenName", SortDirection.Ascending));
+            paginator.SortDirectives.Add(new SortProperty<Person>("GivenName", SortDirection.Ascending));
 
             // Act
             var result = paginator.Paginate(People);
@@ -175,7 +175,7 @@ namespace Developist.Core.Persistence.Tests
         {
             // Arrange
             var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 2);
-            paginator.SortProperties.Add(new SortProperty<Person>("FamilyName", SortDirection.Descending));
+            paginator.SortDirectives.Add(new SortProperty<Person>("FamilyName", SortDirection.Descending));
 
             // Act
             var result = paginator.Paginate(People);
@@ -191,8 +191,8 @@ namespace Developist.Core.Persistence.Tests
         {
             // Arrange
             var paginator = new SortingPaginator<Person>(pageNumber: 2, pageSize: 3);
-            paginator.SortProperties.Add(new SortProperty<Person>("FamilyName", SortDirection.Ascending));
-            paginator.SortProperties.Add(new SortProperty<Person>("GivenName", SortDirection.Descending));
+            paginator.SortDirectives.Add(new SortProperty<Person>("FamilyName", SortDirection.Ascending));
+            paginator.SortDirectives.Add(new SortProperty<Person>("GivenName", SortDirection.Descending));
 
             // Act
             var result = paginator.Paginate(People);

@@ -9,6 +9,11 @@ using System.Linq.Expressions;
 
 namespace Developist.Core.Persistence
 {
+    /// <summary>
+    /// A sorting directive consisting of a sort property and sort direction.
+    /// </summary>
+    /// <typeparam name="T">The type of the object whose property to sort by.</typeparam>
+    /// <typeparam name="TProperty">The type of the property to sort by.</typeparam>
     public class SortProperty<T, TProperty> : SortProperty<T>
     {
         public SortProperty(Expression<Func<T, TProperty>> property, SortDirection direction) : base(direction)
