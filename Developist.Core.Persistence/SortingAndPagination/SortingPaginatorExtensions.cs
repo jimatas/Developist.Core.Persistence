@@ -39,7 +39,7 @@ namespace Developist.Core.Persistence
         /// </summary>
         /// <typeparam name="T">The type of the items being paginated over.</typeparam>
         /// <param name="paginator">The paginator to add the sorting directive to.</param>
-        /// <param name="property">The name of the property to sort by.</param>
+        /// <param name="property">The name of the property on the target object to sort by.</param>
         /// <param name="direction">The direction in which to sort. Defaults to <see cref="SortDirection.Ascending"/>.</param>
         /// <returns>A reference to the paginator to allow for chaining of method calls.</returns>
         public static SortingPaginator<T> SortedBy<T>(this SortingPaginator<T> paginator, string property, SortDirection direction = SortDirection.Ascending)
@@ -54,7 +54,7 @@ namespace Developist.Core.Persistence
         /// <typeparam name="T">The type of the items being paginated over.</typeparam>
         /// <typeparam name="TProperty">The type of the property to sort by.</typeparam>
         /// <param name="paginator">The paginator to add the sorting directive to.</param>
-        /// <param name="property">A lambda expression selecting the property to sort by on the target object.</param>
+        /// <param name="property">A lambda expression selecting the property on the target object to sort by.</param>
         /// <param name="direction">The direction in which to sort. Defaults to <see cref="SortDirection.Ascending"/>.</param>
         /// <returns>A reference to the paginator to allow for chaining of method calls.</returns>
         public static SortingPaginator<T> SortedBy<T, TProperty>(this SortingPaginator<T> paginator, Expression<Func<T, TProperty>> property, SortDirection direction = SortDirection.Ascending)
