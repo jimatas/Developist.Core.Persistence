@@ -45,7 +45,7 @@ namespace Developist.Core.Persistence
             Expression expression = parameter;
             foreach (var nestedProperty in Property.Split('.'))
             {
-                var property = type.GetProperty(nestedProperty);
+                var property = type.GetPublicProperty(nestedProperty);
                 if (property is null)
                 {
                     throw new InvalidOperationException($"No property '{nestedProperty}' on type '{type.Name}'.");
