@@ -5,7 +5,6 @@ using Developist.Core.Utilities;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Developist.Core.Persistence
 {
@@ -20,24 +19,29 @@ namespace Developist.Core.Persistence
         {
             Ensure.Argument.NotNullOrWhiteSpace(value, nameof(value));
 
-            foreach (var directive in value.Split(',').Select(s => s.Trim()).Where(s => s != string.Empty))
+            foreach (var directive in value.Split(',', StringSplitOptions.TrimEntries))
             {
-                var property = directive;
+                var propertyName = directive;
 
                 bool descending;
-                if ((descending = property.StartsWith('-')) || property.StartsWith('+')) // Also handle possible +-prefix.
+                if ((descending = directive.StartsWith('-')) || directive.StartsWith('+')) // Also handle possible +-prefix.
                 {
-                    property = property.Substring(1).TrimStart('(').TrimEnd(')');
-                }
-
-                if (property.Trim() == string.Empty)
-                {
-                    throw new FormatException("At least one of the sorting directives in the input string could not be parsed successfully.");
+                    propertyName = directive.Substring(1).TrimStart('(').TrimEnd(')');
                 }
 
                 var direction = descending ? SortDirection.Descending : SortDirection.Ascending;
 
-                yield return new SortProperty<T>(property, direction);
+                SortProperty<T> property;
+                try
+                {
+                    property = new SortProperty<T>(propertyName, direction);
+                }
+                catch (ArgumentException exception)
+                {
+                    throw new FormatException("At least one of the sorting directives in the input string could not be parsed successfully.", exception);
+                }
+
+                yield return property;
             }
         }
     }
