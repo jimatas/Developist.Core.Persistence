@@ -15,6 +15,9 @@ namespace Developist.Core.Persistence
     /// <typeparam name="T">The type of the items in result set.</typeparam>
     public class SortingPaginator<T> : IQueryablePaginator<T>
     {
+        /// <summary>
+        /// The default page size to use when one is not specified.
+        /// </summary>
         public const int DefaultPageSize = 20;
 
         private int pageNumber;
@@ -22,8 +25,22 @@ namespace Developist.Core.Persistence
         private int itemCount;
 
         #region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SortingPaginator{T}"/> class.
+        /// </summary>
         public SortingPaginator() : this(pageNumber: 1) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SortingPaginator{T}"/> class given the current page number.
+        /// </summary>
+        /// <param name="pageNumber">The 1-based page number.</param>
         public SortingPaginator(int pageNumber) : this(pageNumber, DefaultPageSize) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SortingPaginator{T}"/> class given the current page number and page size.
+        /// </summary>
+        /// <param name="pageNumber">The 1-based page number.</param>
+        /// <param name="pageSize">The number of items per page.</param>
         public SortingPaginator(int pageNumber, int pageSize)
         {
             PageNumber = pageNumber;
@@ -72,6 +89,7 @@ namespace Developist.Core.Persistence
         /// </summary>
         public ICollection<ISortDirective<T>> SortDirectives { get; } = new List<ISortDirective<T>>();
 
+        /// <inheritdoc/>
         public IQueryable<T> Paginate(IQueryable<T> sequence)
         {
             ItemCount = sequence.Count();
