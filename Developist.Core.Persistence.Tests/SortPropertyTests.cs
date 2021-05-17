@@ -52,16 +52,31 @@ namespace Developist.Core.Persistence.Tests
         }
 
         [TestMethod]
-        public void Initialize_GivenInvalidPropertyName_DoesNotThrow()
+        public void Initialize_GivenInvalidPropertyName_ThrowsArgumentException()
         {
             // Arrange
             var propertyName = "UndefinedProperty";
 
             // Act
-            var property = new SortProperty<Person>(propertyName, SortDirection.Ascending);
+            void action() => new SortProperty<Person>(propertyName, SortDirection.Ascending);
 
             // Assert
-            Assert.IsNotNull(property.Property);
+            var exception = Assert.ThrowsException<ArgumentException>(action);
+            Assert.AreEqual("No property 'UndefinedProperty' on type 'Person'. (Parameter 'propertyName')", exception.Message);
+        }
+
+        [TestMethod]
+        public void Initialize_GivenInvalidNestedPropertyName_ThrowsArgumentException()
+        {
+            // Arrange
+            var propertyName = "FavoriteBook.UndefinedProperty";
+
+            // Act
+            void action() => new SortProperty<Person>(propertyName, SortDirection.Ascending);
+
+            // Assert
+            var exception = Assert.ThrowsException<ArgumentException>(action);
+            Assert.AreEqual("No property 'UndefinedProperty' on type 'Book'. (Parameter 'propertyName')", exception.Message);
         }
 
         [TestMethod]

@@ -111,34 +111,6 @@ namespace Developist.Core.Persistence.Tests
         }
 
         [TestMethod]
-        public void Paginate_SortedByInvalidProperty_ThrowsInvalidOperationException()
-        {
-            // Arrange
-            var paginator = new SortingPaginator<Person>().SortedBy("UndefinedProperty");
-
-            // Act
-            void action() => paginator.Paginate(People);
-
-            // Assert
-            var exception = Assert.ThrowsException<InvalidOperationException>(action);
-            Assert.AreEqual("No property 'UndefinedProperty' on type 'Person'.", exception.Message);
-        }
-
-        [TestMethod]
-        public void Paginate_SortedByInvalidNestedProperty_ThrowsInvalidOperationException()
-        {
-            // Arrange
-            var paginator = new SortingPaginator<Person>().SortedBy("FavoriteBook.UndefinedProperty");
-
-            // Act
-            void action() => paginator.Paginate(People);
-
-            // Assert
-            var exception = Assert.ThrowsException<InvalidOperationException>(action);
-            Assert.AreEqual("No property 'UndefinedProperty' on type 'Book'.", exception.Message);
-        }
-
-        [TestMethod]
         public void Paginate_SortedByGivenNameAscendingUsingExpression_ReturnsExpectedResult()
         {
             // Arrange

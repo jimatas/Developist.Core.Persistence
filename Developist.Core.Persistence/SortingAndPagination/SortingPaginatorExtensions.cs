@@ -39,12 +39,12 @@ namespace Developist.Core.Persistence
         /// </summary>
         /// <typeparam name="T">The type of the items being paginated over.</typeparam>
         /// <param name="paginator">The paginator to add the sorting directive to.</param>
-        /// <param name="property">The name of the property on the target object to sort by.</param>
+        /// <param name="propertyName">The name of the property on the target object to sort by. Supports, to some extent, the specification of nested paths using dot notation.</param>
         /// <param name="direction">The direction in which to sort. Defaults to <see cref="SortDirection.Ascending"/>.</param>
         /// <returns>A reference to the paginator to allow for chaining of method calls.</returns>
-        public static SortingPaginator<T> SortedBy<T>(this SortingPaginator<T> paginator, string property, SortDirection direction = SortDirection.Ascending)
+        public static SortingPaginator<T> SortedBy<T>(this SortingPaginator<T> paginator, string propertyName, SortDirection direction = SortDirection.Ascending)
         {
-            paginator.SortDirectives.Add(new SortProperty<T>(property, direction));
+            paginator.SortDirectives.Add(new SortProperty<T>(propertyName, direction));
             return paginator;
         }
 

@@ -13,7 +13,7 @@ namespace Developist.Core.Persistence
         /// Determines whether the sequence is sorted.
         /// </summary>
         /// <remarks>
-        /// A sequence is considered sorted if OrderBy(Descending) or ThenBy(Descending) has been called on it.
+        /// A sequence is considered sorted if OrderBy/OrderByDescending or ThenBy/ThenByDescending has been called on it.
         /// </remarks>
         /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
         /// <param name="sequence">The sequence to determine </param>
@@ -21,8 +21,8 @@ namespace Developist.Core.Persistence
         public static bool IsOrdered<T>(this IQueryable<T> sequence) => OrderMethodFinder.Find(sequence.Expression);
 
         /// <summary>
-        /// Simply doing a check such as <c>queryable.Expression.Type == typeof(IOrderedQueryable&lt;T&gt;)</c> won't work 
-        /// if OrderBy(Descending) or ThenBy(Descending) wasn't the last operation performed on the queryable.
+        /// Simply doing a check such as <c>queryable.Expression.Type == typeof(IOrderedQueryable&lt;T&gt;)</c> won't work if
+        /// OrderBy/OrderByDescending or ThenBy/ThenByDescending is not the last operation that was performed on the queryable.
         /// </summary>
         private class OrderMethodFinder : ExpressionVisitor
         {

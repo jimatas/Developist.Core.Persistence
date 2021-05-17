@@ -16,16 +16,22 @@ namespace Developist.Core.Persistence
     /// <typeparam name="TProperty">The type of the property to sort by.</typeparam>
     public class SortProperty<T, TProperty> : SortProperty<T>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SortProperty{T, TProperty}"/> class given a lambda expression selecting the sort property, and the sort direction.
+        /// </summary>
+        /// <param name="property">A strongly typed lambda expression selecting the property on the target object to sort by.</param>
+        /// <param name="direction">The direction in which to sort.</param>
         public SortProperty(Expression<Func<T, TProperty>> property, SortDirection direction) : base(direction)
         {
             Property = Ensure.Argument.NotNull(property, nameof(property));
         }
 
         /// <summary>
-        /// A lambda expression selecting the property to sort by.
+        /// A strongly typed lambda expression selecting the property on the target object to sort by.
         /// </summary>
         public new Expression<Func<T, TProperty>> Property { get; }
 
+        /// <inheritdoc/>
         public override IOrderedQueryable<T> ApplyTo(IQueryable<T> sequence)
         {
             return sequence.IsOrdered()

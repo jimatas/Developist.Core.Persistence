@@ -16,46 +16,37 @@ namespace Developist.Core.Persistence
     public class SortProperty<T> : ISortDirective<T>
     {
         #region Constructors
-        public SortProperty(string property, SortDirection direction) : this(direction)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SortProperty{T}"/> class given the name of the property to sort by and the sort direction.
+        /// </summary>
+        /// <param name="propertyName">The name of the property on the target object to sort by. Supports, to some extent, the specification of nested paths using dot notation.</param>
+        /// <param name="direction">The direction in which to sort.</param>
+        public SortProperty(string propertyName, SortDirection direction) : this(direction)
         {
-            Property = Ensure.Argument.NotNullOrWhiteSpace(property, nameof(property));
+            Ensure.Argument.NotNullOrWhiteSpace(propertyName, nameof(propertyName));
+            Property = GetPropertySelector(propertyName);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SortProperty{T}"/> class given the sort direction.
+        /// </summary>
+        /// <param name="direction">The direction in which to sort.</param>
         protected SortProperty(SortDirection direction) => Direction = direction;
         #endregion
 
         /// <summary>
-        /// The name of the property to sort by.
+        /// A lambda expression selecting the property on the target object to sort by.
         /// </summary>
-        /// <remarks>
-        /// Supports, to some extent, specifying nested paths using dot notation.
-        /// </remarks>
-        public string Property { get; }
+        public LambdaExpression Property { get; }
 
         /// <summary>
         /// The direction in which to sort.
         /// </summary>
         public SortDirection Direction { get; }
 
+        /// <inheritdoc/>
         public virtual IOrderedQueryable<T> ApplyTo(IQueryable<T> sequence)
         {
-            var type = typeof(T);
-            var parameter = Expression.Parameter(type, "p");
-
-            Expression expression = parameter;
-            foreach (var nestedProperty in Property.Split('.'))
-            {
-                var property = type.GetPublicProperty(nestedProperty);
-                if (property is null)
-                {
-                    throw new InvalidOperationException($"No property '{nestedProperty}' on type '{type.Name}'.");
-                }
-
-                expression = Expression.Property(expression, property);
-                type = property.PropertyType;
-            }
-            expression = Expression.Lambda(expression, parameter);
-
             var sortMethodName = sequence.IsOrdered()
                 ? Direction == SortDirection.Ascending
                     ? "ThenBy"
@@ -63,11 +54,33 @@ namespace Developist.Core.Persistence
                 : Direction == SortDirection.Ascending
                     ? "OrderBy"
                     : "OrderByDescending";
-
+            
             var sortMethod = typeof(Queryable).GetMethods().Single(method => method.Name == sortMethodName && method.GetParameters().Length == 2);
-            sortMethod = sortMethod.MakeGenericMethod(typeof(T), type);
+            sortMethod = sortMethod.MakeGenericMethod(typeof(T), Property.ReturnType);
 
-            return (IOrderedQueryable<T>)sortMethod.Invoke(null, new object[] { sequence, expression });
+            return (IOrderedQueryable<T>)sortMethod.Invoke(null, new object[] { sequence, Property });
+        }
+
+        private static LambdaExpression GetPropertySelector(string propertyName)
+        {
+            var type = typeof(T);
+            var parameter = Expression.Parameter(type, "p");
+
+            Expression expression = parameter;
+            foreach (var nestedProperty in propertyName.Split('.'))
+            {
+                var property = type.GetPublicProperty(nestedProperty);
+                if (property is null)
+                {
+                    throw new ArgumentException($"No property '{nestedProperty}' on type '{type.Name}'.", nameof(propertyName));
+                }
+
+                expression = Expression.Property(expression, property);
+                type = property.PropertyType;
+            }
+
+            expression = Expression.Lambda(expression, parameter);
+            return expression as LambdaExpression;
         }
     }
 }

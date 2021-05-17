@@ -5,6 +5,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Developist.Core.Persistence.Tests
 {
@@ -154,6 +156,34 @@ namespace Developist.Core.Persistence.Tests
         }
 
         [TestMethod]
+        public void SortedBy_GivenInvalidProperty_ThrowsArgumentException()
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>();
+
+            // Act
+            void action() => paginator.SortedBy("UndefinedProperty");
+
+            // Assert
+            var exception = Assert.ThrowsException<ArgumentException>(action);
+            Assert.AreEqual("No property 'UndefinedProperty' on type 'Person'. (Parameter 'propertyName')", exception.Message);
+        }
+
+        [TestMethod]
+        public void SortedBy_GivenInvalidNestedProperty_ThrowsArgumentException()
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>();
+
+            // Act
+            void action() => paginator.SortedBy("FavoriteBook.UndefinedProperty");
+
+            // Assert
+            var exception = Assert.ThrowsException<ArgumentException>(action);
+            Assert.AreEqual("No property 'UndefinedProperty' on type 'Book'. (Parameter 'propertyName')", exception.Message);
+        }
+
+        [TestMethod]
         public void SortedByString_GivenNullString_ThrowsArgumentNullException()
         {
             // Arrange
@@ -207,7 +237,7 @@ namespace Developist.Core.Persistence.Tests
 
             // Assert
             Assert.AreEqual(1, paginator.SortDirectives.Count);
-            Assert.AreEqual("FamilyName", ((SortProperty<Person>)paginator.SortDirectives.First()).Property);
+            Assert.AreEqual("FamilyName", GetPropertyNameFromLambda(((SortProperty<Person>)paginator.SortDirectives.First()).Property));
             Assert.AreEqual(SortDirection.Ascending, ((SortProperty<Person>)paginator.SortDirectives.First()).Direction);
         }
 
@@ -222,10 +252,15 @@ namespace Developist.Core.Persistence.Tests
 
             // Assert
             Assert.AreEqual(2, paginator.SortDirectives.Count);
-            Assert.AreEqual("FamilyName", ((SortProperty<Person>)paginator.SortDirectives.First()).Property);
+            Assert.AreEqual("FamilyName", GetPropertyNameFromLambda(((SortProperty<Person>)paginator.SortDirectives.First()).Property));
             Assert.AreEqual(SortDirection.Ascending, ((SortProperty<Person>)paginator.SortDirectives.First()).Direction);
-            Assert.AreEqual("Age", ((SortProperty<Person>)paginator.SortDirectives.Last()).Property);
+            Assert.AreEqual("Age", GetPropertyNameFromLambda(((SortProperty<Person>)paginator.SortDirectives.Last()).Property));
             Assert.AreEqual(SortDirection.Descending, ((SortProperty<Person>)paginator.SortDirectives.Last()).Direction);
+        }
+
+        private static string GetPropertyNameFromLambda(LambdaExpression expression)
+        {
+            return (expression.Body as MemberExpression)?.Member.Name;
         }
 
         private static IQueryable<Person> People =>
