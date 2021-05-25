@@ -1,6 +1,5 @@
 <Project>
   <PropertyGroup>
-    <Deterministic>true</Deterministic>
     <Product>Developist.Core.Persistence</Product>
     <Authors>Jim Atas</Authors>
     <Company>Developist</Company>
