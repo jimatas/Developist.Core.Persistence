@@ -1,6 +1,10 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Persistence.Entities;
+using Developist.Core.Persistence.InMemory.DependencyInjection;
+using Developist.Core.Persistence.Pagination;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,17 +18,22 @@ namespace Developist.Core.Persistence.Tests
     [TestClass]
     public class RepositoryTests
     {
+        private IServiceProvider serviceProvider;
         private IUnitOfWork uow;
 
         [TestInitialize]
         public void Initialize()
         {
-            var services = new ServiceCollection();
-            services.AddLogging(config => config.AddConsole());
-            services.AddPersistence();
+            var services = new ServiceCollection()
+                .AddLogging(logging => logging.AddConsole())
+                .AddUnitOfWork();
 
-            uow = services.BuildServiceProvider().GetRequiredService<IUnitOfWork>();
+            serviceProvider = services.BuildServiceProvider();
+            uow = serviceProvider.GetRequiredService<IUnitOfWork>();
         }
+
+        [TestCleanup]
+        public void CleanUp() => (serviceProvider as IDisposable)?.Dispose();
 
         [TestMethod]
         public void EnsureUnitOfWorkRegistered()
@@ -37,7 +46,7 @@ namespace Developist.Core.Persistence.Tests
             Assert.IsNotNull(uow);
         }
 
-        #region Repository<TEntity>.Count tests
+        #region IRepository<TEntity>.Count tests
         [TestMethod]
         public void Count_ByDefault_ReturnsExpectedResult()
         {
@@ -90,7 +99,7 @@ namespace Developist.Core.Persistence.Tests
         }
         #endregion
 
-        #region Repository<TEntity>.CountAsync tests
+        #region IRepository<TEntity>.CountAsync tests
         [TestMethod]
         public async Task CountAsync_ByDefault_ReturnsExpectedResult()
         {
@@ -143,7 +152,7 @@ namespace Developist.Core.Persistence.Tests
         }
         #endregion
 
-        #region Repository<TEntity>.Find tests
+        #region IRepository<TEntity>.Find tests
         [TestMethod]
         public void Find_GivenNullFilter_ThrowsArgumentNullException()
         {
@@ -195,7 +204,7 @@ namespace Developist.Core.Persistence.Tests
             var repository = uow.Repository<Person>();
             IQueryableFilter<Person> filter = new PersonByIdFilter(default);
             IQueryablePaginator<Person> paginator = new SortingPaginator<Person>();
-            IEntityIncludePaths<Person> includePaths = null;
+            IIncludePathCollection<Person> includePaths = null;
 
             // Act
             repository.Find(filter, includePaths);
@@ -240,7 +249,7 @@ namespace Developist.Core.Persistence.Tests
         }
         #endregion
 
-        #region Repository<TEntity>.FindAsync tests
+        #region IRepository<TEntity>.FindAsync tests
         [TestMethod]
         public async Task FindAsync_GivenNullFilter_ThrowsArgumentNullException()
         {
@@ -292,7 +301,7 @@ namespace Developist.Core.Persistence.Tests
             var repository = uow.Repository<Person>();
             IQueryableFilter<Person> filter = new PersonByIdFilter(default);
             IQueryablePaginator<Person> paginator = new SortingPaginator<Person>();
-            IEntityIncludePaths<Person> includePaths = null;
+            IIncludePathCollection<Person> includePaths = null;
 
             // Act
             await repository.FindAsync(filter, includePaths).ConfigureAwait(false);
@@ -329,7 +338,7 @@ namespace Developist.Core.Persistence.Tests
             IQueryablePaginator<Person> paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 1).SortedBy(nameof(Person.FamilyName));
 
             // Act
-            var people = await repository .FindAsync(filter, paginator).ConfigureAwait(false);
+            var people = await repository.FindAsync(filter, paginator).ConfigureAwait(false);
 
             // Assert
             Assert.AreEqual(1, people.Count());
@@ -337,7 +346,7 @@ namespace Developist.Core.Persistence.Tests
         }
         #endregion
 
-        #region Repository<TEntity>.Add tests
+        #region IRepository<TEntity>.Add tests
         [TestMethod]
         public void Add_GivenNull_ThrowsArgumentNullException()
         {
@@ -387,7 +396,7 @@ namespace Developist.Core.Persistence.Tests
         }
         #endregion
 
-        #region Repository<TEntity>.Remove tests
+        #region IRepository<TEntity>.Remove tests
         [TestMethod]
         public void Remove_GivenNull_ThrowsArgumentNullException()
         {

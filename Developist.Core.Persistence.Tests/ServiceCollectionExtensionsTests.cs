@@ -1,6 +1,9 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Persistence.InMemory;
+using Developist.Core.Persistence.InMemory.DependencyInjection;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -13,56 +16,55 @@ namespace Developist.Core.Persistence.Tests
     {
         private IServiceCollection services = new ServiceCollection();
 
-        #region AddPersistence tests
         [TestMethod]
-        public void AddPersistence_ByDefault_RegistersInMemoryUnitOfWork()
+        public void AddUnitOfWork_ByDefault_RegistersInMemoryUnitOfWork()
         {
             // Arrange
 
             // Act
-            services.AddPersistence();
+            services.AddUnitOfWork();
             var serviceProvider = services.BuildServiceProvider();
 
             IUnitOfWork uow = serviceProvider.GetService<IUnitOfWork>();
 
             // Assert
-            Assert.IsInstanceOfType(uow, typeof(InMemory.UnitOfWork));
+            Assert.IsInstanceOfType(uow, typeof(UnitOfWork));
         }
 
         [TestMethod]
-        public void AddPersistence_GivenInvalidRepositoryFactoryType_ThrowsArgumentException()
+        public void AddUnitOfWork_GivenInvalidRepositoryFactoryType_ThrowsArgumentException()
         {
             // Arrange
             var invalidRepositoryFactoryType = typeof(object);
 
             // Act
-            void action() => services.AddPersistence(invalidRepositoryFactoryType);
+            void action() => services.AddUnitOfWork(invalidRepositoryFactoryType);
 
             // Assert
             Assert.ThrowsException<ArgumentException>(action);
         }
 
         [TestMethod]
-        public void AddPersistence_GivenRepositoryFactoryInterfaceType_ThrowsArgumentException()
+        public void AddUnitOfWork_GivenRepositoryFactoryInterfaceType_ThrowsArgumentException()
         {
             // Arrange
             var repositoryFactoryInterfaceType = typeof(IRepositoryFactory);
 
             // Act
-            void action() => services.AddPersistence(repositoryFactoryInterfaceType);
+            void action() => services.AddUnitOfWork(repositoryFactoryInterfaceType);
 
             // Assert
             Assert.ThrowsException<ArgumentException>(action);
         }
 
         [TestMethod]
-        public void AddPersistence_GivenValidRepositoryFactoryType_DoesNotThrow()
+        public void AddUnitOfWork_GivenValidRepositoryFactoryType_DoesNotThrow()
         {
             // Arrange
-            var validRepositoryFactoryType = typeof(InMemory.RepositoryFactory);
+            var validRepositoryFactoryType = typeof(RepositoryFactory);
 
             // Act
-            void action() => services.AddPersistence(validRepositoryFactoryType);
+            void action() => services.AddUnitOfWork(validRepositoryFactoryType);
 
             // Assert
             try
@@ -74,90 +76,5 @@ namespace Developist.Core.Persistence.Tests
                 Assert.Fail();
             }
         }
-
-        [TestMethod]
-        public void AddPersistence_GivenValidRepositoryFactorySubtype_DoesNotThrow()
-        {
-            // Arrange
-            var validRepositoryFactorySubtype = typeof(EntityFramework.RepositoryFactory<SampleDbContext>);
-
-            // Act
-            void action() => services.AddPersistence(validRepositoryFactorySubtype);
-
-            // Assert
-            try
-            {
-                action();
-            }
-            catch
-            {
-                Assert.Fail();
-            }
-        }
-        #endregion
-
-        #region AddPersistence<TDbContext> tests
-        [TestMethod]
-        public void AddPersistenceOfTDbContext_ByDefault_RegistersEntityFrameworkUnitOfWork()
-        {
-            // Arrange
-            services.AddScoped<SampleDbContext, SampleDbContext>();
-
-            // Act
-            services.AddPersistence<SampleDbContext>();
-            var serviceProvider = services.BuildServiceProvider();
-
-            IUnitOfWork uow = serviceProvider.GetService<IUnitOfWork>();
-
-            // Assert
-            Assert.IsInstanceOfType(uow, typeof(EntityFramework.UnitOfWork<SampleDbContext>));
-        }
-
-        [TestMethod]
-        public void AddPersistenceOfTDbContext_GivenInvalidRepositoryFactoryType_ThrowsArgumentException()
-        {
-            // Arrange
-            var invalidRepositoryFactoryType = typeof(object);
-
-            // Act
-            void action() => services.AddPersistence<SampleDbContext>(invalidRepositoryFactoryType);
-
-            // Assert
-            Assert.ThrowsException<ArgumentException>(action);
-        }
-
-        [TestMethod]
-        public void AddPersistenceOfTDbContext_GivenRepositoryFactoryInterfaceType_ThrowsArgumentException()
-        {
-            // Arrange
-            var repositoryFactoryInterfaceType = typeof(EntityFramework.IRepositoryFactory<SampleDbContext>);
-
-            // Act
-            void action() => services.AddPersistence<SampleDbContext>(repositoryFactoryInterfaceType);
-
-            // Assert
-            Assert.ThrowsException<ArgumentException>(action);
-        }
-
-        [TestMethod]
-        public void AddPersistenceOfTDbContext_GivenValidRepositoryFactoryType_DoesNotThrow()
-        {
-            // Arrange
-            var validRepositoryFactoryType = typeof(EntityFramework.RepositoryFactory<SampleDbContext>);
-
-            // Act
-            void action() => services.AddPersistence(validRepositoryFactoryType);
-
-            // Assert
-            try
-            {
-                action();
-            }
-            catch
-            {
-                Assert.Fail();
-            }
-        }
-        #endregion
     }
 }

@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Persistence.Pagination;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System;
@@ -209,19 +211,17 @@ namespace Developist.Core.Persistence.Tests
             Assert.AreEqual("Randall Bloom", result.Last().FullName());
         }
 
-        private static IQueryable<Person> People =>
-            new[]
-            {
-                new Person { GivenName = "Dwayne", FamilyName = "Welsh", Age = 18 },
-                new Person { GivenName = "Ed", FamilyName = "Stuart", Age = 24 },
-                new Person { GivenName = "Hollie", FamilyName = "Marin", Age = 36 },
-                new Person { GivenName = "Randall", FamilyName = "Bloom", Age = 55 },
-                new Person { GivenName = "Glenn", FamilyName = "Hensley", Age = 27 },
-                new Person { GivenName = "Phillipa", FamilyName = "Connor", Age = null },
-                new Person { GivenName = "Peter", FamilyName = "Connor", Age = 12 },
-                new Person { GivenName = "Ana", FamilyName = "Bryan", Age = 44 },
-                new Person { GivenName = "Edgar", FamilyName = "Bernard", Age = 80 }
-
-            }.AsQueryable();
+        private static IQueryable<Person> People => new[]
+        {
+            new Person { GivenName = "Dwayne", FamilyName = "Welsh", Age = 18 },
+            new Person { GivenName = "Ed", FamilyName = "Stuart", Age = 24 },
+            new Person { GivenName = "Hollie", FamilyName = "Marin", Age = 36 },
+            new Person { GivenName = "Randall", FamilyName = "Bloom", Age = 55 },
+            new Person { GivenName = "Glenn", FamilyName = "Hensley", Age = 27 },
+            new Person { GivenName = "Phillipa", FamilyName = "Connor", Age = null },
+            new Person { GivenName = "Peter", FamilyName = "Connor", Age = 12 },
+            new Person { GivenName = "Ana", FamilyName = "Bryan", Age = 44 },
+            new Person { GivenName = "Edgar", FamilyName = "Bernard", Age = 80 }
+        }.AsQueryable();
     }
 }

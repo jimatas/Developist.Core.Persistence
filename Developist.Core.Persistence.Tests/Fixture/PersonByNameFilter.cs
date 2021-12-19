@@ -8,6 +8,7 @@ namespace Developist.Core.Persistence.Tests
     public class PersonByNameFilter : IQueryableFilter<Person>
     {
         public bool UsePartialMatching { get; set; }
+
         public string GivenName { get; set; }
         public string FamilyName { get; set; }
 

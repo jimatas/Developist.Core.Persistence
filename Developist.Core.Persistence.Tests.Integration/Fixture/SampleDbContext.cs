@@ -3,10 +3,11 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Developist.Core.Persistence.Tests
+namespace Developist.Core.Persistence.Tests.Integration.Fixture
 {
     public class SampleDbContext : DbContext
     {
+        public SampleDbContext() : base() { }
         public SampleDbContext(DbContextOptions<SampleDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -33,7 +34,7 @@ namespace Developist.Core.Persistence.Tests
 
             base.OnModelCreating(builder);
         }
-        
+
         public DbSet<Person> People { get; set; }
         public DbSet<Message> Messages { get; set; }
 

@@ -3,13 +3,10 @@
 
 using System;
 
-namespace Developist.Core.Persistence
+namespace Developist.Core.Persistence.Entities
 {
-    /// <summary>
-    /// Convenience base class for entity types that have a single Id property to inherit from.
-    /// </summary>
-    /// <typeparam name="TIdentifier">The type of the identifier.</typeparam>
-    public abstract class EntityBase<TIdentifier> : IEntity<TIdentifier> where TIdentifier : IEquatable<TIdentifier>
+    public abstract class EntityBase<TIdentifier> : IEntity<TIdentifier>
+        where TIdentifier : IEquatable<TIdentifier>
     {
         private int? hashCode;
 
@@ -17,17 +14,13 @@ namespace Developist.Core.Persistence
         protected EntityBase(TIdentifier id) => Id = id;
 
         public virtual TIdentifier Id { get; protected set; }
-        public virtual bool IsTransient => Id is null || Id.Equals(default);
+        public virtual bool IsTransient => Id == null || Id.Equals(default);
 
-        #region System.Object overrides
-        public override string ToString()
-        {
-            return $"{GetType().Name} with {nameof(Id)} {(IsTransient ? "[None]" : Id.ToString())}";
-        }
+        public override string ToString() => $"{GetType().Name} with {nameof(Id)} {(IsTransient ? "[None]" : Id.ToString())}";
 
         public override bool Equals(object obj)
         {
-            if (obj is not EntityBase<TIdentifier> that || this.GetType() != that.GetType())
+            if (!(obj is EntityBase<TIdentifier> that) || this.GetType() != that.GetType())
             {
                 return false;
             }
@@ -37,7 +30,7 @@ namespace Developist.Core.Persistence
                 return true;
             }
 
-            if (this.IsTransient || that.IsTransient) // Entities that have not yet been persisted, do not have a meaningful identity.
+            if (this.IsTransient || that.IsTransient)
             {
                 return false;
             }
@@ -55,23 +48,18 @@ namespace Developist.Core.Persistence
                 }
                 else
                 {
-                    hashCode = HashCode.Combine(GetType(), Id);
+                    var hashCode = 6337;
+                    hashCode = unchecked(hashCode * 8447 + GetType().GetHashCode());
+                    hashCode = unchecked(hashCode * 8447 + Id.GetHashCode());
+                    return hashCode;
                 }
             }
             return (int)hashCode;
         }
-        #endregion
 
-        #region Equality operator overloads
         public static bool operator ==(EntityBase<TIdentifier> x, EntityBase<TIdentifier> y)
-        {
-            return x is null || y is null ? ReferenceEquals(x, y) : x.Equals(y);
-        }
+            => x is null || y is null ? ReferenceEquals(x, y) : x.Equals(y);
 
-        public static bool operator !=(EntityBase<TIdentifier> x, EntityBase<TIdentifier> y)
-        {
-            return !(x == y);
-        }
-        #endregion
+        public static bool operator !=(EntityBase<TIdentifier> x, EntityBase<TIdentifier> y) => !(x == y);
     }
 }

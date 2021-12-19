@@ -1,11 +1,12 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Persistence.Entities;
 using Developist.Core.Utilities;
 
 using System.Collections.Generic;
 
-namespace Developist.Core.Persistence.Tests
+namespace Developist.Core.Persistence.Tests.Integration.Fixture
 {
     public static class RepositoryExtensions
     {

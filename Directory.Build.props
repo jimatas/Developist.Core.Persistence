@@ -6,7 +6,7 @@
     <Copyright>Copyright (c) $([System.DateTime]::Now.Year) $(Authors)</Copyright>
   </PropertyGroup>
   <PropertyGroup>
-    <Version>1.0.2</Version>
+    <Version>3.0.0</Version>
     <Major>$(Version.Split('.')[0])</Major>
     <Minor>$(Version.Split('.')[1])</Minor>
     <Build>$([System.Math]::Floor($([System.DateTime]::Now.Subtract($([System.DateTime]::Parse("01-01-2000"))).TotalDays)))</Build>
@@ -17,11 +17,11 @@
   <PropertyGroup>
     <Deterministic>true</Deterministic>
     <NeutralLanguage>en</NeutralLanguage>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
-    <Description>Entity Framework Core and in-memory implementations of the Repository and Unit of Work patterns. Targets .NET 5.0.</Description>
-    <PackageTags>entity-framework repository-pattern entityframeworkcore unitofwork unit-of-work-pattern net5</PackageTags>
+    <Description>Entity Framework (Core) and in-memory implementations of the Repository and Unit of Work patterns. Targets .NET Standard 2.0, .NET Framework 4.8, and .NET 5.0.</Description>
+    <PackageTags>entityframework;entityframeworkcore;repository;unitofwork</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>License.txt</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/jimatas/Developist.Core.Persistence</PackageProjectUrl>

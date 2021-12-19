@@ -1,32 +1,39 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Persistence.Entities;
+using Developist.Core.Persistence.EntityFrameworkCore.DependencyInjection;
+using Developist.Core.Persistence.Pagination;
+using Developist.Core.Persistence.Tests.Integration.Fixture;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Developist.Core.Persistence.Tests
+namespace Developist.Core.Persistence.Tests.Integration
 {
     [TestClass]
     public class RepositoryTests
     {
+        private IServiceProvider serviceProvider;
         private IUnitOfWork uow;
 
         [TestInitialize]
         public void Initialize()
         {
             var services = new ServiceCollection();
-            services.AddLogging(config => config.AddConsole());
+            services.AddLogging(logging => logging.AddConsole());
             services.AddDbContext<SampleDbContext>(
-                builder => builder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=DevelopistCorePersistence_TestDb;Trusted_Connection=true;MultipleActiveResultSets=true"),
+                dbContext => dbContext.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=DevelopistCorePersistence_TestDb;Trusted_Connection=true;MultipleActiveResultSets=true"),
                 ServiceLifetime.Scoped);
-            services.AddPersistence<SampleDbContext>(lifetime: ServiceLifetime.Transient);
+            services.AddUnitOfWork<SampleDbContext>(serviceLifetime: ServiceLifetime.Scoped);
 
-            var serviceProvider = services.BuildServiceProvider();
+            serviceProvider = services.BuildServiceProvider();
 
             var dbContext = serviceProvider.GetRequiredService<SampleDbContext>();
             dbContext.Database.EnsureCreated();
@@ -38,8 +45,10 @@ namespace Developist.Core.Persistence.Tests
         public void CleanUp()
         {
             uow.Dispose();
-            (uow as EntityFramework.IUnitOfWork<SampleDbContext>)?.DbContext.Database.EnsureDeleted();
+            (uow as EntityFrameworkCore.IUnitOfWork<SampleDbContext>)?.DbContext.Database.EnsureDeleted();
+            (serviceProvider as IDisposable)?.Dispose();
         }
+
 
         [TestMethod]
         public void Add_WithoutCallingComplete_DoesNotCommit()
@@ -91,7 +100,7 @@ namespace Developist.Core.Persistence.Tests
                 GivenName = "Hollie",
                 FamilyName = "Marin"
             };
-            
+
             hollie.SentMessages.Add(new Message
             {
                 Sender = hollie,
@@ -102,7 +111,7 @@ namespace Developist.Core.Persistence.Tests
             repository.Add(hollie);
             uow.Complete();
 
-            var result = repository.Find(new PersonByNameFilter { FamilyName = "Marin" }, EntityIncludePaths.ForEntity<Person>().Include(p => p.ReceivedMessages));
+            var result = repository.Find(new PersonByNameFilter { FamilyName = "Marin" }, new IncludePathCollection<Person>().Include(p => p.ReceivedMessages));
             hollie = result.Single();
 
             // Assert
@@ -126,17 +135,17 @@ namespace Developist.Core.Persistence.Tests
 
             message.Recipients.Add(randall);
             message.Recipients.Add(glen);
-            
+
             var messageRepository = uow.Repository<Message>();
             messageRepository.Add(message);
             uow.Complete();
 
             var personRepository = uow.Repository<Person>();
 
-            hollie = personRepository.Find(p => p.FamilyName == "Marin", EntityIncludePaths.ForEntity<Person>().Include(p => p.SentMessages)).Single();
+            hollie = personRepository.Find(p => p.FamilyName == "Marin", includePaths => includePaths.Include(p => p.SentMessages)).Single();
             Assert.IsTrue(hollie.SentMessages.Any());
 
-            glen = personRepository.Find(p => p.FamilyName == "Hensley", EntityIncludePaths.ForEntity<Person>().Include(p => p.ReceivedMessages)).Single();
+            glen = personRepository.Find(p => p.FamilyName == "Hensley", includePaths => includePaths.Include(p => p.ReceivedMessages)).Single();
             Assert.IsTrue(glen.ReceivedMessages.Any());
         }
 
@@ -159,7 +168,7 @@ namespace Developist.Core.Persistence.Tests
             uow.People().AddRange(people);
             uow.Complete();
 
-            IQueryablePaginator<Person> paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 2).SortedBy(nameof(Person.FamilyName));
+            var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 2).SortedBy(nameof(Person.FamilyName));
 
             // Act
             var result = uow.People().Find(p => p.GivenName.Contains("ll")); // 3
@@ -219,7 +228,7 @@ namespace Developist.Core.Persistence.Tests
 
             // Act
             var unfilteredResult = uow.People().Count();
-            var filteredResult = uow.People().Count(new PersonByNameFilter(andAlso: true)
+            var filteredResult = uow.People().Count(new PersonByNameFilter(/*andAlso: true*/)
             {
                 GivenName = "Glenn",
                 FamilyName = "Hensley"

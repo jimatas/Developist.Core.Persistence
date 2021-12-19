@@ -3,18 +3,11 @@
 
 using System;
 
-namespace Developist.Core.Persistence
+namespace Developist.Core.Persistence.Entities
 {
-    /// <summary>
-    /// Extends the <see cref="IEntity"/> interface adding an Id property through which the entity is uniquely identified.
-    /// </summary>
-    /// <typeparam name="TIdentifier">The type of the identifier.</typeparam>
-    public interface IEntity<TIdentifier> : IEntity where TIdentifier : IEquatable<TIdentifier>
+    public interface IEntity<TIdentifier> : IEntity
+        where TIdentifier : IEquatable<TIdentifier>
     {
-        /// <summary>
-        /// The entity's unique identifier. 
-        /// Typically the primary key of the record in which the entity is stored in the database.
-        /// </summary>
         TIdentifier Id { get; }
     }
 }

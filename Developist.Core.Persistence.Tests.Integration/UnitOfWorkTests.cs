@@ -1,6 +1,9 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Persistence.EntityFrameworkCore.DependencyInjection;
+using Developist.Core.Persistence.Tests.Integration.Fixture;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -9,24 +12,25 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
 
-namespace Developist.Core.Persistence.Tests
+namespace Developist.Core.Persistence.Tests.Integration
 {
     [TestClass]
     public class UnitOfWorkTests
     {
+        private IServiceProvider serviceProvider;
         private IUnitOfWork uow;
 
         [TestInitialize]
         public void Initialize()
         {
             var services = new ServiceCollection();
-            services.AddLogging(config => config.AddConsole());
+            services.AddLogging(logging => logging.AddConsole());
             services.AddDbContext<SampleDbContext>(
-                builder => builder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=DevelopistCorePersistence_TestDb;Trusted_Connection=true;MultipleActiveResultSets=true"),
+                dbContext => dbContext.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=DevelopistCorePersistence_TestDb;Trusted_Connection=true;MultipleActiveResultSets=true"),
                 ServiceLifetime.Scoped);
-            services.AddPersistence<SampleDbContext>(lifetime: ServiceLifetime.Transient);
+            services.AddUnitOfWork<SampleDbContext>(serviceLifetime: ServiceLifetime.Scoped);
 
-            var serviceProvider = services.BuildServiceProvider();
+            serviceProvider = services.BuildServiceProvider();
 
             var dbContext = serviceProvider.GetRequiredService<SampleDbContext>();
             dbContext.Database.EnsureCreated();
@@ -38,7 +42,8 @@ namespace Developist.Core.Persistence.Tests
         public void CleanUp()
         {
             uow.Dispose();
-            (uow as EntityFramework.IUnitOfWork<SampleDbContext>)?.DbContext.Database.EnsureDeleted();
+            (uow as EntityFrameworkCore.IUnitOfWork<SampleDbContext>)?.DbContext.Database.EnsureDeleted();
+            (serviceProvider as IDisposable)?.Dispose();
         }
 
         [TestMethod]

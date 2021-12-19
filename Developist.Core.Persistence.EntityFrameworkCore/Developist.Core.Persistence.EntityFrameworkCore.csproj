@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Developist.Core.Persistence\Developist.Core.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Developist.Core.Utilities">
+      <HintPath>..\..\Developist.Core.Utilities\Developist.Core.Utilities\bin\Release\netstandard2.0\Developist.Core.Utilities.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

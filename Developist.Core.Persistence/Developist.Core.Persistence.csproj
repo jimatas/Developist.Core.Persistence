@@ -1,11 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Developist.Core.Utilities" Version="1.1.1" />
+    <Reference Include="Developist.Core.Utilities">
+      <HintPath>..\..\Developist.Core.Utilities\Developist.Core.Utilities\bin\Release\netstandard2.0\Developist.Core.Utilities.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

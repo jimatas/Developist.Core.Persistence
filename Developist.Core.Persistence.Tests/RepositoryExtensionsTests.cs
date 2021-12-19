@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for details.
 
+using Developist.Core.Persistence.InMemory.DependencyInjection;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,17 +17,22 @@ namespace Developist.Core.Persistence.Tests
     [TestClass]
     public class RepositoryExtensionsTests
     {
+        private IServiceProvider serviceProvider;
         private IUnitOfWork uow;
 
         [TestInitialize]
         public void Initialize()
         {
-            var services = new ServiceCollection();
-            services.AddLogging(config => config.AddConsole());
-            services.AddPersistence();
+            var services = new ServiceCollection()
+                .AddLogging(logging => logging.AddConsole())
+                .AddUnitOfWork();
 
-            uow = services.BuildServiceProvider().GetRequiredService<IUnitOfWork>();
+            serviceProvider = services.BuildServiceProvider();
+            uow = serviceProvider.GetRequiredService<IUnitOfWork>();
         }
+
+        [TestCleanup]
+        public void CleanUp() => (serviceProvider as IDisposable)?.Dispose();
 
         [TestMethod]
         public void EnsureUnitOfWorkRegistered()
@@ -126,36 +133,69 @@ namespace Developist.Core.Persistence.Tests
         }
         #endregion
 
-        #region RepositoryExtensions.Find tests
+        #region RepositoryExtensions.Get tests
         [TestMethod]
-        public void Find_GivenUnknownId_ReturnsNull()
+        public void Get_GivenUnknownId_ReturnsNull()
         {
             // Arrange
             var repository = uow.Repository<Person>();
             SeedRepositoryWithData(repository);
 
             // Act
-            var result = repository.Find(id: 0);
+            var result = repository.Get(id: 0);
 
             // Assert
             Assert.IsNull(result);
         }
 
         [TestMethod]
-        public void Find_GivenValidId_ReturnsExpectedResult()
+        public void Get_GivenValidId_ReturnsExpectedResult()
         {
             // Arrange
             var repository = uow.Repository<Person>();
             SeedRepositoryWithData(repository);
 
             // Act
-            var result = repository.Find(id: 3);
+            var result = repository.Get(id: 3);
 
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual("Glen Hensley", result.FullName());
         }
+        #endregion
 
+        #region RepositoryExtensions.GetAsync tests
+        [TestMethod]
+        public async Task GetAsync_GivenUnknownId_ReturnsNull()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            // Act
+            var result = await repository.GetAsync(id: 0).ConfigureAwait(false);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public async Task GetAsync_GivenValidId_ReturnsExpectedResult()
+        {
+            // Arrange
+            var repository = uow.Repository<Person>();
+            SeedRepositoryWithData(repository);
+
+            // Act
+            var result = await repository.GetAsync(id: 3).ConfigureAwait(false);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Glen Hensley", result.FullName());
+        }
+        #endregion
+
+        #region RepositoryExtensions.Find tests
         [TestMethod]
         public void Find_GivenNullPredicate_ThrowsArgumentNullException()
         {
@@ -218,35 +258,6 @@ namespace Developist.Core.Persistence.Tests
 
         #region RepositoryExtensions.FindAsync tests
         [TestMethod]
-        public async Task FindAsync_GivenUnknownId_ReturnsNull()
-        {
-            // Arrange
-            var repository = uow.Repository<Person>();
-            SeedRepositoryWithData(repository);
-
-            // Act
-            var result = await repository.FindAsync(id: 0).ConfigureAwait(false);
-
-            // Assert
-            Assert.IsNull(result);
-        }
-
-        [TestMethod]
-        public async Task FindAsync_GivenValidId_ReturnsExpectedResult()
-        {
-            // Arrange
-            var repository = uow.Repository<Person>();
-            SeedRepositoryWithData(repository);
-
-            // Act
-            var result = await repository.FindAsync(id: 3).ConfigureAwait(false);
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Glen Hensley", result.FullName());
-        }
-
-        [TestMethod]
         public async Task FindAsync_GivenNullPredicate_ThrowsArgumentNullException()
         {
             // Arrange
@@ -303,72 +314,6 @@ namespace Developist.Core.Persistence.Tests
 
             // Assert
             Assert.AreEqual(2, result.Count());
-        }
-        #endregion
-
-        #region RepositoryExtensions.Remove/RemoveAsync tests
-        [TestMethod]
-        public void Remove_GivenInvalidId_DoesNotRemoveEntity()
-        {
-            // Arrange
-            var repository = uow.Repository<Person>();
-            SeedRepositoryWithData(repository);
-
-            // Act
-            var result = repository.Remove(4);
-            uow.Complete();
-
-            // Assert
-            Assert.IsFalse(result);
-            Assert.AreEqual(3, repository.Count());
-        }
-
-        [TestMethod]
-        public void Remove_GivenValidId_RemovesEntity()
-        {
-            // Arrange
-            var repository = uow.Repository<Person>();
-            SeedRepositoryWithData(repository);
-
-            // Act
-            var result = repository.Remove(3);
-            uow.Complete();
-
-            // Assert
-            Assert.IsTrue(result);
-            Assert.AreEqual(2, repository.Count());
-        }
-
-        [TestMethod]
-        public async Task RemoveAsync_GivenInvalidId_DoesNotRemoveEntity()
-        {
-            // Arrange
-            var repository = uow.Repository<Person>();
-            SeedRepositoryWithData(repository);
-
-            // Act
-            var result = await repository.RemoveAsync(4).ConfigureAwait(false);
-            await uow.CompleteAsync().ConfigureAwait(false);
-
-            // Assert
-            Assert.IsFalse(result);
-            Assert.AreEqual(3, await repository.CountAsync().ConfigureAwait(false));
-        }
-
-        [TestMethod]
-        public async Task RemoveAsync_GivenValidId_RemovesEntity()
-        {
-            // Arrange
-            var repository = uow.Repository<Person>();
-            SeedRepositoryWithData(repository);
-
-            // Act
-            var result = await repository.RemoveAsync(3).ConfigureAwait(false);
-            await uow.CompleteAsync().ConfigureAwait(false);
-
-            // Assert
-            Assert.IsTrue(result);
-            Assert.AreEqual(2, await repository.CountAsync().ConfigureAwait(false));
         }
         #endregion
 
