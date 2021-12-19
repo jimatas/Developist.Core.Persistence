@@ -5,13 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Developist.Core.Persistence\Developist.Core.Persistence.csproj" />
+    <PackageReference Include="Developist.Core.Utilities" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Developist.Core.Utilities">
-      <HintPath>..\..\Developist.Core.Utilities\Developist.Core.Utilities\bin\Release\netstandard2.0\Developist.Core.Utilities.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Developist.Core.Persistence\Developist.Core.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

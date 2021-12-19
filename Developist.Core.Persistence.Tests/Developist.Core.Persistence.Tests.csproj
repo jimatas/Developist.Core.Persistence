@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Developist.Core.Utilities" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
@@ -26,12 +27,6 @@
     <ProjectReference Include="..\Developist.Core.Persistence.InMemory.DependencyInjection\Developist.Core.Persistence.InMemory.DependencyInjection.csproj" />
     <ProjectReference Include="..\Developist.Core.Persistence.InMemory\Developist.Core.Persistence.InMemory.csproj" />
     <ProjectReference Include="..\Developist.Core.Persistence\Developist.Core.Persistence.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Developist.Core.Utilities">
-      <HintPath>..\..\Developist.Core.Utilities\Developist.Core.Utilities\bin\Release\netstandard2.0\Developist.Core.Utilities.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
