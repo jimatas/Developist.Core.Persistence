@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Developist.Core.Persistence.EntityFramework.DependencyInjection.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
