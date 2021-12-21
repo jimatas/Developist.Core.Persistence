@@ -48,10 +48,7 @@ namespace Developist.Core.Persistence.Entities
                 }
                 else
                 {
-                    var hashCode = 6337;
-                    hashCode = unchecked(hashCode * 8447 + GetType().GetHashCode());
-                    hashCode = unchecked(hashCode * 8447 + Id.GetHashCode());
-                    return hashCode;
+                    hashCode = (GetType(), Id).GetHashCode();
                 }
             }
             return (int)hashCode;
