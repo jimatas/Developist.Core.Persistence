@@ -50,12 +50,12 @@ namespace Developist.Core.Persistence.EntityFrameworkCore
             try
             {
                 DbContext.ValidateChangedEntities();
-                await DbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-                await CommitTransactionAsync(cancellationToken).ConfigureAwait(false);
+                await DbContext.SaveChangesAsync(cancellationToken).WithoutCapturingContext();
+                await CommitTransactionAsync(cancellationToken).WithoutCapturingContext();
             }
             catch
             {
-                await RollbackTransactionAsync(cancellationToken).ConfigureAwait(false);
+                await RollbackTransactionAsync(cancellationToken).WithoutCapturingContext();
                 throw;
             }
             OnCompleted(new UnitOfWorkCompletedEventArgs(this));
@@ -76,7 +76,7 @@ namespace Developist.Core.Persistence.EntityFrameworkCore
             {
                 throw new InvalidOperationException("An active transaction is already in progress. Nested transactions are not supported.");
             }
-            dbContextTransaction = await DbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+            dbContextTransaction = await DbContext.Database.BeginTransactionAsync(cancellationToken).WithoutCapturingContext();
         }
 
         protected void CommitTransaction()
@@ -103,8 +103,8 @@ namespace Developist.Core.Persistence.EntityFrameworkCore
         {
             if (IsTransactional)
             {
-                await dbContextTransaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-                await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
+                await dbContextTransaction.CommitAsync(cancellationToken).WithoutCapturingContext();
+                await dbContextTransaction.DisposeAsync().WithoutCapturingContext();
                 dbContextTransaction = null;
             }
         }
@@ -113,8 +113,8 @@ namespace Developist.Core.Persistence.EntityFrameworkCore
         {
             if (IsTransactional)
             {
-                await dbContextTransaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
+                await dbContextTransaction.RollbackAsync(cancellationToken).WithoutCapturingContext();
+                await dbContextTransaction.DisposeAsync().WithoutCapturingContext();
                 dbContextTransaction = null;
             }
         }

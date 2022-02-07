@@ -108,7 +108,7 @@ namespace Developist.Core.Persistence.Tests
             SeedRepositoryWithData(repository);
 
             // Act
-            var count = await repository.CountAsync().ConfigureAwait(false);
+            var count = await repository.CountAsync();
 
             // Assert
             Assert.AreEqual(3, count);
@@ -122,10 +122,10 @@ namespace Developist.Core.Persistence.Tests
             IQueryableFilter<Person> filter = null;
 
             // Act
-            async Task action() => await repository.CountAsync(filter).ConfigureAwait(false);
+            async Task action() => await repository.CountAsync(filter);
 
             // Assert
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action).ConfigureAwait(false);
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
         }
 
         [DataTestMethod]
@@ -145,7 +145,7 @@ namespace Developist.Core.Persistence.Tests
             };
 
             // Act
-            var result = await repository.CountAsync(filter).ConfigureAwait(false);
+            var result = await repository.CountAsync(filter);
 
             // Assert
             Assert.AreEqual(expectedResult, result);
@@ -258,10 +258,10 @@ namespace Developist.Core.Persistence.Tests
             IQueryableFilter<Person> filter = null;
 
             // Act
-            async Task action() => await repository.FindAsync(filter).ConfigureAwait(false);
+            async Task action() => await repository.FindAsync(filter);
 
             // Assert
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action).ConfigureAwait(false);
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
         }
 
         [TestMethod]
@@ -273,10 +273,10 @@ namespace Developist.Core.Persistence.Tests
             IQueryablePaginator<Person> paginator = new SortingPaginator<Person>();
 
             // Act
-            async Task action() => await repository.FindAsync(filter, paginator).ConfigureAwait(false);
+            async Task action() => await repository.FindAsync(filter, paginator);
 
             // Assert
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action).ConfigureAwait(false);
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
         }
 
         [TestMethod]
@@ -288,10 +288,10 @@ namespace Developist.Core.Persistence.Tests
             IQueryablePaginator<Person> paginator = null;
 
             // Act
-            async Task action() => await repository.FindAsync(filter, paginator).ConfigureAwait(false);
+            async Task action() => await repository.FindAsync(filter, paginator);
 
             // Assert
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action).ConfigureAwait(false);
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
         }
 
         [TestMethod]
@@ -304,8 +304,8 @@ namespace Developist.Core.Persistence.Tests
             IIncludePathCollection<Person> includePaths = null;
 
             // Act
-            await repository.FindAsync(filter, includePaths).ConfigureAwait(false);
-            await repository.FindAsync(filter, paginator, includePaths).ConfigureAwait(false);
+            await repository.FindAsync(filter, includePaths);
+            await repository.FindAsync(filter, paginator, includePaths);
 
             // Assert
         }
@@ -320,7 +320,7 @@ namespace Developist.Core.Persistence.Tests
             IQueryableFilter<Person> filter = new PersonByIdFilter(id: 2);
 
             // Act
-            var people = await repository.FindAsync(filter).ConfigureAwait(false);
+            var people = await repository.FindAsync(filter);
 
             // Assert
             Assert.AreEqual(1, people.Count());
@@ -338,7 +338,7 @@ namespace Developist.Core.Persistence.Tests
             IQueryablePaginator<Person> paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 1).SortedBy(nameof(Person.FamilyName));
 
             // Act
-            var people = await repository.FindAsync(filter, paginator).ConfigureAwait(false);
+            var people = await repository.FindAsync(filter, paginator);
 
             // Assert
             Assert.AreEqual(1, people.Count());

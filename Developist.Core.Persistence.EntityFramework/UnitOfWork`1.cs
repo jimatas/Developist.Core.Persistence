@@ -46,7 +46,7 @@ namespace Developist.Core.Persistence.EntityFramework
         {
             try
             {
-                await DbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                await DbContext.SaveChangesAsync(cancellationToken).WithoutCapturingContext();
                 CommitTransaction();
             }
             catch

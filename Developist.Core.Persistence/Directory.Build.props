@@ -1,7 +1,7 @@
 ﻿<Project>
   <Import Project="../Directory.Build.props" />
   <PropertyGroup>
-    <Version>3.0.1</Version>
+    <Version>3.0.2</Version>
     <Major>$(Version.Split('.')[0])</Major>
     <Minor>$(Version.Split('.')[1])</Minor>
     <AssemblyVersion>$(Major).$(Minor).$(Build).$(Revision)</AssemblyVersion>

@@ -36,16 +36,16 @@ namespace Developist.Core.Persistence.EntityFrameworkCore
         }
 
         public override async Task<int> CountAsync(CancellationToken cancellationToken = default) 
-            => await CreateQuery(includePaths: null).CountAsync(cancellationToken).ConfigureAwait(false);
+            => await CreateQuery(includePaths: null).CountAsync(cancellationToken).WithoutCapturingContext();
 
         public override async Task<int> CountAsync(IQueryableFilter<TEntity> filter, CancellationToken cancellationToken = default) 
-            => await CreateQuery(includePaths: null).Filter(filter).CountAsync(cancellationToken).ConfigureAwait(false);
+            => await CreateQuery(includePaths: null).Filter(filter).CountAsync(cancellationToken).WithoutCapturingContext();
 
         public override async Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IIncludePathCollection<TEntity> includePaths, CancellationToken cancellationToken = default) 
-            => await CreateQuery(includePaths).Filter(filter).ToListAsync(cancellationToken).ConfigureAwait(false);
+            => await CreateQuery(includePaths).Filter(filter).ToListAsync(cancellationToken).WithoutCapturingContext();
 
         public override async Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IIncludePathCollection<TEntity> includePaths, CancellationToken cancellationToken = default) 
-            => await CreateQuery(includePaths).Filter(filter).Paginate(paginator).ToListAsync(cancellationToken).ConfigureAwait(false);
+            => await CreateQuery(includePaths).Filter(filter).Paginate(paginator).ToListAsync(cancellationToken).WithoutCapturingContext();
 
         protected override IQueryable<TEntity> CreateQuery(IIncludePathCollection<TEntity> includePaths = null)
         {

@@ -103,7 +103,7 @@ namespace Developist.Core.Persistence.Tests
             uow.Completed += (sender, e) => isCompleted = true;
 
             // Act
-            await uow.CompleteAsync().ConfigureAwait(false);
+            await uow.CompleteAsync();
 
             // Assert
             Assert.IsTrue(isCompleted);

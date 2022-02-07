@@ -63,13 +63,13 @@ namespace Developist.Core.Persistence.Tests.Integration
         public async Task BeginTransactionAsync_CalledTwice_ThrowsInvalidOperationException()
         {
             // Arrange
-            await uow.BeginTransactionAsync().ConfigureAwait(false);
+            await uow.BeginTransactionAsync();
 
             // Act
-            async Task action() => await uow.BeginTransactionAsync().ConfigureAwait(false);
+            async Task action() => await uow.BeginTransactionAsync();
 
             // Assert
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(action).ConfigureAwait(false);
+            await Assert.ThrowsExceptionAsync<InvalidOperationException>(action);
         }
     }
 }

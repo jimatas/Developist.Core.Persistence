@@ -120,27 +120,27 @@ namespace Developist.Core.Persistence
         public static async Task<int> CountAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
             where TEntity : IEntity
         {
-            return await repository.CountAsync(new PredicateQueryableFilter<TEntity>(predicate), cancellationToken).ConfigureAwait(false);
+            return await repository.CountAsync(new PredicateQueryableFilter<TEntity>(predicate), cancellationToken).WithoutCapturingContext();
         }
 
         public static async Task<TEntity> GetAsync<TEntity, TIdentifier>(this IReadOnlyRepository<TEntity> repository, TIdentifier id, CancellationToken cancellationToken = default)
             where TEntity : IEntity<TIdentifier>
             where TIdentifier : IEquatable<TIdentifier>
         {
-            return (await repository.FindAsync(entity => entity.Id.Equals(id), cancellationToken).ConfigureAwait(false)).SingleOrDefault();
+            return (await repository.FindAsync(entity => entity.Id.Equals(id), cancellationToken).WithoutCapturingContext()).SingleOrDefault();
         }
 
         public static async Task<TEntity> GetAsync<TEntity, TIdentifier>(this IReadOnlyRepository<TEntity> repository, TIdentifier id, Func<IIncludePathCollection<TEntity>, IIncludePathCollection<TEntity>> configureIncludePaths, CancellationToken cancellationToken = default)
             where TEntity : IEntity<TIdentifier>
             where TIdentifier : IEquatable<TIdentifier>
         {
-            return (await repository.FindAsync(entity => entity.Id.Equals(id), configureIncludePaths, cancellationToken).ConfigureAwait(false)).SingleOrDefault();
+            return (await repository.FindAsync(entity => entity.Id.Equals(id), configureIncludePaths, cancellationToken).WithoutCapturingContext()).SingleOrDefault();
         }
 
         public static async Task<IEnumerable<TEntity>> FindAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
             where TEntity : IEntity
         {
-            return await repository.FindAsync(new PredicateQueryableFilter<TEntity>(predicate), cancellationToken).ConfigureAwait(false);
+            return await repository.FindAsync(new PredicateQueryableFilter<TEntity>(predicate), cancellationToken).WithoutCapturingContext();
         }
 
         public static async Task<IEnumerable<TEntity>> FindAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, Func<IIncludePathCollection<TEntity>, IIncludePathCollection<TEntity>> configureIncludePaths, CancellationToken cancellationToken = default)
@@ -148,7 +148,7 @@ namespace Developist.Core.Persistence
         {
             var includePaths = configureIncludePaths(new IncludePathCollection<TEntity>());
 
-            return await repository.FindAsync(new PredicateQueryableFilter<TEntity>(predicate), includePaths, cancellationToken).ConfigureAwait(false);
+            return await repository.FindAsync(new PredicateQueryableFilter<TEntity>(predicate), includePaths, cancellationToken).WithoutCapturingContext();
         }
 
         public static async Task<IEnumerable<TEntity>> FindAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, Action<SortingPaginator<TEntity>> configurePaginator, CancellationToken cancellationToken = default)
@@ -157,13 +157,13 @@ namespace Developist.Core.Persistence
             var paginator = new SortingPaginator<TEntity>();
             configurePaginator(paginator);
 
-            return await repository.FindAsync(predicate, paginator, cancellationToken).ConfigureAwait(false);
+            return await repository.FindAsync(predicate, paginator, cancellationToken).WithoutCapturingContext();
         }
 
         public static async Task<IEnumerable<TEntity>> FindAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IQueryablePaginator<TEntity> paginator, CancellationToken cancellationToken = default)
             where TEntity : IEntity
         {
-            return await repository.FindAsync(new PredicateQueryableFilter<TEntity>(predicate), paginator, cancellationToken).ConfigureAwait(false);
+            return await repository.FindAsync(new PredicateQueryableFilter<TEntity>(predicate), paginator, cancellationToken).WithoutCapturingContext();
         }
 
         public static async Task<IEnumerable<TEntity>> FindAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, Action<SortingPaginator<TEntity>> configurePaginator, Func<IIncludePathCollection<TEntity>, IIncludePathCollection<TEntity>> configureIncludePaths, CancellationToken cancellationToken = default)
@@ -172,7 +172,7 @@ namespace Developist.Core.Persistence
             var paginator = new SortingPaginator<TEntity>();
             configurePaginator(paginator);
 
-            return await repository.FindAsync(predicate, paginator, configureIncludePaths, cancellationToken).ConfigureAwait(false);
+            return await repository.FindAsync(predicate, paginator, configureIncludePaths, cancellationToken).WithoutCapturingContext();
         }
 
         public static async Task<IEnumerable<TEntity>> FindAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Expression<Func<TEntity, bool>> predicate, IQueryablePaginator<TEntity> paginator, Func<IIncludePathCollection<TEntity>, IIncludePathCollection<TEntity>> configureIncludePaths, CancellationToken cancellationToken = default)
@@ -180,7 +180,7 @@ namespace Developist.Core.Persistence
         {
             var includePaths = configureIncludePaths(new IncludePathCollection<TEntity>());
 
-            return await repository.FindAsync(new PredicateQueryableFilter<TEntity>(predicate), paginator, includePaths, cancellationToken).ConfigureAwait(false);
+            return await repository.FindAsync(new PredicateQueryableFilter<TEntity>(predicate), paginator, includePaths, cancellationToken).WithoutCapturingContext();
         }
 
         public static async Task<IPaginatedList<TEntity>> AllAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Action<SortingPaginator<TEntity>> configurePaginator, CancellationToken cancellationToken = default)
@@ -189,13 +189,13 @@ namespace Developist.Core.Persistence
             var paginator = new SortingPaginator<TEntity>();
             configurePaginator(paginator);
 
-            return await repository.AllAsync(paginator, cancellationToken).ConfigureAwait(false);
+            return await repository.AllAsync(paginator, cancellationToken).WithoutCapturingContext();
         }
 
         public static async Task<IPaginatedList<TEntity>> AllAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, SortingPaginator<TEntity> paginator, CancellationToken cancellationToken = default)
             where TEntity : class, IEntity
         {
-            return new PaginatedList<TEntity>(await repository.FindAsync(PassthroughFilter<TEntity>.Default, paginator, cancellationToken).ConfigureAwait(false), paginator);
+            return new PaginatedList<TEntity>(await repository.FindAsync(PassthroughFilter<TEntity>.Default, paginator, cancellationToken).WithoutCapturingContext(), paginator);
         }
 
         public static async Task<IPaginatedList<TEntity>> AllAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, Action<SortingPaginator<TEntity>> configurePaginator, Func<IIncludePathCollection<TEntity>, IIncludePathCollection<TEntity>> configureIncludePaths, CancellationToken cancellationToken = default)
@@ -204,7 +204,7 @@ namespace Developist.Core.Persistence
             var paginator = new SortingPaginator<TEntity>();
             configurePaginator(paginator);
 
-            return await repository.AllAsync(paginator, configureIncludePaths, cancellationToken).ConfigureAwait(false);
+            return await repository.AllAsync(paginator, configureIncludePaths, cancellationToken).WithoutCapturingContext();
         }
 
         public static async Task<IPaginatedList<TEntity>> AllAsync<TEntity>(this IReadOnlyRepository<TEntity> repository, SortingPaginator<TEntity> paginator, Func<IIncludePathCollection<TEntity>, IIncludePathCollection<TEntity>> configureIncludePaths, CancellationToken cancellationToken = default)
@@ -212,7 +212,7 @@ namespace Developist.Core.Persistence
         {
             var includePaths = configureIncludePaths(new IncludePathCollection<TEntity>());
 
-            return new PaginatedList<TEntity>(await repository.FindAsync(PassthroughFilter<TEntity>.Default, paginator, includePaths, cancellationToken).ConfigureAwait(false), paginator);
+            return new PaginatedList<TEntity>(await repository.FindAsync(PassthroughFilter<TEntity>.Default, paginator, includePaths, cancellationToken).WithoutCapturingContext(), paginator);
         }
         #endregion
 

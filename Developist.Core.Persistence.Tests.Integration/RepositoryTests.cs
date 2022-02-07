@@ -244,7 +244,7 @@ namespace Developist.Core.Persistence.Tests.Integration
         [TestMethod]
         public async Task Add_WithExplicitTransaction_Commits()
         {
-            await uow.BeginTransactionAsync().ConfigureAwait(false);
+            await uow.BeginTransactionAsync();
 
             uow.People().Add(new()
             {
@@ -256,17 +256,17 @@ namespace Developist.Core.Persistence.Tests.Integration
             {
                 GivenName = "Glenn",
                 FamilyName = "Hensley"
-            }).ConfigureAwait(false);
+            });
 
             Assert.IsFalse(result.Any());
 
-            await uow.CompleteAsync().ConfigureAwait(false);
+            await uow.CompleteAsync();
 
             result = await uow.People().FindAsync(new PersonByNameFilter
             {
                 GivenName = "Glenn",
                 FamilyName = "Hensley"
-            }).ConfigureAwait(false);
+            });
 
             Assert.IsTrue(result.Any());
         }
@@ -275,7 +275,7 @@ namespace Developist.Core.Persistence.Tests.Integration
         public async Task AllAsync_ByDefault_ReturnsPaginatedList()
         {
             // Arrange
-            await uow.BeginTransactionAsync().ConfigureAwait(false);
+            await uow.BeginTransactionAsync();
 
             var people = new[]
             {
@@ -290,12 +290,12 @@ namespace Developist.Core.Persistence.Tests.Integration
             };
             uow.People().AddRange(people);
 
-            await uow.CompleteAsync().ConfigureAwait(false);
+            await uow.CompleteAsync();
 
             // Act
             var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 5);
 
-            var result = await uow.People().AllAsync(paginator).ConfigureAwait(false);
+            var result = await uow.People().AllAsync(paginator);
 
             // Assert
             Assert.AreEqual(5, result.Count);

@@ -98,10 +98,10 @@ namespace Developist.Core.Persistence.Tests
             Expression<Func<Person, bool>> nullPredicate = null;
 
             // Act
-            async Task action() => await repository.CountAsync(predicate: nullPredicate).ConfigureAwait(false);
+            async Task action() => await repository.CountAsync(predicate: nullPredicate);
 
             // Assert
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action).ConfigureAwait(false);
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
         }
 
         [TestMethod]
@@ -112,7 +112,7 @@ namespace Developist.Core.Persistence.Tests
             SeedRepositoryWithData(repository);
 
             // Act
-            var result = await repository.CountAsync(predicate: p => p.FamilyName.Equals("Bloom")).ConfigureAwait(false);
+            var result = await repository.CountAsync(predicate: p => p.FamilyName.Equals("Bloom"));
 
             // Assert
             Assert.AreEqual(1, result);
@@ -126,7 +126,7 @@ namespace Developist.Core.Persistence.Tests
             SeedRepositoryWithData(repository);
 
             // Act
-            var result = await repository.CountAsync(predicate: p => p.FamilyName.Equals("Bloom") || p.FamilyName.Equals("Marin")).ConfigureAwait(false);
+            var result = await repository.CountAsync(predicate: p => p.FamilyName.Equals("Bloom") || p.FamilyName.Equals("Marin"));
 
             // Assert
             Assert.AreEqual(2, result);
@@ -173,7 +173,7 @@ namespace Developist.Core.Persistence.Tests
             SeedRepositoryWithData(repository);
 
             // Act
-            var result = await repository.GetAsync(id: 0).ConfigureAwait(false);
+            var result = await repository.GetAsync(id: 0);
 
             // Assert
             Assert.IsNull(result);
@@ -187,7 +187,7 @@ namespace Developist.Core.Persistence.Tests
             SeedRepositoryWithData(repository);
 
             // Act
-            var result = await repository.GetAsync(id: 3).ConfigureAwait(false);
+            var result = await repository.GetAsync(id: 3);
 
             // Assert
             Assert.IsNotNull(result);
@@ -265,10 +265,10 @@ namespace Developist.Core.Persistence.Tests
             Expression<Func<Person, bool>> predicate = null;
 
             // Act
-            async Task action() => await repository.FindAsync(predicate: predicate).ConfigureAwait(false);
+            async Task action() => await repository.FindAsync(predicate: predicate);
 
             // Assert
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action).ConfigureAwait(false);
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
         }
 
         [TestMethod]
@@ -279,7 +279,7 @@ namespace Developist.Core.Persistence.Tests
             Expression<Func<Person, bool>> predicate = p => false;
 
             // Act
-            var result = await repository.FindAsync(predicate).ConfigureAwait(false);
+            var result = await repository.FindAsync(predicate);
 
             // Assert
             Assert.AreEqual(0, result.Count());
@@ -294,7 +294,7 @@ namespace Developist.Core.Persistence.Tests
             Expression<Func<Person, bool>> predicate = p => p.GivenName.Equals("Hollie");
 
             // Act
-            var result = await repository.FindAsync(predicate).ConfigureAwait(false);
+            var result = await repository.FindAsync(predicate);
 
             // Assert
             Assert.AreEqual(1, result.Count());
@@ -310,7 +310,7 @@ namespace Developist.Core.Persistence.Tests
             Expression<Func<Person, bool>> predicate = p => p.GivenName.Contains("ll");
 
             // Act
-            var result = await repository.FindAsync(predicate).ConfigureAwait(false);
+            var result = await repository.FindAsync(predicate);
 
             // Assert
             Assert.AreEqual(2, result.Count());
