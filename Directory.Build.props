@@ -2,11 +2,10 @@
   <PropertyGroup>
     <Product>Developist.Core.Persistence</Product>
     <Authors>Jim Atas</Authors>
-    <Company>Developist</Company>
     <Copyright>Copyright (c) $([System.DateTime]::Now.Year) $(Authors)</Copyright>
   </PropertyGroup>
   <PropertyGroup>
-    <Version>3.0.3</Version>
+    <Version>4.0.0</Version>
     <Major>$(Version.Split('.')[0])</Major>
     <Minor>$(Version.Split('.')[1])</Minor>
     <Build>$([System.Math]::Floor($([System.DateTime]::Now.Subtract($([System.DateTime]::Parse("01-01-2000"))).TotalDays)))</Build>
@@ -15,20 +14,12 @@
     <FileVersion>$(AssemblyVersion)</FileVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <Deterministic>true</Deterministic>
-    <NeutralLanguage>en</NeutralLanguage>
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <Description>Entity Framework (Core) and in-memory implementations of the Repository and Unit of Work patterns. Targets .NET Standard 2.0, .NET Framework 4.8, and .NET 5.0.</Description>
-    <PackageTags>entityframework;entityframeworkcore;repository;unitofwork</PackageTags>
+    <Description>Persistence library that provides Entity Framework Core and in-memory implementations of the Repository and Unit of Work patterns.</Description>
+    <PackageTags>entityframeworkcore;efcore;dbcontext;repository;unitofwork</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageLicenseFile>License.txt</PackageLicenseFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/jimatas/Developist.Core.Persistence</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jimatas/Developist.Core.Persistence</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
-  <ItemGroup>
-    <None Include="../License.txt" Pack="True" PackagePath="$(PackageLicenseFile)"/>
-  </ItemGroup>
 </Project>

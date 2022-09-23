@@ -1,5 +1,4 @@
-﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for details.
+﻿using Developist.Core.Persistence.Entities;
 
 using System;
 using System.Linq.Expressions;
@@ -8,36 +7,31 @@ namespace Developist.Core.Persistence.Pagination
 {
     public static class SortingPaginatorExtensions
     {
-        public static SortingPaginator<T> StartingAt<T>(this SortingPaginator<T> paginator, int pageNumber)
+        public static SortingPaginator<TEntity> StartingAtPage<TEntity>(this SortingPaginator<TEntity> paginator, int pageNumber)
+            where TEntity : IEntity
         {
             paginator.PageNumber = pageNumber;
             return paginator;
         }
 
-        public static SortingPaginator<T> WithPageSizeOf<T>(this SortingPaginator<T> paginator, int pageSize)
+        public static SortingPaginator<TEntity> WithPageSizeOf<TEntity>(this SortingPaginator<TEntity> paginator, int pageSize)
+            where TEntity : IEntity
         {
             paginator.PageSize = pageSize;
             return paginator;
         }
 
-        public static SortingPaginator<T> SortedBy<T>(this SortingPaginator<T> paginator, string propertyName, SortDirection direction = SortDirection.Ascending)
+        public static SortingPaginator<TEntity> SortedByProperty<TEntity>(this SortingPaginator<TEntity> paginator, string propertyName, SortDirection direction = SortDirection.Ascending)
+            where TEntity : IEntity
         {
-            paginator.SortDirectives.Add(new SortProperty<T>(propertyName, direction));
+            paginator.SortProperties.Add(new SortProperty<TEntity>(propertyName, direction));
             return paginator;
         }
 
-        public static SortingPaginator<T> SortedBy<T, TProperty>(this SortingPaginator<T> paginator, Expression<Func<T, TProperty>> property, SortDirection direction = SortDirection.Ascending)
+        public static SortingPaginator<TEntity> SortedByProperty<TEntity, TProperty>(this SortingPaginator<TEntity> paginator, Expression<Func<TEntity, TProperty>> property, SortDirection direction = SortDirection.Ascending)
+            where TEntity : IEntity
         {
-            paginator.SortDirectives.Add(new SortProperty<T, TProperty>(property, direction));
-            return paginator;
-        }
-
-        public static SortingPaginator<T> SortedByString<T>(this SortingPaginator<T> paginator, string value)
-        {
-            foreach (var property in SortPropertyHelper<T>.ParseFromString(value))
-            {
-                paginator.SortDirectives.Add(property);
-            }
+            paginator.SortProperties.Add(new SortProperty<TEntity, TProperty>(property, direction));
             return paginator;
         }
     }

@@ -1,44 +1,39 @@
-﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for details.
-
-using Developist.Core.Persistence.InMemory;
+﻿using Developist.Core.Persistence.InMemory;
 using Developist.Core.Persistence.InMemory.DependencyInjection;
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using System;
 
 namespace Developist.Core.Persistence.Tests
 {
     [TestClass]
     public class ServiceCollectionExtensionsTests
     {
-        private IServiceCollection services = new ServiceCollection();
+        private readonly IServiceCollection services = new ServiceCollection();
 
         [TestMethod]
-        public void AddUnitOfWork_ByDefault_RegistersInMemoryUnitOfWork()
+        public async Task AddUnitOfWork_ByDefault_RegistersInMemoryUnitOfWork()
         {
             // Arrange
 
             // Act
             services.AddUnitOfWork();
-            var serviceProvider = services.BuildServiceProvider();
+            await using var serviceProvider = services.BuildServiceProvider();
 
-            IUnitOfWork uow = serviceProvider.GetService<IUnitOfWork>();
+            IUnitOfWork? unitOfWork = serviceProvider.GetService<IUnitOfWork>();
 
             // Assert
-            Assert.IsInstanceOfType(uow, typeof(UnitOfWork));
+            Assert.IsNotNull(unitOfWork);
+            Assert.IsInstanceOfType(unitOfWork, typeof(UnitOfWork));
         }
 
         [TestMethod]
-        public void AddUnitOfWork_GivenInvalidRepositoryFactoryType_ThrowsArgumentException()
+        public void AddUnitOfWork_GivenIncorectRepositoryFactoryType_ThrowsArgumentException()
         {
             // Arrange
-            var invalidRepositoryFactoryType = typeof(object);
+            var incorrectRepositoryFactoryType = typeof(object);
 
             // Act
-            void action() => services.AddUnitOfWork(invalidRepositoryFactoryType);
+            void action() => services.AddUnitOfWork(incorrectRepositoryFactoryType);
 
             // Assert
             Assert.ThrowsException<ArgumentException>(action);
@@ -64,17 +59,8 @@ namespace Developist.Core.Persistence.Tests
             var validRepositoryFactoryType = typeof(RepositoryFactory);
 
             // Act
-            void action() => services.AddUnitOfWork(validRepositoryFactoryType);
-
             // Assert
-            try
-            {
-                action();
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+            services.AddUnitOfWork(validRepositoryFactoryType);
         }
     }
 }

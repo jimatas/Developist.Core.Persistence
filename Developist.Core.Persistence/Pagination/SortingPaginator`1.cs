@@ -1,7 +1,5 @@
-﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for details.
-
-using Developist.Core.Utilities;
+﻿using Developist.Core.Persistence.Entities;
+using Developist.Core.Persistence.Utilities;
 
 using System;
 using System.Collections.Generic;
@@ -9,7 +7,8 @@ using System.Linq;
 
 namespace Developist.Core.Persistence.Pagination
 {
-    public class SortingPaginator<T> : IQueryablePaginator<T>
+    public class SortingPaginator<TEntity> : IQueryablePaginator<TEntity>
+        where TEntity : IEntity
     {
         public const int DefaultPageSize = 20;
 
@@ -28,13 +27,13 @@ namespace Developist.Core.Persistence.Pagination
         public int PageNumber
         {
             get => pageNumber;
-            set => pageNumber = Ensure.Argument.NotOutOfRange(value, nameof(PageNumber), message: "Value cannot be negative or zero.", lowerBound: 1);
+            set => pageNumber = ArgumentOutOfRangeExceptionHelper.ThrowIfOutOfRange(value, nameof(PageNumber), minValue: 1);
         }
 
         public int PageSize
         {
             get => pageSize;
-            set => pageSize = Ensure.Argument.NotOutOfRange(value, nameof(PageSize), message: "Value cannot be negative or zero.", lowerBound: 1);
+            set => pageSize = ArgumentOutOfRangeExceptionHelper.ThrowIfOutOfRange(value, nameof(PageSize), minValue: 1);
         }
 
         public int PageCount { get; private set; }
@@ -49,37 +48,25 @@ namespace Developist.Core.Persistence.Pagination
             }
         }
 
-        public ICollection<ISortDirective<T>> SortDirectives { get; } = new List<ISortDirective<T>>();
-        
-        public IQueryable<T> Paginate(IQueryable<T> sequence)
-        {
-            ItemCount = sequence.Count();
+        public ICollection<SortPropertyBase<TEntity>> SortProperties { get; } = new List<SortPropertyBase<TEntity>>();
 
-            IOrderedQueryable<T> orderedSequence = null;
-            foreach (var directive in SortDirectives)
+        public IQueryable<TEntity> Paginate(IQueryable<TEntity> query)
+        {
+            ItemCount = query.Count();
+
+            IOrderedQueryable<TEntity>? sortedQuery = null;
+            foreach (var directive in SortProperties)
             {
-                orderedSequence = directive.ApplyTo(orderedSequence ?? sequence);
+                sortedQuery = directive.Sort(sortedQuery ?? query);
             }
 
-            if (orderedSequence != null)
+            if (sortedQuery != null)
             {
-                sequence = orderedSequence.Skip((PageNumber - 1) * PageSize);
+                query = sortedQuery.Skip((PageNumber - 1) * PageSize);
             }
-            sequence = sequence.Take(PageSize);
+            query = query.Take(PageSize);
 
-            return sequence;
-        }
-
-        public static SortingPaginator<T> operator ++(SortingPaginator<T> paginator)
-        {
-            paginator.PageNumber++;
-            return paginator;
-        }
-
-        public static SortingPaginator<T> operator --(SortingPaginator<T> paginator)
-        {
-            paginator.PageNumber--;
-            return paginator;
+            return query;
         }
     }
 }

@@ -1,21 +1,18 @@
-﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for details.
+﻿using Developist.Core.Persistence.Entities;
 
-using Developist.Core.Persistence.Entities;
-
-using System.Collections.Generic;
-
-namespace Developist.Core.Persistence.Tests
+namespace Developist.Core.Persistence.Tests.Fixture
 {
-    public class Person : EntityBase<int>
+    public class Person : EntityBase<Guid>
     {
         public Person() { }
-        public Person(int id) => Id = id;
+        public Person(Guid id) : base(id) { }
 
-        public string GivenName { get; set; }
-        public string FamilyName { get; set; }
+        public string? GivenName { get; set; }
+        public string? FamilyName { get; set; }
         public int? Age { get; set; }
-        public ICollection<Person> Friends { get; set; }
-        public Book FavoriteBook { get; set; }
+        public ICollection<Person> Friends { get; set; } = new HashSet<Person>();
+        public Book? FavoriteBook { get; set; }
+        public ICollection<Message> SentMessages { get; set; } = new HashSet<Message>();
+        public ICollection<Message> ReceivedMessages { get; set; } = new HashSet<Message>();
     }
 }

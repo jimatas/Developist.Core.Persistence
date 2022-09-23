@@ -1,7 +1,4 @@
-﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for details.
-
-using System;
+﻿using System;
 
 namespace Developist.Core.Persistence.Entities
 {
@@ -10,32 +7,32 @@ namespace Developist.Core.Persistence.Entities
     {
         private int? hashCode;
 
-        protected EntityBase() { }
+        protected EntityBase() : this(default!) { }
         protected EntityBase(TIdentifier id) => Id = id;
 
         public virtual TIdentifier Id { get; protected set; }
-        public virtual bool IsTransient => Id == null || Id.Equals(default);
+        public virtual bool IsTransient => Id is null || Id.Equals(default!);
 
         public override string ToString() => $"{GetType().Name} with {nameof(Id)} {(IsTransient ? "[None]" : Id.ToString())}";
 
         public override bool Equals(object obj)
         {
-            if (!(obj is EntityBase<TIdentifier> that) || this.GetType() != that.GetType())
+            if (!(obj is EntityBase<TIdentifier> other) || GetType() != other.GetType())
             {
                 return false;
             }
 
-            if (ReferenceEquals(this, that))
+            if (ReferenceEquals(this, other))
             {
                 return true;
             }
 
-            if (this.IsTransient || that.IsTransient)
+            if (IsTransient || other.IsTransient)
             {
                 return false;
             }
 
-            return this.Id.Equals(that.Id);
+            return Id.Equals(other.Id);
         }
 
         public override int GetHashCode()
@@ -48,15 +45,17 @@ namespace Developist.Core.Persistence.Entities
                 }
                 else
                 {
-                    hashCode = (GetType(), Id).GetHashCode();
+                    hashCode = HashCode.Combine(GetType(), Id);
                 }
             }
             return (int)hashCode;
         }
 
-        public static bool operator ==(EntityBase<TIdentifier> x, EntityBase<TIdentifier> y)
-            => x is null || y is null ? ReferenceEquals(x, y) : x.Equals(y);
+        public static bool operator ==(EntityBase<TIdentifier> one, EntityBase<TIdentifier> other)
+        {
+            return one is null || other is null ? ReferenceEquals(one, other) : one.Equals(other);
+        }
 
-        public static bool operator !=(EntityBase<TIdentifier> x, EntityBase<TIdentifier> y) => !(x == y);
+        public static bool operator !=(EntityBase<TIdentifier> one, EntityBase<TIdentifier> other) => !(one == other);
     }
 }

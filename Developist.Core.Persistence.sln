@@ -1,32 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31105.61
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A486057E-89A0-487D-941E-3B7FC1A52B49}"
 	ProjectSection(SolutionItems) = preProject
-		Developist.Core.Persistence.sln.licenseheader = Developist.Core.Persistence.sln.licenseheader
 		Directory.Build.props = Directory.Build.props
-		License.txt = License.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence", "Developist.Core.Persistence\Developist.Core.Persistence.csproj", "{B9E62303-51DD-4F56-93EF-5959ABF8A040}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Developist.Core.Persistence.EntityFramework", "Developist.Core.Persistence.EntityFramework\Developist.Core.Persistence.EntityFramework.csproj", "{EF2F163E-D956-47E0-99BF-804195E0648A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Developist.Core.Persistence.EntityFramework.DependencyInjection", "Developist.Core.Persistence.EntityFramework.DependencyInjection\Developist.Core.Persistence.EntityFramework.DependencyInjection.csproj", "{9C9AD940-9B63-4CFA-8AF5-7CD7B38C423D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.EntityFrameworkCore", "Developist.Core.Persistence.EntityFrameworkCore\Developist.Core.Persistence.EntityFrameworkCore.csproj", "{87E8CE5A-EFF3-403A-B433-11F1EE62A9F1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.EntityFrameworkCore.DependencyInjection", "Developist.Core.Persistence.EntityFrameworkCore.DependencyInjection\Developist.Core.Persistence.EntityFrameworkCore.DependencyInjection.csproj", "{1E4D2D74-CE47-435F-9D9C-2EF9DDD86F20}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.InMemory", "Developist.Core.Persistence.InMemory\Developist.Core.Persistence.InMemory.csproj", "{3E86E78A-8130-4FFC-9409-3A91F8645A05}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.InMemory.DependencyInjection", "Developist.Core.Persistence.InMemory.DependencyInjection\Developist.Core.Persistence.InMemory.DependencyInjection.csproj", "{30B354DF-951E-4B5D-BD1D-0B085B662AD3}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.Tests", "Developist.Core.Persistence.Tests\Developist.Core.Persistence.Tests.csproj", "{BDEF4EC5-AE69-4028-93ED-6916552A9234}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.Tests.Integration", "Developist.Core.Persistence.Tests.Integration\Developist.Core.Persistence.Tests.Integration.csproj", "{14E4DFB9-AAE4-486D-8DCF-A9949D459920}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,38 +26,18 @@ Global
 		{B9E62303-51DD-4F56-93EF-5959ABF8A040}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9E62303-51DD-4F56-93EF-5959ABF8A040}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9E62303-51DD-4F56-93EF-5959ABF8A040}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF2F163E-D956-47E0-99BF-804195E0648A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF2F163E-D956-47E0-99BF-804195E0648A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF2F163E-D956-47E0-99BF-804195E0648A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF2F163E-D956-47E0-99BF-804195E0648A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9C9AD940-9B63-4CFA-8AF5-7CD7B38C423D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9C9AD940-9B63-4CFA-8AF5-7CD7B38C423D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9C9AD940-9B63-4CFA-8AF5-7CD7B38C423D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9C9AD940-9B63-4CFA-8AF5-7CD7B38C423D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{87E8CE5A-EFF3-403A-B433-11F1EE62A9F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{87E8CE5A-EFF3-403A-B433-11F1EE62A9F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87E8CE5A-EFF3-403A-B433-11F1EE62A9F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87E8CE5A-EFF3-403A-B433-11F1EE62A9F1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1E4D2D74-CE47-435F-9D9C-2EF9DDD86F20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1E4D2D74-CE47-435F-9D9C-2EF9DDD86F20}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1E4D2D74-CE47-435F-9D9C-2EF9DDD86F20}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1E4D2D74-CE47-435F-9D9C-2EF9DDD86F20}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3E86E78A-8130-4FFC-9409-3A91F8645A05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3E86E78A-8130-4FFC-9409-3A91F8645A05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E86E78A-8130-4FFC-9409-3A91F8645A05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E86E78A-8130-4FFC-9409-3A91F8645A05}.Release|Any CPU.Build.0 = Release|Any CPU
-		{30B354DF-951E-4B5D-BD1D-0B085B662AD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30B354DF-951E-4B5D-BD1D-0B085B662AD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{30B354DF-951E-4B5D-BD1D-0B085B662AD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30B354DF-951E-4B5D-BD1D-0B085B662AD3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BDEF4EC5-AE69-4028-93ED-6916552A9234}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BDEF4EC5-AE69-4028-93ED-6916552A9234}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDEF4EC5-AE69-4028-93ED-6916552A9234}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDEF4EC5-AE69-4028-93ED-6916552A9234}.Release|Any CPU.Build.0 = Release|Any CPU
-		{14E4DFB9-AAE4-486D-8DCF-A9949D459920}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{14E4DFB9-AAE4-486D-8DCF-A9949D459920}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{14E4DFB9-AAE4-486D-8DCF-A9949D459920}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{14E4DFB9-AAE4-486D-8DCF-A9949D459920}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

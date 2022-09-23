@@ -1,8 +1,5 @@
-﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for details.
-
-using Developist.Core.Persistence.Entities;
-using Developist.Core.Utilities;
+﻿using Developist.Core.Persistence.Entities;
+using Developist.Core.Persistence.Utilities;
 
 using System;
 using System.Collections.Generic;
@@ -11,27 +8,22 @@ using System.Threading.Tasks;
 
 namespace Developist.Core.Persistence
 {
-    public abstract class UnitOfWorkBase : DisposableBase, IUnitOfWork
+    public abstract class UnitOfWorkBase : IUnitOfWork
     {
-        public event EventHandler<UnitOfWorkCompletedEventArgs> Completed;
-
         private readonly IDictionary<Type, RepositoryWrapper> repositories = new Dictionary<Type, RepositoryWrapper>();
         private readonly IRepositoryFactory repositoryFactory;
 
         protected UnitOfWorkBase(IRepositoryFactory repositoryFactory)
-            => this.repositoryFactory = Ensure.Argument.NotNull(repositoryFactory, nameof(repositoryFactory));
-
-        public abstract bool IsTransactional { get; }
-
-        public abstract void BeginTransaction();
-        public virtual Task BeginTransactionAsync(CancellationToken cancellationToken = default)
         {
-            BeginTransaction();
-            return Task.CompletedTask;
+            this.repositoryFactory = ArgumentNullExceptionHelper.ThrowIfNull(() => repositoryFactory);
         }
 
-        public abstract void Complete();
+        public event EventHandler<UnitOfWorkCompletedEventArgs>? Completed;
         public abstract Task CompleteAsync(CancellationToken cancellationToken = default);
+        protected void OnCompleted(UnitOfWorkCompletedEventArgs e) => Completed?.Invoke(this, e);
+
+        public abstract bool IsTransactional { get; }
+        public abstract Task BeginTransactionAsync(CancellationToken cancellationToken = default);
 
         public IRepository<TEntity> Repository<TEntity>()
             where TEntity : class, IEntity
@@ -44,20 +36,33 @@ namespace Developist.Core.Persistence
             return wrapper.Repository<TEntity>();
         }
 
-        protected void OnCompleted(UnitOfWorkCompletedEventArgs e) => Completed?.Invoke(this, e);
+        protected bool IsDisposed { get; private set; }
 
-        protected override void ReleaseManagedResources()
+        public async ValueTask DisposeAsync()
         {
-            repositories.Clear();
-            base.ReleaseManagedResources();
+            await DisposeAsyncCore().ConfigureAwait(false);
+            GC.SuppressFinalize(this);
         }
 
-        private class RepositoryWrapper
+        protected virtual ValueTask DisposeAsyncCore()
+        {
+            if (!IsDisposed)
+            {
+                repositories.Clear();
+                IsDisposed = true;
+            }
+            return default;
+        }
+
+        private readonly struct RepositoryWrapper
         {
             private readonly object repository;
-            public RepositoryWrapper(object repository) => this.repository = Ensure.Argument.NotNull(repository, nameof(repository));
+            public RepositoryWrapper(object repository) => this.repository = repository;
             public IRepository<TEntity> Repository<TEntity>()
-                where TEntity : class, IEntity => (IRepository<TEntity>)repository;
+                where TEntity : IEntity
+            {
+                return (IRepository<TEntity>)repository;
+            }
         }
     }
 }

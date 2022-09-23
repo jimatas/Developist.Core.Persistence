@@ -1,74 +1,31 @@
-﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for details.
-
-using Developist.Core.Utilities;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Developist.Core.Persistence.EntityFrameworkCore
 {
     public class UnitOfWork<TDbContext> : UnitOfWorkBase, IUnitOfWork<TDbContext>
         where TDbContext : DbContext, new()
     {
-        private IDbContextTransaction dbContextTransaction;
+        private IDbContextTransaction? dbContextTransaction;
         private readonly bool disposeOfDbContext;
 
-        public UnitOfWork() : this(new RepositoryFactory<TDbContext>()) { }
-        public UnitOfWork(IRepositoryFactory<TDbContext> repositoryFactory)
-            : this(new TDbContext(), repositoryFactory) => disposeOfDbContext = true;
-
-        public UnitOfWork(TDbContext dbContext) : this(dbContext, new RepositoryFactory<TDbContext>()) { }
-        public UnitOfWork(TDbContext dbContext, IRepositoryFactory<TDbContext> repositoryFactory) : base(repositoryFactory)
-            => DbContext = Ensure.Argument.NotNull(dbContext, nameof(dbContext));
+        public UnitOfWork(TDbContext? dbContext = null, IRepositoryFactory<TDbContext>? repositoryFactory = null)
+            : base(repositoryFactory ?? new RepositoryFactory<TDbContext>())
+        {
+            if (dbContext is null)
+            {
+                dbContext = new TDbContext();
+                disposeOfDbContext = true;
+            }
+            DbContext = dbContext;
+        }
 
         public TDbContext DbContext { get; }
+
+        [MemberNotNullWhen(true, nameof(dbContextTransaction))]
         public override bool IsTransactional => dbContextTransaction is not null;
-
-        public override void Complete()
-        {
-            try
-            {
-                DbContext.ValidateChangedEntities();
-                DbContext.SaveChanges();
-                CommitTransaction();
-            }
-            catch
-            {
-                RollbackTransaction();
-                throw;
-            }
-            OnCompleted(new UnitOfWorkCompletedEventArgs(this));
-        }
-
-        public override async Task CompleteAsync(CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                DbContext.ValidateChangedEntities();
-                await DbContext.SaveChangesAsync(cancellationToken).WithoutCapturingContext();
-                await CommitTransactionAsync(cancellationToken).WithoutCapturingContext();
-            }
-            catch
-            {
-                await RollbackTransactionAsync(cancellationToken).WithoutCapturingContext();
-                throw;
-            }
-            OnCompleted(new UnitOfWorkCompletedEventArgs(this));
-        }
-
-        public override void BeginTransaction()
-        {
-            if (IsTransactional)
-            {
-                throw new InvalidOperationException("An active transaction is already in progress. Nested transactions are not supported.");
-            }
-            dbContextTransaction = DbContext.Database.BeginTransaction();
-        }
 
         public override async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
         {
@@ -76,35 +33,34 @@ namespace Developist.Core.Persistence.EntityFrameworkCore
             {
                 throw new InvalidOperationException("An active transaction is already in progress. Nested transactions are not supported.");
             }
-            dbContextTransaction = await DbContext.Database.BeginTransactionAsync(cancellationToken).WithoutCapturingContext();
+            dbContextTransaction = await DbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        protected void CommitTransaction()
+        public override async Task CompleteAsync(CancellationToken cancellationToken = default)
         {
-            if (IsTransactional)
+            try
             {
-                dbContextTransaction.Commit();
-                dbContextTransaction.Dispose();
-                dbContextTransaction = null;
-            }
-        }
+                DbContext.ValidateChangedEntities();
 
-        protected void RollbackTransaction()
-        {
-            if (IsTransactional)
-            {
-                dbContextTransaction.Rollback();
-                dbContextTransaction.Dispose();
-                dbContextTransaction = null;
+                await DbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                await CommitTransactionAsync(cancellationToken).ConfigureAwait(false);
             }
+            catch
+            {
+                await RollbackTransactionAsync(cancellationToken).ConfigureAwait(false);
+                throw;
+            }
+
+            OnCompleted(new UnitOfWorkCompletedEventArgs(this));
         }
 
         protected async Task CommitTransactionAsync(CancellationToken cancellationToken)
         {
             if (IsTransactional)
             {
-                await dbContextTransaction.CommitAsync(cancellationToken).WithoutCapturingContext();
-                await dbContextTransaction.DisposeAsync().WithoutCapturingContext();
+                await dbContextTransaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
+
                 dbContextTransaction = null;
             }
         }
@@ -113,20 +69,24 @@ namespace Developist.Core.Persistence.EntityFrameworkCore
         {
             if (IsTransactional)
             {
-                await dbContextTransaction.RollbackAsync(cancellationToken).WithoutCapturingContext();
-                await dbContextTransaction.DisposeAsync().WithoutCapturingContext();
+                await dbContextTransaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
+                await dbContextTransaction.DisposeAsync().ConfigureAwait(false);
+
                 dbContextTransaction = null;
             }
         }
 
-        protected override void ReleaseManagedResources()
+        protected override async ValueTask DisposeAsyncCore()
         {
-            RollbackTransaction();
-            if (disposeOfDbContext)
+            if (!IsDisposed)
             {
-                DbContext.Dispose();
+                await RollbackTransactionAsync().ConfigureAwait(false);
+                if (disposeOfDbContext)
+                {
+                    await DbContext.DisposeAsync().ConfigureAwait(false);
+                }
             }
-            base.ReleaseManagedResources();
+            await base.DisposeAsyncCore().ConfigureAwait(false);
         }
     }
 }

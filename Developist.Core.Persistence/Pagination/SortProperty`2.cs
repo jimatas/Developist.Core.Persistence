@@ -1,7 +1,5 @@
-﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for details.
-
-using Developist.Core.Utilities;
+﻿using Developist.Core.Persistence.Entities;
+using Developist.Core.Persistence.Utilities;
 
 using System;
 using System.Linq;
@@ -9,25 +7,26 @@ using System.Linq.Expressions;
 
 namespace Developist.Core.Persistence.Pagination
 {
-    public class SortProperty<T, TProperty> : SortProperty<T>
+    public class SortProperty<TEntity, TProperty> : SortPropertyBase<TEntity>
+        where TEntity : IEntity
     {
-        public SortProperty(Expression<Func<T, TProperty>> property, SortDirection direction) 
+        public SortProperty(Expression<Func<TEntity, TProperty>> property, SortDirection direction)
             : base(direction)
         {
-            Property = Ensure.Argument.NotNull(property, nameof(property));
+            Property = ArgumentNullExceptionHelper.ThrowIfNull(() => property);
         }
 
-        public new Expression<Func<T, TProperty>> Property { get; }
+        public Expression<Func<TEntity, TProperty>> Property { get; }
 
-        public override IOrderedQueryable<T> ApplyTo(IQueryable<T> sequence)
+        public override IOrderedQueryable<TEntity> Sort(IQueryable<TEntity> query)
         {
-            return sequence.IsOrdered()
+            return query.IsSorted()
                 ? Direction == SortDirection.Ascending
-                    ? ((IOrderedQueryable<T>)sequence).ThenBy(Property)
-                    : ((IOrderedQueryable<T>)sequence).ThenByDescending(Property)
+                    ? ((IOrderedQueryable<TEntity>)query).ThenBy(Property)
+                    : ((IOrderedQueryable<TEntity>)query).ThenByDescending(Property)
                 : Direction == SortDirection.Ascending
-                    ? sequence.OrderBy(Property)
-                    : sequence.OrderByDescending(Property);
+                    ? query.OrderBy(Property)
+                    : query.OrderByDescending(Property);
         }
     }
 }

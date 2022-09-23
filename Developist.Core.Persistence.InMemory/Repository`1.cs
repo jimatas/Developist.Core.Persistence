@@ -1,8 +1,7 @@
-﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for details.
-
-using Developist.Core.Persistence.Entities;
-using Developist.Core.Utilities;
+﻿using Developist.Core.Persistence.Entities;
+using Developist.Core.Persistence.Entities.IncludePaths;
+using Developist.Core.Persistence.Pagination;
+using Developist.Core.Persistence.Utilities;
 
 using System;
 using System.Collections.Generic;
@@ -12,72 +11,91 @@ using System.Threading.Tasks;
 
 namespace Developist.Core.Persistence.InMemory
 {
-    public class Repository<TEntity> : RepositoryBase<TEntity>
-        where TEntity : class, IEntity
+    public class Repository<TEntity> : IRepository<TEntity>
+        where TEntity : IEntity
     {
-        public Repository(IUnitOfWork uow) : base(new UnitOfWorkDataStore(uow))
-            => UnitOfWork.Completed += UnitOfWorkCompleted;
+        private static readonly IIncludePathsBuilder<TEntity> DefaultIncludePaths = new IncludePathsBuilder<TEntity>();
+
+        public Repository(IUnitOfWork unitOfWork)
+        {
+            ArgumentNullExceptionHelper.ThrowIfNull(() => unitOfWork);
+            UnitOfWork = new UnitOfWorkWithDataStore(unitOfWork);
+            UnitOfWork.Completed += UnitOfWorkCompleted;
+        }
 
         public ISet<TEntity> DataStore { get; private set; } = new HashSet<TEntity>();
+        public IUnitOfWork UnitOfWork { get; }
 
-        public override void Add(TEntity entity)
+        public void Add(TEntity entity)
         {
-            Ensure.Argument.NotNull(entity, nameof(entity));
-
-            ((UnitOfWorkDataStore)UnitOfWork).DataStore.Add(entity);
+            ArgumentNullExceptionHelper.ThrowIfNull(() => entity);
+            ((UnitOfWorkWithDataStore)UnitOfWork).DataStore.Add(entity);
         }
 
-        public override void Remove(TEntity entity)
+        public void Remove(TEntity entity)
         {
-            Ensure.Argument.NotNull(entity, nameof(entity));
-
-            ((UnitOfWorkDataStore)UnitOfWork).DataStore.Remove(entity);
+            ArgumentNullExceptionHelper.ThrowIfNull(() => entity);
+            ((UnitOfWorkWithDataStore)UnitOfWork).DataStore.Remove(entity);
         }
 
-        public override Task<int> CountAsync(CancellationToken cancellationToken = default) 
-            => Task.FromResult(Count());
+        public Task<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(DataStore.Count);
+        }
 
-        public override Task<int> CountAsync(IQueryableFilter<TEntity> filter, CancellationToken cancellationToken = default) 
-            => Task.FromResult(Count(filter));
+        public Task<int> CountAsync(IQueryableFilter<TEntity> filter, CancellationToken cancellationToken = default)
+        {
+            var query = DataStore.AsQueryable().Filter(filter);
+            return Task.FromResult(query.Count());
+        }
 
-        public override Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IIncludePathCollection<TEntity> includePaths, CancellationToken cancellationToken = default)
-            => Task.FromResult(Find(filter, includePaths));
+        public virtual Task<IReadOnlyList<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, CancellationToken cancellationToken = default)
+        {
+            return FindAsync(filter, DefaultIncludePaths, cancellationToken);
+        }
 
-        public override Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IIncludePathCollection<TEntity> includePaths, CancellationToken cancellationToken = default)
-            => Task.FromResult(Find(filter, paginator, includePaths));
+        public Task<IReadOnlyList<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IIncludePathsBuilder<TEntity> includePaths, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(DataStore.AsQueryable().Filter(filter).ToReadOnlyList());
+        }
 
-        protected override IQueryable<TEntity> CreateQuery(IIncludePathCollection<TEntity> includePaths = null) 
-            => DataStore.AsQueryable();
+        public virtual Task<IReadOnlyList<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, CancellationToken cancellationToken = default)
+        {
+            return FindAsync(filter, paginator, DefaultIncludePaths, cancellationToken);
+        }
+
+        public Task<IReadOnlyList<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IIncludePathsBuilder<TEntity> includePaths, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(DataStore.AsQueryable().Filter(filter).Paginate(paginator).ToReadOnlyList());
+        }
 
         private void UnitOfWorkCompleted(object sender, UnitOfWorkCompletedEventArgs e)
-            => DataStore = new HashSet<TEntity>(((UnitOfWorkDataStore)UnitOfWork).DataStore);
-
-        private class UnitOfWorkDataStore : IUnitOfWork
         {
-            private readonly IUnitOfWork uow;
+            DataStore = new HashSet<TEntity>(((UnitOfWorkWithDataStore)UnitOfWork).DataStore);
+        }
 
-            public event EventHandler<UnitOfWorkCompletedEventArgs> Completed
+        private class UnitOfWorkWithDataStore : IUnitOfWork
+        {
+            private readonly IUnitOfWork unitOfWork;
+
+            public event EventHandler<UnitOfWorkCompletedEventArgs>? Completed
             {
-                add => uow.Completed += value;
-                remove => uow.Completed -= value;
+                add => unitOfWork.Completed += value;
+                remove => unitOfWork.Completed -= value;
             }
 
-            public UnitOfWorkDataStore(IUnitOfWork uow, IEnumerable<TEntity> dataStore = null)
+            public UnitOfWorkWithDataStore(IUnitOfWork unitOfWork) => this.unitOfWork = unitOfWork;
+
+            public ISet<TEntity> DataStore { get; } = new HashSet<TEntity>();
+            public bool IsTransactional => unitOfWork.IsTransactional;
+            public Task BeginTransactionAsync(CancellationToken cancellationToken = default) => unitOfWork.BeginTransactionAsync(cancellationToken);
+            public Task CompleteAsync(CancellationToken cancellationToken = default) => unitOfWork.CompleteAsync(cancellationToken);
+            public IRepository<T> Repository<T>() where T : class, IEntity => unitOfWork.Repository<T>();
+            public ValueTask DisposeAsync()
             {
-                this.uow = Ensure.Argument.NotNull(uow, nameof(uow));
-                DataStore = new HashSet<TEntity>(dataStore ?? Array.Empty<TEntity>());
+                DataStore.Clear();
+                return unitOfWork.DisposeAsync();
             }
-
-            public ISet<TEntity> DataStore { get; }
-            public bool IsTransactional => uow.IsTransactional;
-
-            public void BeginTransaction() => uow.BeginTransaction();
-            public Task BeginTransactionAsync(CancellationToken cancellationToken = default) => uow.BeginTransactionAsync(cancellationToken);
-            public void Complete() => uow.Complete();
-            public Task CompleteAsync(CancellationToken cancellationToken = default) => uow.CompleteAsync(cancellationToken);
-            public IRepository<T> Repository<T>() where T : class, IEntity => uow.Repository<T>();
-
-            public void Dispose() => uow.Dispose();
         }
     }
 }

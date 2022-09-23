@@ -1,33 +1,27 @@
-﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for details.
-
-using Developist.Core.Utilities;
+﻿using Developist.Core.Persistence.Entities;
+using Developist.Core.Persistence.Utilities;
 
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Developist.Core.Persistence.Pagination
 {
-    public class SortProperty<T> : ISortDirective<T>
+    public class SortProperty<TEntity> : SortPropertyBase<TEntity>
+        where TEntity : IEntity
     {
         public SortProperty(string propertyName, SortDirection direction)
-            : this(direction)
+            : base(direction)
         {
-            Ensure.Argument.NotNullOrWhiteSpace(propertyName, nameof(propertyName));
-
+            ArgumentExceptionHelper.ThrowIfNullOrWhiteSpace(() => propertyName);
             Property = GetPropertySelector(propertyName);
         }
 
-        protected SortProperty(SortDirection direction) => Direction = direction;
-
         public LambdaExpression Property { get; }
-        public SortDirection Direction { get; }
 
-        public virtual IOrderedQueryable<T> ApplyTo(IQueryable<T> sequence)
+        public override IOrderedQueryable<TEntity> Sort(IQueryable<TEntity> query)
         {
-            var sortMethodName = sequence.IsOrdered()
+            var sortMethodName = query.IsSorted()
                 ? Direction == SortDirection.Ascending
                     ? "ThenBy"
                     : "ThenByDescending"
@@ -35,21 +29,21 @@ namespace Developist.Core.Persistence.Pagination
                     ? "OrderBy"
                     : "OrderByDescending";
 
-            var sortMethod = typeof(Queryable).GetMethods().Single(method => method.Name == sortMethodName && method.GetParameters().Length == 2);
-            sortMethod = sortMethod.MakeGenericMethod(typeof(T), Property.ReturnType);
+            var sortMethod = typeof(Queryable).GetMethods().Single(method => method.Name.Equals(sortMethodName) && method.GetParameters().Length == 2);
+            sortMethod = sortMethod.MakeGenericMethod(typeof(TEntity), Property.ReturnType);
 
-            return (IOrderedQueryable<T>)sortMethod.Invoke(null, new object[] { sequence, Property });
+            return (IOrderedQueryable<TEntity>)sortMethod.Invoke(null, new object[] { query, Property });
         }
 
         private static LambdaExpression GetPropertySelector(string propertyName)
         {
-            var type = typeof(T);
+            var type = typeof(TEntity);
             var parameter = Expression.Parameter(type, "p");
 
             Expression expression = parameter;
             foreach (var nestedProperty in propertyName.Split('.'))
             {
-                var property = type.GetProperty(nestedProperty, BindingFlags.Public | BindingFlags.Instance);
+                var property = type.GetProperty(nestedProperty);
                 if (property is null)
                 {
                     throw new ArgumentException($"No property '{nestedProperty}' on type '{type.Name}'.", nameof(propertyName));
@@ -60,7 +54,7 @@ namespace Developist.Core.Persistence.Pagination
             }
 
             expression = Expression.Lambda(expression, parameter);
-            return expression as LambdaExpression;
+            return (LambdaExpression)expression;
         }
     }
 }

@@ -1,19 +1,14 @@
-﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for details.
+﻿using Developist.Core.Persistence.Entities;
 
-using Developist.Core.Persistence.Entities;
-
-using System.Collections.Generic;
-
-namespace Developist.Core.Persistence.Tests
+namespace Developist.Core.Persistence.Tests.Fixture
 {
-    public class Book : EntityBase<int>
+    public class Book : EntityBase<Guid>
     {
         public Book() { }
-        public Book(int id) => Id = id;
+        public Book(Guid id) : base(id) { }
 
-        public string Title { get; set; }
-        public ICollection<Person> Authors { get; set; }
+        public string? Title { get; set; }
+        public ICollection<Person> Authors { get; set; } = new HashSet<Person>();
         public Genre Genre { get; set; }
     }
 }

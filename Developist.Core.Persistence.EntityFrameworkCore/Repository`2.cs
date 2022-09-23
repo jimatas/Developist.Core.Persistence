@@ -1,59 +1,69 @@
-﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for details.
-
+﻿using Developist.Core.Persistence;
 using Developist.Core.Persistence.Entities;
-using Developist.Core.Utilities;
+using Developist.Core.Persistence.Entities.IncludePaths;
+using Developist.Core.Persistence.Pagination;
+using Developist.Core.Persistence.Utilities;
 
 using Microsoft.EntityFrameworkCore;
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace Developist.Core.Persistence.EntityFrameworkCore
 {
-    public class Repository<TEntity, TDbContext> : RepositoryBase<TEntity>
+    public class Repository<TEntity, TDbContext> : IRepository<TEntity>
         where TEntity : class, IEntity
         where TDbContext : DbContext
     {
-        public Repository(IUnitOfWork<TDbContext> uow) : base(uow) { }
-
-        public override IUnitOfWork<TDbContext> UnitOfWork => (IUnitOfWork<TDbContext>)base.UnitOfWork;
-
-        public override void Add(TEntity entity)
+        public Repository(IUnitOfWork<TDbContext> unitOfWork)
         {
-            Ensure.Argument.NotNull(entity, nameof(entity));
+            UnitOfWork = ArgumentNullExceptionHelper.ThrowIfNull(() => unitOfWork);
+        }
 
+        IUnitOfWork IRepository<TEntity>.UnitOfWork => UnitOfWork;
+        public IUnitOfWork<TDbContext> UnitOfWork { get; }
+
+        public void Add(TEntity entity)
+        {
             UnitOfWork.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Added;
         }
 
-        public override void Remove(TEntity entity)
+        public void Remove(TEntity entity)
         {
-            Ensure.Argument.NotNull(entity, nameof(entity));
-
             UnitOfWork.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Deleted;
         }
 
-        public override async Task<int> CountAsync(CancellationToken cancellationToken = default) 
-            => await CreateQuery(includePaths: null).CountAsync(cancellationToken).WithoutCapturingContext();
+        public Task<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            return CreateQuery().CountAsync(cancellationToken);
+        }
 
-        public override async Task<int> CountAsync(IQueryableFilter<TEntity> filter, CancellationToken cancellationToken = default) 
-            => await CreateQuery(includePaths: null).Filter(filter).CountAsync(cancellationToken).WithoutCapturingContext();
+        public Task<int> CountAsync(IQueryableFilter<TEntity> filter, CancellationToken cancellationToken = default)
+        {
+            return CreateQuery().Filter(filter).CountAsync(cancellationToken);
+        }
 
-        public override async Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IIncludePathCollection<TEntity> includePaths, CancellationToken cancellationToken = default) 
-            => await CreateQuery(includePaths).Filter(filter).ToListAsync(cancellationToken).WithoutCapturingContext();
+        public Task<IReadOnlyList<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, CancellationToken cancellationToken = default)
+        {
+            return CreateQuery().Filter(filter).ToReadOnlyListAsync(cancellationToken);
+        }
 
-        public override async Task<IEnumerable<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IIncludePathCollection<TEntity> includePaths, CancellationToken cancellationToken = default) 
-            => await CreateQuery(includePaths).Filter(filter).Paginate(paginator).ToListAsync(cancellationToken).WithoutCapturingContext();
+        public Task<IReadOnlyList<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IIncludePathsBuilder<TEntity> includePaths, CancellationToken cancellationToken = default)
+        {
+            return CreateQuery(includePaths).Filter(filter).ToReadOnlyListAsync(cancellationToken);
+        }
 
-        protected override IQueryable<TEntity> CreateQuery(IIncludePathCollection<TEntity> includePaths = null)
+        public Task<IReadOnlyList<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, CancellationToken cancellationToken = default)
+        {
+            return CreateQuery().Filter(filter).Paginate(paginator).ToReadOnlyListAsync(cancellationToken);
+        }
+
+        public Task<IReadOnlyList<TEntity>> FindAsync(IQueryableFilter<TEntity> filter, IQueryablePaginator<TEntity> paginator, IIncludePathsBuilder<TEntity> includePaths, CancellationToken cancellationToken = default)
+        {
+            return CreateQuery(includePaths).Filter(filter).Paginate(paginator).ToReadOnlyListAsync(cancellationToken);
+        }
+
+        protected IQueryable<TEntity> CreateQuery(IIncludePathsBuilder<TEntity>? includePaths = null)
         {
             var query = UnitOfWork.DbContext.Set<TEntity>().AsQueryable();
-            if (includePaths is not null && includePaths.Any())
-            {
-                query = includePaths.Distinct().Aggregate(query, (query, path) => query.Include(path));
-            }
+            query = includePaths?.ToArray().Distinct().Aggregate(query, (query, path) => query.Include(path)) ?? query;
             return query;
         }
     }

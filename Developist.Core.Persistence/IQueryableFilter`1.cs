@@ -1,12 +1,12 @@
-﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for details.
+﻿using Developist.Core.Persistence.Entities;
 
 using System.Linq;
 
 namespace Developist.Core.Persistence
 {
-    public interface IQueryableFilter<T>
+    public interface IQueryableFilter<TEntity>
+        where TEntity : IEntity
     {
-        IQueryable<T> Filter(IQueryable<T> sequence);
+        IQueryable<TEntity> Filter(IQueryable<TEntity> query);
     }
 }

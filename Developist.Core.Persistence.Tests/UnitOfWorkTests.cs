@@ -1,112 +1,92 @@
-﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for details.
-
-using Developist.Core.Persistence.InMemory.DependencyInjection;
+﻿using Developist.Core.Persistence.InMemory.DependencyInjection;
+using Developist.Core.Persistence.Tests.Fixture;
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using System;
-using System.Threading.Tasks;
 
 namespace Developist.Core.Persistence.Tests
 {
     [TestClass]
     public class UnitOfWorkTests
     {
-        private IServiceProvider serviceProvider;
-        private IUnitOfWork uow;
-
-        [TestInitialize]
-        public void Initialize()
-        {
-            var services = new ServiceCollection()
-                .AddLogging(logging => logging.AddConsole())
-                .AddUnitOfWork();
-
-            serviceProvider = services.BuildServiceProvider();
-            uow = serviceProvider.GetRequiredService<IUnitOfWork>();
-        }
-
-        [TestCleanup]
-        public void CleanUp() => (serviceProvider as IDisposable)?.Dispose();
-
         [TestMethod]
-        public void EnsureUnitOfWorkRegistered()
+        public async Task EnsureUnitOfWorkRegistered()
         {
             // Arrange
+            await using var provider = ConfigureServiceProvider(services => services.AddUnitOfWork());
 
             // Act
+            IUnitOfWork? unitOfWork = provider.GetService<IUnitOfWork>();
 
             // Assert
-            Assert.IsNotNull(uow);
+            Assert.IsNotNull(unitOfWork);
         }
 
         [TestMethod]
-        public void Repository_GivenValidGenericType_ReturnsRepository()
+        public async Task Repository_GivenValidGenericType_ReturnsRepository()
         {
             // Arrange
+            await using var provider = ConfigureServiceProvider(services => services.AddUnitOfWork());
+            IUnitOfWork unitOfWork = provider.GetRequiredService<IUnitOfWork>();
 
             // Act
-            var personRepository = uow.Repository<Person>();
+            var personRepository = unitOfWork.Repository<Person>();
 
             // Assert
             Assert.IsNotNull(personRepository);
         }
 
         [TestMethod]
-        public void Repository_CalledTwiceForSameGenericType_ReturnsSameRepository()
+        public async Task Repository_CalledTwiceForSameGenericType_ReturnsSameRepository()
         {
             // Arrange
+            await using var provider = ConfigureServiceProvider(services => services.AddUnitOfWork());
+            IUnitOfWork unitOfWork = provider.GetRequiredService<IUnitOfWork>();
 
             // Act
-            var personRepository = uow.Repository<Person>();
-            var anotherPersonRepository = uow.Repository<Person>();
+            IRepository<Person> personRepository = unitOfWork.Repository<Person>();
+            IRepository<Person> anotherPersonRepository = unitOfWork.Repository<Person>();
 
             // Assert
             Assert.AreEqual(personRepository, anotherPersonRepository);
         }
 
         [TestMethod]
-        public void Repository_CalledTwiceForDifferentGenericTypes_ReturnsTwoRepositories()
+        public async Task Repository_CalledTwiceForDifferentGenericTypes_ReturnsTwoRepositories()
         {
             // Arrange
+            await using var provider = ConfigureServiceProvider(services => services.AddUnitOfWork());
+            IUnitOfWork unitOfWork = provider.GetRequiredService<IUnitOfWork>();
 
             // Act
-            var bookRepository = uow.Repository<Book>();
-            var personRepository = uow.Repository<Person>();
+            IRepository<Book> bookRepository = unitOfWork.Repository<Book>();
+            IRepository<Person> personRepository = unitOfWork.Repository<Person>();
 
             // Assert
             Assert.AreNotEqual(bookRepository, personRepository);
         }
 
         [TestMethod]
-        public void Complete_ByDefault_FiresCompletedEvent()
+        public async Task CompleteAsync_ByDefault_FiresCompletedEvent()
         {
             // Arrange
-            var isCompleted = false;
-            uow.Completed += (sender, e) => isCompleted = true;
+            await using var provider = ConfigureServiceProvider(services => services.AddUnitOfWork());
+            IUnitOfWork unitOfWork = provider.GetRequiredService<IUnitOfWork>();
+
+            bool isCompleted = false;
+            unitOfWork.Completed += (sender, e) => isCompleted = true;
 
             // Act
-            uow.Complete();
+            await unitOfWork.CompleteAsync();
 
             // Assert
             Assert.IsTrue(isCompleted);
         }
 
-        [TestMethod]
-        public async Task CompleteAsync_ByDefault_FiresCompletedEvent()
+        private static ServiceProvider ConfigureServiceProvider(Action<IServiceCollection> configureServices)
         {
-            // Arrange
-            var isCompleted = false;
-            uow.Completed += (sender, e) => isCompleted = true;
-
-            // Act
-            await uow.CompleteAsync();
-
-            // Assert
-            Assert.IsTrue(isCompleted);
+            IServiceCollection services = new ServiceCollection();
+            configureServices(services);
+            return services.BuildServiceProvider();
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for details.
-
-using Developist.Core.Persistence.Entities;
+﻿using Developist.Core.Persistence.Entities;
 
 using System;
 using System.Threading;
@@ -9,19 +6,15 @@ using System.Threading.Tasks;
 
 namespace Developist.Core.Persistence
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IAsyncDisposable
     {
-        event EventHandler<UnitOfWorkCompletedEventArgs> Completed;
-
-        bool IsTransactional { get; }
-
-        void BeginTransaction();
-        Task BeginTransactionAsync(CancellationToken cancellationToken = default);
-
-        void Complete();
+        event EventHandler<UnitOfWorkCompletedEventArgs>? Completed;
         Task CompleteAsync(CancellationToken cancellationToken = default);
 
-        IRepository<TEntity> Repository<TEntity>()
+        bool IsTransactional { get; }
+        Task BeginTransactionAsync(CancellationToken cancellationToken = default);
+
+        IRepository<TEntity> Repository<TEntity>() 
             where TEntity : class, IEntity;
     }
 }
