@@ -148,7 +148,7 @@ namespace Developist.Core.Persistence.Tests
 
             // Assert
             var exception = Assert.ThrowsException<ArgumentOutOfRangeException>(action);
-            Assert.IsTrue(exception.Message.StartsWith($"Parameter '{nameof(value)}' cannot be less than {minValue}."));
+            Assert.IsTrue(exception.Message.StartsWith($"Value cannot be less than {minValue}."));
         }
 
         [TestMethod]
@@ -163,7 +163,7 @@ namespace Developist.Core.Persistence.Tests
 
             // Assert
             var exception = Assert.ThrowsException<ArgumentOutOfRangeException>(action);
-            Assert.IsTrue(exception.Message.StartsWith($"Parameter '{nameof(value)}' cannot be greater than {maxValue}."));
+            Assert.IsTrue(exception.Message.StartsWith($"Value cannot be greater than {maxValue}."));
         }
 
         [TestMethod]
@@ -179,7 +179,7 @@ namespace Developist.Core.Persistence.Tests
 
             // Assert
             var exception = Assert.ThrowsException<ArgumentOutOfRangeException>(action);
-            Assert.IsTrue(exception.Message.StartsWith($"Parameter '{nameof(value)}' cannot be less than {minValue} or greater than {maxValue}."));
+            Assert.IsTrue(exception.Message.StartsWith($"Value cannot be less than {minValue} or greater than {maxValue}."));
         }
 
         [TestMethod]

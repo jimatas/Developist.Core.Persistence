@@ -13,8 +13,7 @@ namespace Developist.Core.Persistence.Utilities
             var value = ArgumentNullExceptionHelper.ThrowIfNull(argument);
             if (value.Length == 0)
             {
-                var paramName = argument.GetMemberName();
-                throw new ArgumentException($"Parameter '{paramName}' cannot be empty.", paramName);
+                throw new ArgumentException(message: "Value cannot be empty.", paramName: argument.GetMemberName());
             }
             return value;
         }
@@ -25,8 +24,7 @@ namespace Developist.Core.Persistence.Utilities
             var value = ThrowIfNullOrEmpty(argument);
             if (value.All(char.IsWhiteSpace))
             {
-                var paramName = argument.GetMemberName();
-                throw new ArgumentException($"Parameter '{paramName}' cannot be all white space.", paramName);
+                throw new ArgumentException(message: "Value cannot be all white space.", paramName: argument.GetMemberName());
             }
             return value;
         }

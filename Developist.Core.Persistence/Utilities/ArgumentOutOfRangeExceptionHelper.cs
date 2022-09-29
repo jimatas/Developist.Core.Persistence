@@ -12,8 +12,7 @@ namespace Developist.Core.Persistence.Utilities
             if (minValue != null && Comparer<T>.Default.Compare((T)value, (T)minValue) < 0 ||
                 maxValue != null && Comparer<T>.Default.Compare((T)value, (T)maxValue) > 0)
             {
-                var paramName = argument.GetMemberName();
-                throw new ArgumentOutOfRangeException(paramName, value, FormatMessage(paramName, minValue, maxValue));
+                throw new ArgumentOutOfRangeException(paramName: argument.GetMemberName(), actualValue: value, message: FormatMessage(minValue, maxValue));
             }
             return (T)value;
         }
@@ -23,14 +22,14 @@ namespace Developist.Core.Persistence.Utilities
             if (minValue != null && Comparer<T>.Default.Compare((T)value, (T)minValue) < 0 ||
                 maxValue != null && Comparer<T>.Default.Compare((T)value, (T)maxValue) > 0)
             {
-                throw new ArgumentOutOfRangeException(paramName, value, FormatMessage(paramName, minValue, maxValue));
+                throw new ArgumentOutOfRangeException(paramName, actualValue: value, message: FormatMessage(minValue, maxValue));
             }
             return (T)value;
         }
 
-        private static string FormatMessage(string? paramName, object? minValue, object? maxValue)
+        private static string FormatMessage(object? minValue, object? maxValue)
         {
-            var message = $"Parameter '{paramName}' cannot be";
+            var message = "Value cannot be";
             if (minValue != null)
             {
                 message += $" less than {minValue}";

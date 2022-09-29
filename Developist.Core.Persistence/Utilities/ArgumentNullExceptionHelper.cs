@@ -12,8 +12,7 @@ namespace Developist.Core.Persistence.Utilities
             var value = argument.Compile().Invoke();
             if (value is null)
             {
-                var paramName = argument.GetMemberName();
-                throw new ArgumentNullException(paramName, $"Parameter '{paramName}' cannot be null.");
+                throw new ArgumentNullException(paramName: argument.GetMemberName());
             }
             return value;
         }
