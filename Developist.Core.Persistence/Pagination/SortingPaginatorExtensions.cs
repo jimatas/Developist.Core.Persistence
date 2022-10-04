@@ -38,8 +38,8 @@ namespace Developist.Core.Persistence.Pagination
             return paginator;
         }
 
-        public static SortingPaginator<T> SortedByString<T>(this SortingPaginator<T> paginator, string value)
-            where T : IEntity
+        public static SortingPaginator<TEntity> SortedByString<TEntity>(this SortingPaginator<TEntity> paginator, string value)
+            where TEntity : IEntity
         {
             ArgumentExceptionHelper.ThrowIfNullOrWhiteSpace(() => value);
 
@@ -49,7 +49,7 @@ namespace Developist.Core.Persistence.Pagination
             }
             return paginator;
 
-            IEnumerable<SortProperty<T>> ParseSortPropertiesFromString()
+            IEnumerable<SortProperty<TEntity>> ParseSortPropertiesFromString()
             {
                 foreach (var directive in value.Split(',').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim()))
                 {
@@ -60,13 +60,12 @@ namespace Developist.Core.Persistence.Pagination
                     {
                         propertyName = directive[1..].TrimStart('(').TrimEnd(')');
                     }
-
                     var direction = descending ? SortDirection.Descending : SortDirection.Ascending;
 
-                    SortProperty<T> property;
+                    SortProperty<TEntity> property;
                     try
                     {
-                        property = new SortProperty<T>(propertyName, direction);
+                        property = new SortProperty<TEntity>(propertyName, direction);
                     }
                     catch (ArgumentException exception)
                     {
