@@ -1,5 +1,6 @@
 ﻿using Developist.Core.Persistence.Pagination;
 using Developist.Core.Persistence.Tests.Fixture;
+using Developist.Core.Persistence.Utilities;
 
 namespace Developist.Core.Persistence.Tests
 {
@@ -214,6 +215,82 @@ namespace Developist.Core.Persistence.Tests
             // Assert
             var exception = Assert.ThrowsException<ArgumentException>(action);
             Assert.AreEqual("No property 'UndefinedProperty' on type 'Book'. (Parameter 'propertyName')", exception.Message);
+        }
+
+        [TestMethod]
+        public void SortedByString_GivenNullString_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>();
+
+            // Act
+            void action() => paginator.SortedByString(null!);
+
+            // Assert
+            Assert.ThrowsException<ArgumentNullException>(action);
+        }
+
+        [DataTestMethod]
+        [DataRow("")]
+        [DataRow(" ")]
+        [DataRow("\r\n")]
+        public void SortedByString_GivenEmptyOrWhiteSpaceOnlyString_ThrowsArgumentException(string value)
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>();
+
+            // Act
+            void action() => paginator.SortedByString(value);
+
+            // Assert
+            Assert.ThrowsException<ArgumentException>(action);
+        }
+
+        [DataTestMethod]
+        [DataRow("+()")]
+        [DataRow("GivenName,-( )")]
+        public void SortedByString_GivenInvalidDirectives_ThrowsFormatException(string value)
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>();
+
+            // Act
+            void action() => paginator.SortedByString(value);
+
+            // Assert
+            Assert.ThrowsException<FormatException>(action);
+        }
+
+        [TestMethod]
+        public void SortedByString_GivenSingleDirective_AddsSortProperty()
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>();
+
+            // Act
+            paginator.SortedByString("FamilyName");
+
+            // Assert
+            Assert.AreEqual(1, paginator.SortProperties.Count);
+            Assert.AreEqual("FamilyName", ((SortProperty<Person>)paginator.SortProperties.First()).Property.GetMemberName());
+            Assert.AreEqual(SortDirection.Ascending, ((SortProperty<Person>)paginator.SortProperties.First()).Direction);
+        }
+
+        [TestMethod]
+        public void SortedByString_GivenTwoDirectives_AddsBoth()
+        {
+            // Arrange
+            var paginator = new SortingPaginator<Person>();
+
+            // Act
+            paginator.SortedByString("FamilyName,-Age");
+
+            // Assert
+            Assert.AreEqual(2, paginator.SortProperties.Count);
+            Assert.AreEqual("FamilyName", ((SortProperty<Person>)paginator.SortProperties.First()).Property.GetMemberName());
+            Assert.AreEqual(SortDirection.Ascending, ((SortProperty<Person>)paginator.SortProperties.First()).Direction);
+            Assert.AreEqual("Age", ((SortProperty<Person>)paginator.SortProperties.Last()).Property.GetMemberName());
+            Assert.AreEqual(SortDirection.Descending, ((SortProperty<Person>)paginator.SortProperties.Last()).Direction);
         }
     }
 }
