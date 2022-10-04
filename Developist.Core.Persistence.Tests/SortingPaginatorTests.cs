@@ -218,13 +218,13 @@ namespace Developist.Core.Persistence.Tests
         }
 
         [TestMethod]
-        public void SortedByString_GivenNullString_ThrowsArgumentNullException()
+        public void SortedBy_GivenNullString_ThrowsArgumentNullException()
         {
             // Arrange
             var paginator = new SortingPaginator<Person>();
 
             // Act
-            void action() => paginator.SortedByString(null!);
+            void action() => paginator.SortedBy(null!);
 
             // Assert
             Assert.ThrowsException<ArgumentNullException>(action);
@@ -234,13 +234,13 @@ namespace Developist.Core.Persistence.Tests
         [DataRow("")]
         [DataRow(" ")]
         [DataRow("\r\n")]
-        public void SortedByString_GivenEmptyOrWhiteSpaceOnlyString_ThrowsArgumentException(string value)
+        public void SortedBy_GivenEmptyOrWhiteSpaceOnlyString_ThrowsArgumentException(string value)
         {
             // Arrange
             var paginator = new SortingPaginator<Person>();
 
             // Act
-            void action() => paginator.SortedByString(value);
+            void action() => paginator.SortedBy(value);
 
             // Assert
             Assert.ThrowsException<ArgumentException>(action);
@@ -249,26 +249,26 @@ namespace Developist.Core.Persistence.Tests
         [DataTestMethod]
         [DataRow("+()")]
         [DataRow("GivenName,-( )")]
-        public void SortedByString_GivenInvalidDirectives_ThrowsFormatException(string value)
+        public void SortedBy_GivenInvalidDirectives_ThrowsFormatException(string value)
         {
             // Arrange
             var paginator = new SortingPaginator<Person>();
 
             // Act
-            void action() => paginator.SortedByString(value);
+            void action() => paginator.SortedBy(value);
 
             // Assert
             Assert.ThrowsException<FormatException>(action);
         }
 
         [TestMethod]
-        public void SortedByString_GivenSingleDirective_AddsSortProperty()
+        public void SortedBy_GivenSingleDirective_AddsSortProperty()
         {
             // Arrange
             var paginator = new SortingPaginator<Person>();
 
             // Act
-            paginator.SortedByString("FamilyName");
+            paginator.SortedBy("FamilyName");
 
             // Assert
             Assert.AreEqual(1, paginator.SortProperties.Count);
@@ -277,13 +277,13 @@ namespace Developist.Core.Persistence.Tests
         }
 
         [TestMethod]
-        public void SortedByString_GivenTwoDirectives_AddsBoth()
+        public void SortedBy_GivenTwoDirectives_AddsBoth()
         {
             // Arrange
             var paginator = new SortingPaginator<Person>();
 
             // Act
-            paginator.SortedByString("FamilyName,-Age");
+            paginator.SortedBy("FamilyName,-Age");
 
             // Assert
             Assert.AreEqual(2, paginator.SortProperties.Count);
