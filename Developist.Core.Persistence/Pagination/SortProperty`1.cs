@@ -46,7 +46,7 @@ namespace Developist.Core.Persistence.Pagination
                 var property = type.GetProperty(nestedProperty);
                 if (property is null)
                 {
-                    throw new ArgumentException($"No property '{nestedProperty}' on type '{type.Name}'.", nameof(propertyName));
+                    throw new ArgumentException($"No accessible property '{nestedProperty}' defined on type '{type.Name}'.", nameof(propertyName));
                 }
 
                 expression = Expression.Property(expression, property);

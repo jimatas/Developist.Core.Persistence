@@ -69,7 +69,7 @@ namespace Developist.Core.Persistence.Pagination
                     }
                     catch (ArgumentException exception)
                     {
-                        throw new FormatException("Error reading one or more sorting directives from the input string. See the inner exception for details.", exception);
+                        throw new FormatException("Error while reading a sorting directive from the input string. See the inner exception for details.", exception);
                     }
 
                     yield return property;
