@@ -43,13 +43,13 @@ namespace Developist.Core.Persistence.Pagination
         {
             ArgumentExceptionHelper.ThrowIfNullOrWhiteSpace(() => sortString);
 
-            foreach (var property in ParseSortPropertiesFromString())
+            foreach (var property in ReadSortPropertiesFromString())
             {
                 paginator.SortProperties.Add(property);
             }
             return paginator;
 
-            IEnumerable<SortProperty<TEntity>> ParseSortPropertiesFromString()
+            IEnumerable<SortProperty<TEntity>> ReadSortPropertiesFromString()
             {
                 foreach (var directive in sortString.Split(',').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim()))
                 {
@@ -69,7 +69,7 @@ namespace Developist.Core.Persistence.Pagination
                     }
                     catch (ArgumentException exception)
                     {
-                        throw new FormatException("Error parsing one or more sorting directives from the input string. See the inner exception for details.", exception);
+                        throw new FormatException("Error reading one or more sorting directives from the input string. See the inner exception for details.", exception);
                     }
 
                     yield return property;
