@@ -26,7 +26,7 @@ namespace Developist.Core.Persistence
                     right: otherPredicate.ReplaceParameterWith(predicate.Parameters.Single()).Body),
                 parameters: predicate.Parameters);
 
-        internal static TExpression ReplaceParameterWith<TExpression>(this TExpression expression, ParameterExpression replacement)
+        private static TExpression ReplaceParameterWith<TExpression>(this TExpression expression, ParameterExpression replacement)
             where TExpression : Expression
             => new ParameterReplacer(replacement).Visit(expression);
 
