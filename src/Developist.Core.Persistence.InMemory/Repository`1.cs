@@ -94,7 +94,7 @@ namespace Developist.Core.Persistence.InMemory
         /// <inheritdoc/>
         public Task<IPaginatedList<T>> FindAsync(IFilterCriteria<T> criteria, IPaginator<T> paginator, IIncludePathsBuilder<T> includePaths, CancellationToken cancellationToken = default)
         {
-            return FindAsync(criteria, paginator);
+            return FindAsync(criteria, paginator, cancellationToken);
         }
 
         private void UnitOfWorkCompleted(object sender, UnitOfWorkCompletedEventArgs e)
