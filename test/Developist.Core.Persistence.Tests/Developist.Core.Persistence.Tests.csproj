@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Developist.Core.Persistence.EntityFrameworkCore\Developist.Core.Persistence.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\..\src\Developist.Core.Persistence.InMemory\Developist.Core.Persistence.InMemory.csproj" />
   </ItemGroup>
 

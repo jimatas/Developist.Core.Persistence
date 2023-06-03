@@ -1,7 +1,4 @@
-﻿using Developist.Core.Persistence.Filtering;
-using Developist.Core.Persistence.Pagination;
-using Developist.Core.Persistence.Pagination.Sorting;
-using Developist.Core.Persistence.Tests.Fixture;
+﻿using Developist.Core.Persistence.Tests.Fixture;
 
 namespace Developist.Core.Persistence.Tests;
 

@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Developist.Core.Persistence;
+using Developist.Core.Persistence.InMemory;
 using System;
 
-namespace Developist.Core.Persistence.InMemory.DependencyInjection
+namespace Microsoft.Extensions.DependencyInjection
 {
     /// <summary>
     /// Provides extension methods for configuring the in-memory implementation of the unit of work pattern.

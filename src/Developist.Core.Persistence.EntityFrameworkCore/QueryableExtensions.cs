@@ -1,5 +1,4 @@
-﻿using Developist.Core.Persistence.IncludePaths;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Developist.Core.Persistence.EntityFrameworkCore;
 
@@ -9,17 +8,20 @@ namespace Developist.Core.Persistence.EntityFrameworkCore;
 internal static class QueryableExtensions
 {
     /// <summary>
-    /// Includes related entities specified in <paramref name="includePaths"/> in the query results.
+    /// Includes related entities specified in <paramref name="includePathsBuilder"/> in the query results.
     /// </summary>
     /// <typeparam name="T">The type of entity being queried.</typeparam>
     /// <param name="query">The query to include related entities in.</param>
-    /// <param name="includePaths">The <see cref="IIncludePathsBuilder{T}"/> that specifies the related entities to include.</param>
+    /// <param name="includePathsBuilder">The <see cref="IIncludePathsBuilder{T}"/> that specifies the related entities to include.</param>
     /// <returns>The query with related entities included.</returns>
-    public static IQueryable<T> WithIncludes<T>(this IQueryable<T> query, IIncludePathsBuilder<T> includePaths)
-        where T : class
+    public static IQueryable<T> WithIncludes<T>(
+        this IQueryable<T> query,
+        IIncludePathsBuilder<T> includePathsBuilder) where T : class
     {
-        ArgumentNullException.ThrowIfNull(includePaths);
+        ArgumentNullException.ThrowIfNull(includePathsBuilder);
 
-        return includePaths.AsList().Distinct().Aggregate(query, (query, path) => query.Include(path));
+        return includePathsBuilder.AsList()
+            .Distinct()
+            .Aggregate(query, (query, path) => query.Include(path));
     }
 }

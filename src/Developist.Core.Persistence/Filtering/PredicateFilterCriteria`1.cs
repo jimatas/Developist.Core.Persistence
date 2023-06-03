@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Developist.Core.Persistence.Filtering
+namespace Developist.Core.Persistence
 {
     /// <summary>
     /// An implementation of the <see cref="IFilterCriteria{TEntity}"/> interface that filters entities using a predicate.

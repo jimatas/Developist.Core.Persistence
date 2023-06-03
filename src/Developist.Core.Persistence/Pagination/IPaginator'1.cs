@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Developist.Core.Persistence.Pagination
+namespace Developist.Core.Persistence
 {
     /// <summary>
     /// Defines the interface for paginating data using an <see cref="IQueryable{T}"/>.

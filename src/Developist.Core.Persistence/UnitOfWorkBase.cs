@@ -38,7 +38,8 @@ namespace Developist.Core.Persistence
         /// <inheritdoc/>
         public virtual IRepository<T> Repository<T>() where T : class
         {
-            return _repositories.GetOrAdd(typeof(T), _ => new RepositoryHolder(_repositoryFactory.Create<T>(this))).Repository<T>();
+            return _repositories.GetOrAdd(typeof(T),
+                _ => new RepositoryHolder(_repositoryFactory.Create<T>(this))).Repository<T>();
         }
 
         /// <summary>

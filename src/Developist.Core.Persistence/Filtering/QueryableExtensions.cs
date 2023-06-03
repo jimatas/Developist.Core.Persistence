@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 
-namespace Developist.Core.Persistence.Filtering
+namespace Developist.Core.Persistence
 {
     /// <summary>
     /// Provides extension methods for working with <see cref="IQueryable{T}"/> objects.
     /// </summary>
-    public static class QueryableExtensions
+    internal static partial class QueryableExtensions
     {
         /// <summary>
         /// Filters the specified query using the specified filter criteria.

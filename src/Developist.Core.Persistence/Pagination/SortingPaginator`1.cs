@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Developist.Core.Persistence.Pagination.Sorting
+namespace Developist.Core.Persistence
 {
     /// <summary>
     /// A paginator that supports sorting by multiple properties.

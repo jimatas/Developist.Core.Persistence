@@ -1,13 +1,12 @@
-﻿using Developist.Core.Persistence.Pagination;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace Developist.Core.Persistence.EntityFrameworkCore.Pagination.Sorting;
+namespace Developist.Core.Persistence.EntityFrameworkCore;
 
 /// <summary>
-/// An Entity Framework Core paginator that sorts and paginates data.
+/// An Entity Framework Core paginator that asynchronously sorts and paginates data.
 /// </summary>
 /// <typeparam name="T">The type of items being paged.</typeparam>
-public class SortingPaginator<T> : Persistence.Pagination.Sorting.SortingPaginator<T>
+public class SortingPaginator<T> : Persistence.SortingPaginator<T>
 {
     /// <inheritdoc/>
     public override async Task<IPaginatedList<T>> PaginateAsync(IQueryable<T> query, CancellationToken cancellationToken = default)

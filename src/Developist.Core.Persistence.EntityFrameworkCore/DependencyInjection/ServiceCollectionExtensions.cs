@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Developist.Core.Persistence;
+using Developist.Core.Persistence.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
-namespace Developist.Core.Persistence.EntityFrameworkCore.DependencyInjection;
+namespace Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
 /// Provides extension methods to add unit of work and repository services to the dependency injection container.
@@ -75,6 +76,7 @@ public static class ServiceCollectionExtensions
         where TContext : DbContext
     {
         services.Add(new ServiceDescriptor(typeof(IUnitOfWork<TContext>), typeof(UnitOfWork<TContext>), lifetime));
+        services.Add(new ServiceDescriptor(typeof(IUnitOfWorkBase), provider => provider.GetRequiredService<IUnitOfWork<TContext>>(), lifetime));
         services.Add(new ServiceDescriptor(typeof(IUnitOfWork), provider => provider.GetRequiredService<IUnitOfWork<TContext>>(), lifetime));
         services.Add(new ServiceDescriptor(typeof(IRepositoryFactory), provider => provider.GetRequiredService<IRepositoryFactory<TContext>>(), lifetime));
         services.AddDbContext<TContext>(contextLifetime: lifetime, optionsLifetime: lifetime);

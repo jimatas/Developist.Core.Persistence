@@ -1,5 +1,4 @@
 ﻿using Developist.Core.Persistence.InMemory;
-using Developist.Core.Persistence.InMemory.DependencyInjection;
 using Developist.Core.Persistence.Tests.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 

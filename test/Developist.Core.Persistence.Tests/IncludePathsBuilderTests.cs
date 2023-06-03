@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.IncludePaths;
+﻿using Developist.Core.Persistence.EntityFrameworkCore;
 using Developist.Core.Persistence.Tests.Fixture;
 using System.Reflection;
 

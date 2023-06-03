@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Developist.Core.Persistence.Pagination.Sorting
+namespace Developist.Core.Persistence
 {
     /// <summary>
     /// Represents a sortable property with an expression for sorting <typeparamref name="T"/> items by the specified <typeparamref name="TProperty"/>.

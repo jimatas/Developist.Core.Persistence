@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Developist.Core.Persistence.Filtering
+namespace Developist.Core.Persistence
 {
     /// <summary>
     /// Represents criteria for filtering entities of type <typeparamref name="T"/>.

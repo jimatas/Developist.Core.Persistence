@@ -31,6 +31,7 @@ public class RepositoryFactory<TContext> : IRepositoryFactory<TContext> where TC
     {
         var repositoryType = GetRepositoryImplementationType<T>();
         var repository = (IRepository<T>)ActivatorUtilities.CreateInstance(_serviceProvider, repositoryType, unitOfWork);
+
         return repository;
     }
 
@@ -38,13 +39,13 @@ public class RepositoryFactory<TContext> : IRepositoryFactory<TContext> where TC
     /// Gets the type of repository implementation to use for entities of type <typeparamref name="T"/>.
     /// </summary>
     /// <remarks>
-    /// By default, this method returns the type of the <see cref="Repository{T, TContext}"/> class.
+    /// By default, this method returns the type of the <see cref="Repository{T}"/> class.
     /// Subclasses can override this method to provide their own implementation of the <see cref="IRepository{T}"/> interface.
     /// </remarks>
     /// <typeparam name="T">The type of entity for which to get the repository implementation.</typeparam>
     /// <returns>The type of repository implementation to use for entities of type <typeparamref name="T"/>.</returns>
     protected virtual Type GetRepositoryImplementationType<T>() where T : class
     {
-        return typeof(Repository<T, TContext>);
+        return typeof(Repository<T>);
     }
 }

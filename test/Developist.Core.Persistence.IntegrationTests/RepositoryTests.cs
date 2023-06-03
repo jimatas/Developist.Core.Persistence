@@ -1,9 +1,6 @@
 ﻿using Developist.Core.Persistence.EntityFrameworkCore;
-using Developist.Core.Persistence.EntityFrameworkCore.DependencyInjection;
-using Developist.Core.Persistence.IncludePaths;
 using Developist.Core.Persistence.IntegrationTests.Fixture;
 using Developist.Core.Persistence.IntegrationTests.Helpers;
-using Developist.Core.Persistence.Pagination.Sorting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -91,9 +88,11 @@ public class RepositoryTests
         unitOfWork.Repository<Person>().Add(hollie);
         await unitOfWork.CompleteAsync();
 
-        var result = await unitOfWork.Repository<Person>().FindAsync(p => p.GivenName == "Hollie" && p.FamilyName == "Marin",
-            paginator => paginator.StartingAtPage(1).WithPageSize(1).SortedByProperty(p => p.FamilyName),
-            paths => paths.Include(p => p.ReceivedMessages));
+        var result = await unitOfWork.Repository<Person>()
+            .WithIncludes(related => related.Include(person => person.ReceivedMessages))
+            .ListAsync(
+                person => person.GivenName == "Hollie" && person.FamilyName == "Marin",
+                paginator => paginator.StartingAtPage(1).WithPageSize(1).SortedByProperty(p => p.FamilyName));
 
         hollie = result.Single();
 
@@ -131,15 +130,15 @@ public class RepositoryTests
         await unitOfWork.CompleteAsync();
 
         // Assert
-        hollie = (await unitOfWork.Repository<Person>().FindAsync(p => p.GivenName == "Hollie" && p.FamilyName == "Marin",
-            paginator => paginator.StartingAtPage(1).WithPageSize(1).SortedByProperty(p => p.FamilyName),
-            paths => paths.Include(p => p.SentMessages))).Single();
+        hollie = await unitOfWork.Repository<Person>()
+            .WithIncludes(related => related.Include(person => person.SentMessages))
+            .SingleOrDefaultAsync(person => person.GivenName == "Hollie" && person.FamilyName == "Marin");
 
         Assert.IsTrue(hollie.SentMessages.Any());
 
-        glen = (await unitOfWork.Repository<Person>().FindAsync(p => p.GivenName == "Glen" && p.FamilyName == "Hensley",
-            paginator => paginator.StartingAtPage(1).WithPageSize(1).SortedByProperty(p => p.FamilyName),
-            paths => paths.Include(p => p.ReceivedMessages))).Single();
+        glen = await unitOfWork.Repository<Person>()
+            .WithIncludes(related => related.Include(person => person.SentMessages))
+            .SingleOrDefaultAsync(person => person.GivenName == "Glen" && person.FamilyName == "Hensley");
 
         Assert.IsTrue(glen.ReceivedMessages.Any());
     }
@@ -189,9 +188,8 @@ public class RepositoryTests
         // Act
         var countBeforeRemoval = await unitOfWork.Repository<Person>().CountAsync();
 
-        var peter = (await unitOfWork.Repository<Person>().FindAsync(
-            predicate: p => p.GivenName == "Peter" && p.FamilyName == "Connor",
-            paginator => paginator.StartingAtPage(1).WithPageSize(1))).Single();
+        var peter = await unitOfWork.Repository<Person>()
+            .SingleOrDefaultAsync(person => person.GivenName == "Peter" && person.FamilyName == "Connor");
 
         unitOfWork.Repository<Person>().Remove(peter);
         await unitOfWork.CompleteAsync();
@@ -217,14 +215,12 @@ public class RepositoryTests
         await unitOfWork.Repository<Person>().SeedWithDataAsync();
         await unitOfWork.CompleteAsync();
 
-        var paginator = new SortingPaginator<Person>(pageNumber: 1, pageSize: 2).SortedByProperty(nameof(Person.FamilyName));
-
         // Act
-        var result = await unitOfWork.Repository<Person>().CountAsync();
-        var filteredResult = await unitOfWork.Repository<Person>().CountAsync(p => p.GivenName == "Glenn" || p.GivenName == "Ed");
+        var count = await unitOfWork.Repository<Person>().CountAsync();
+        var filteredCount = await unitOfWork.Repository<Person>().CountAsync(p => p.GivenName == "Glenn" || p.GivenName == "Ed");
 
         // Assert
-        Assert.AreEqual(People.AsQueryable().Count(), result);
-        Assert.AreEqual(2, filteredResult);
+        Assert.AreEqual(People.AsQueryable().Count(), count);
+        Assert.AreEqual(2, filteredCount);
     }
 }

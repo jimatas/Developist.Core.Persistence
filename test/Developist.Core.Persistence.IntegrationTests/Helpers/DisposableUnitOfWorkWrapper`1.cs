@@ -11,13 +11,15 @@ public sealed class DisposableUnitOfWorkWrapper<TContext> : IUnitOfWork<TContext
 
     public DisposableUnitOfWorkWrapper(
         IUnitOfWork<TContext> unitOfWork,
-        Func<DisposableUnitOfWorkWrapper<TContext>, ValueTask> disposeAction)
+        Func<DisposableUnitOfWorkWrapper<TContext>, ValueTask>? disposeAction = default)
     {
         _wrappedUnitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-        _disposeAction = disposeAction ?? throw new ArgumentNullException(nameof(disposeAction));
+        _disposeAction = disposeAction ?? (_ => default);
     }
 
     public TContext DbContext => _wrappedUnitOfWork.DbContext;
+
+    DbContext IUnitOfWorkBase.DbContext => DbContext;
 
     public event EventHandler<UnitOfWorkCompletedEventArgs>? Completed
     {

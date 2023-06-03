@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Developist.Core.Persistence.Pagination
+namespace Developist.Core.Persistence
 {
     /// <summary>
     /// Represents a generic paginated list of items.

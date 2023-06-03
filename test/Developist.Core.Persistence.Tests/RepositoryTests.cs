@@ -1,9 +1,4 @@
-﻿using Developist.Core.Persistence.Filtering;
-using Developist.Core.Persistence.IncludePaths;
-using Developist.Core.Persistence.InMemory;
-using Developist.Core.Persistence.InMemory.DependencyInjection;
-using Developist.Core.Persistence.Pagination;
-using Developist.Core.Persistence.Pagination.Sorting;
+﻿using Developist.Core.Persistence.InMemory;
 using Developist.Core.Persistence.Tests.Fixture;
 using Developist.Core.Persistence.Tests.Helpers;
 using Microsoft.Extensions.DependencyInjection;
@@ -103,35 +98,21 @@ public class RepositoryTests
     }
 
     [TestMethod]
-    public async Task ListAsync_GivenNullPaginatorAndIncludePaths_ThrowsArgumentNullException()
+    public async Task ListAsync_GivenNullCriteria_ThrowsArgumentNullException()
     {
         // Arrange
         using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
         var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
         var repository = unitOfWork.Repository<Person>();
-        IPaginator<Person>? paginator = null;
-
-        // Act
-        var action = () => repository.ListAsync(paginator, includePaths: null);
-
-        // Assert
-        var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
-        Assert.AreEqual(nameof(paginator), exception.ParamName);
-    }
-    
-    [TestMethod]
-    public async Task ListAsync_GivenNullIncludePaths_DoesNotThrow()
-    {
-        // Arrange
-        using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
-        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
-        var repository = unitOfWork.Repository<Person>();
+        IFilterCriteria<Person>? criteria = null;
         var paginator = new SortingPaginator<Person>();
 
         // Act
-        await repository.ListAsync(paginator, includePaths: null);
+        var action = () => repository.ListAsync(criteria, paginator);
 
         // Assert
+        var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
+        Assert.AreEqual(nameof(criteria), exception.ParamName);
     }
 
     [TestMethod]
@@ -155,80 +136,7 @@ public class RepositoryTests
     }
 
     [TestMethod]
-    public async Task ListAsync_GivenPaginatorAndIncludePaths_ReturnsExpectedResult()
-    {
-        // Arrange
-        using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
-        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
-        var repository = unitOfWork.Repository<Person>();
-        var paginator = new SortingPaginator<Person>(pageNumber: 2, pageSize: 3);
-        var includePaths = new IncludePathsBuilder<Person>();
-
-        await repository.SeedWithDataAsync();
-
-        // Act
-        var expectedResult = await repository.ListAsync(paginator, includePaths);
-
-        // Assert
-        Assert.IsNotNull(expectedResult);
-        Assert.AreEqual(paginator.PageSize, expectedResult.Count);
-        Assert.AreEqual(paginator.PageNumber, expectedResult.PageNumber);
-    }
-
-    [TestMethod]
-    public async Task FindAsync_GivenNullCriteria_ThrowsArgumentNullException()
-    {
-        // Arrange
-        using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
-        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
-        var repository = unitOfWork.Repository<Person>();
-        IFilterCriteria<Person>? criteria = null;
-        var paginator = new SortingPaginator<Person>();
-
-        // Act
-        var action = () => repository.FindAsync(criteria, paginator);
-
-        // Assert
-        var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
-        Assert.AreEqual(nameof(criteria), exception.ParamName);
-    }
-
-    [TestMethod]
-    public async Task FindAsync_GivenNullPaginator_ThrowsArgumentNullException()
-    {
-        // Arrange
-        using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
-        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
-        var repository = unitOfWork.Repository<Person>();
-        var criteria = new PersonByNameCriteria();
-        IPaginator<Person>? paginator = null;
-
-        // Act
-        var action = () => repository.FindAsync(criteria, paginator);
-
-        // Assert
-        var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
-        Assert.AreEqual(nameof(paginator), exception.ParamName);
-    }
-
-    [TestMethod]
-    public async Task FindAsync_GivenNullIncludePaths_DoesNotThrow()
-    {
-        // Arrange
-        using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
-        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
-        var repository = unitOfWork.Repository<Person>();
-        var criteria = new PersonByNameCriteria();
-        var paginator = new SortingPaginator<Person>();
-
-        // Act
-        await repository.FindAsync(criteria, paginator, includePaths: null);
-
-        // Assert
-    }
-
-    [TestMethod]
-    public async Task FindAsync_GivenCriteriaAndPaginator_ReturnsExpectedResult()
+    public async Task ListAsync_GivenCriteriaAndPaginator_ReturnsExpectedResult()
     {
         // Arrange
         using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
@@ -241,34 +149,11 @@ public class RepositoryTests
         var paginator = new SortingPaginator<Person>().StartingAtPage(1).WithPageSize(10);
 
         // Act
-        var expectedResult = await repository.FindAsync(criteria, paginator);
+        var expectedResult = await repository.ListAsync(criteria, paginator);
 
         // Assert
         Assert.AreEqual(1, expectedResult.Count);
         Assert.AreEqual("Randall", expectedResult.Single().GivenName);
-    }
-
-    [TestMethod]
-    public async Task FindAsync_GivenCriteriaAndPaginatorAndIncludePaths_ReturnsExpectedResult()
-    {
-        // Arrange
-        using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
-        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
-        var repository = unitOfWork.Repository<Person>();
-
-        await repository.SeedWithDataAsync();
-
-        var criteria = new PersonByNameCriteria { FamilyName = "Connor" };
-        var paginator = new SortingPaginator<Person>().StartingAtPage(1).WithPageSize(10).SortedByProperty(nameof(Person.Age));
-        var includePaths = new IncludePathsBuilder<Person>();
-
-        // Act
-        var expectedResult = await repository.FindAsync(criteria, paginator, includePaths);
-
-        // Assert
-        Assert.AreEqual(2, expectedResult.Count);
-        Assert.AreEqual("Phillipa", expectedResult[0].GivenName); // null < anything else
-        Assert.AreEqual("Peter", expectedResult[1].GivenName);
     }
 
     [TestMethod]
@@ -278,7 +163,6 @@ public class RepositoryTests
         using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
         var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
         var repository = unitOfWork.Repository<Person>();
-
         Person? entity = null;
 
         // Act
@@ -296,7 +180,6 @@ public class RepositoryTests
         using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
         var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
         var repository = (Repository<Person>)unitOfWork.Repository<Person>();
-
         var entity = new Person { GivenName = "John", FamilyName = "Smith" };
 
         // Act
@@ -316,13 +199,14 @@ public class RepositoryTests
         using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
         var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
         var repository = (Repository<Person>)unitOfWork.Repository<Person>();
-
         var entity = new Person() { GivenName = "John", FamilyName = "Smith" };
 
         // Act
         var countBeforeAdding = repository.DataStore.Count;
+
         repository.Add(entity);
         await unitOfWork.CompleteAsync();
+
         var countAfterAdding = repository.DataStore.Count;
 
         // Assert
@@ -336,7 +220,6 @@ public class RepositoryTests
         using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
         var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
         var repository = unitOfWork.Repository<Person>();
-
         Person? entity = null;
 
         // Act
@@ -360,11 +243,13 @@ public class RepositoryTests
         var criteria = new PersonByNameCriteria { FamilyName = "Hensley" };
         var paginator = new SortingPaginator<Person>();
 
-        var entity = (await repository.FindAsync(criteria, paginator)).Single();
+        var entity = (await repository.ListAsync(criteria, paginator)).Single();
 
         // Act
         var countBeforeRemoval = repository.DataStore.Count;
+
         repository.Remove(entity);
+
         var countAfterRemoval = repository.DataStore.Count;
 
         // Assert
@@ -385,12 +270,14 @@ public class RepositoryTests
         var criteria = new PersonByNameCriteria { FamilyName = "Hensley" };
         var paginator = new SortingPaginator<Person>();
 
-        var entity = (await repository.FindAsync(criteria, paginator)).Single();
+        var entity = (await repository.ListAsync(criteria, paginator)).Single();
 
         // Act
         var countBeforeRemoval = repository.DataStore.Count;
+
         repository.Remove(entity);
         await unitOfWork.CompleteAsync();
+
         var countAfterRemoval = repository.DataStore.Count;
 
         // Assert

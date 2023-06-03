@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Developist.Core.Persistence.Pagination
+namespace Developist.Core.Persistence
 {
     /// <summary>
     /// Represents a paginated list of data.

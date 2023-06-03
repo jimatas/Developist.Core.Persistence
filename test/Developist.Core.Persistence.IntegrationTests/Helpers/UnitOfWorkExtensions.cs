@@ -7,7 +7,7 @@ internal static class UnitOfWorkExtensions
 {
     public static DisposableUnitOfWorkWrapper<TContext> AsDisposableUnitOfWork<TContext>(
         this IUnitOfWork<TContext> unitOfWork,
-        Func<DisposableUnitOfWorkWrapper<TContext>, ValueTask> disposeAction) where TContext : DbContext
+        Func<DisposableUnitOfWorkWrapper<TContext>, ValueTask>? disposeAction = default) where TContext : DbContext
     {
         return new DisposableUnitOfWorkWrapper<TContext>(unitOfWork, disposeAction);
     }

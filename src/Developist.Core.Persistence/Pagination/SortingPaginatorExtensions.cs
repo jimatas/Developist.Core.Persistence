@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Developist.Core.Persistence.Pagination.Sorting
+namespace Developist.Core.Persistence
 {
     /// <summary>
     /// Provides extension methods for configuring instances of <see cref="SortingPaginator{T}"/>.

@@ -1,4 +1,4 @@
-﻿namespace Developist.Core.Persistence.Pagination.Sorting
+﻿namespace Developist.Core.Persistence
 {
     /// <summary>
     /// Specifies the sort direction for a sortable property.

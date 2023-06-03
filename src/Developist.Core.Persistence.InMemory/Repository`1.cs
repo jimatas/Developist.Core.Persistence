@@ -1,7 +1,4 @@
-﻿using Developist.Core.Persistence.Filtering;
-using Developist.Core.Persistence.IncludePaths;
-using Developist.Core.Persistence.Pagination;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -72,29 +69,41 @@ namespace Developist.Core.Persistence.InMemory
         }
 
         /// <inheritdoc/>
+        public Task<T> SingleOrDefaultAsync(IFilterCriteria<T> criteria, CancellationToken cancellationToken = default)
+        {
+            var entity = DataStore.AsQueryable().FilterBy(criteria).SingleOrDefault();
+
+            return Task.FromResult(entity);
+        }
+
+        /// <inheritdoc/>
+        public Task<T> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
+        {
+            var entity = DataStore.AsQueryable().FirstOrDefault();
+
+            return Task.FromResult(entity);
+        }
+
+        /// <inheritdoc/>
+        public Task<T> FirstOrDefaultAsync(IFilterCriteria<T> criteria, CancellationToken cancellationToken = default)
+        {
+            var entity = DataStore.AsQueryable().FilterBy(criteria).FirstOrDefault();
+
+            return Task.FromResult(entity);
+        }
+
+        /// <inheritdoc/>
         public Task<IPaginatedList<T>> ListAsync(IPaginator<T> paginator, CancellationToken cancellationToken = default)
         {
             return DataStore.AsQueryable().ToPaginatedListAsync(paginator, cancellationToken);
         }
 
         /// <inheritdoc/>
-        public Task<IPaginatedList<T>> ListAsync(IPaginator<T> paginator, IIncludePathsBuilder<T> includePaths, CancellationToken cancellationToken = default)
-        {
-            return ListAsync(paginator, cancellationToken);
-        }
-
-        /// <inheritdoc/>
-        public Task<IPaginatedList<T>> FindAsync(IFilterCriteria<T> criteria, IPaginator<T> paginator, CancellationToken cancellationToken = default)
+        public Task<IPaginatedList<T>> ListAsync(IFilterCriteria<T> criteria, IPaginator<T> paginator, CancellationToken cancellationToken = default)
         {
             var query = DataStore.AsQueryable().FilterBy(criteria);
 
             return query.ToPaginatedListAsync(paginator, cancellationToken);
-        }
-
-        /// <inheritdoc/>
-        public Task<IPaginatedList<T>> FindAsync(IFilterCriteria<T> criteria, IPaginator<T> paginator, IIncludePathsBuilder<T> includePaths, CancellationToken cancellationToken = default)
-        {
-            return FindAsync(criteria, paginator, cancellationToken);
         }
 
         private void UnitOfWorkCompleted(object sender, UnitOfWorkCompletedEventArgs e)

@@ -1,5 +1,4 @@
-﻿using Developist.Core.Persistence.Pagination.Sorting;
-using Developist.Core.Persistence.Tests.Fixture;
+﻿using Developist.Core.Persistence.Tests.Fixture;
 using System.Linq.Expressions;
 
 namespace Developist.Core.Persistence.Tests;

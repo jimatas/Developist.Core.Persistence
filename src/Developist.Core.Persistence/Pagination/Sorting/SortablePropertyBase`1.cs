@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Developist.Core.Persistence.Pagination.Sorting
+namespace Developist.Core.Persistence
 {
     /// <summary>
     /// Represents a base class for sortable properties.

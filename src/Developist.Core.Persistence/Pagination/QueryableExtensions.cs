@@ -1,16 +1,15 @@
-﻿using Developist.Core.Persistence.Pagination.Sorting;
-using System;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Developist.Core.Persistence.Pagination
+namespace Developist.Core.Persistence
 {
     /// <summary>
     /// Provides extension methods for working with <see cref="IQueryable{T}"/> instances.
     /// </summary>
-    public static class QueryableExtensions
+    internal static partial class QueryableExtensions
     {
         /// <summary>
         /// Converts the specified query to a paginated list using the specified <paramref name="paginator"/>.

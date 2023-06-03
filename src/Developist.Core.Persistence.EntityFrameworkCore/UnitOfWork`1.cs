@@ -27,6 +27,9 @@ public class UnitOfWork<TContext> : UnitOfWorkBase, IUnitOfWork<TContext>
     public TContext DbContext { get; }
 
     /// <inheritdoc/>
+    DbContext IUnitOfWorkBase.DbContext => DbContext;
+
+    /// <inheritdoc/>
     [MemberNotNullWhen(true, nameof(_dbContextTransaction))]
     public override bool HasActiveTransaction => _dbContextTransaction is not null;
 
@@ -55,7 +58,7 @@ public class UnitOfWork<TContext> : UnitOfWorkBase, IUnitOfWork<TContext>
         catch
         {
             await RollbackTransactionAsync(cancellationToken).ConfigureAwait(false);
-            
+
             throw;
         }
 

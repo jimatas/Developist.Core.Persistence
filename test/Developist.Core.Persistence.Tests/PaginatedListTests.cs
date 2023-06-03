@@ -1,5 +1,4 @@
-﻿using Developist.Core.Persistence.Pagination;
-using Developist.Core.Persistence.Tests.Fixture;
+﻿using Developist.Core.Persistence.Tests.Fixture;
 using System.Collections;
 
 namespace Developist.Core.Persistence.Tests;

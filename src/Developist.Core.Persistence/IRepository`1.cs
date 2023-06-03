@@ -1,7 +1,4 @@
-﻿using Developist.Core.Persistence.Filtering;
-using Developist.Core.Persistence.IncludePaths;
-using Developist.Core.Persistence.Pagination;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 namespace Developist.Core.Persistence
@@ -30,20 +27,43 @@ namespace Developist.Core.Persistence
         void Remove(T entity);
 
         /// <summary>
-        /// Returns the number of entities in the repository.
+        /// Counts the number of entities in the repository.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>A task representing the asynchronous operation. The result of the task is the number of entities in the repository.</returns>
         Task<int> CountAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Returns the number of entities in the repository that satisfy the given filter criteria.
+        /// Counts the number of entities in the repository that satisfy the given filter criteria.
         /// </summary>
         /// <param name="criteria">The filter criteria.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>A task representing the asynchronous operation. The result of the task is the number of entities in the repository that satisfy the given filter criteria.</returns>
         Task<int> CountAsync(IFilterCriteria<T> criteria, CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Retrieves a single entity from the repository that satisfies the given filter criteria, throwing an exception if multiple entities match the filter criteria.
+        /// </summary>
+        /// <param name="criteria">The filter criteria.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>A task representing the asynchronous operation. The result of the task is the single entity that satisfies the filter criteria, or <c>null</c> if no entity is found.</returns>
+        Task<T> SingleOrDefaultAsync(IFilterCriteria<T> criteria, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Retrieves the first entity from the repository.
+        /// </summary>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>A task representing the asynchronous operation. The result of the task is the first entity in the repository, or <c>null</c> if the repository is empty.</returns>
+        Task<T> FirstOrDefaultAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Retrieves the first entity from the repository that satisfies the given filter criteria.
+        /// </summary>
+        /// <param name="criteria">The filter criteria.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>A task representing the asynchronous operation. The result of the task is the first entity that satisfies the filter criteria, or <c>null</c> if no entity is found.</returns>
+        Task<T> FirstOrDefaultAsync(IFilterCriteria<T> criteria, CancellationToken cancellationToken = default);
+        
         /// <summary>
         /// Returns a paginated list of entities from the repository.
         /// </summary>
@@ -53,31 +73,12 @@ namespace Developist.Core.Persistence
         Task<IPaginatedList<T>> ListAsync(IPaginator<T> paginator, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Returns a paginated list of entities from the repository.
-        /// </summary>
-        /// <param name="paginator">The paginator to use for pagination.</param>
-        /// <param name="includePaths">The include paths builder to use for eager loading related entities.</param>
-        /// <param name="cancellationToken">A cancellation token.</param>
-        /// <returns>A task representing the asynchronous operation. The result of the task is a paginated list of entities from the repository.</returns>
-        Task<IPaginatedList<T>> ListAsync(IPaginator<T> paginator, IIncludePathsBuilder<T> includePaths, CancellationToken cancellationToken = default);
-
-        /// <summary>
         /// Returns a paginated list of entities from the repository that satisfy the given filter criteria.
         /// </summary>
         /// <param name="criteria">The filter criteria.</param>
         /// <param name="paginator">The paginator.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>A task representing the asynchronous operation. The result of the task is a paginated list of entities from the repository that satisfy the given filter criteria.</returns>
-        Task<IPaginatedList<T>> FindAsync(IFilterCriteria<T> criteria, IPaginator<T> paginator, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Returns a paginated list of entities from the repository that satisfy the given filter criteria.
-        /// </summary>
-        /// <param name="criteria">The filter criteria.</param>
-        /// <param name="paginator">The paginator.</param>
-        /// <param name="includePaths">The include paths builder to use for eager loading related entities.</param>
-        /// <param name="cancellationToken">A cancellation token.</param>
-        /// <returns>A task representing the asynchronous operation. The result of the task is a paginated list of entities from the repository that satisfy the given filter criteria.</returns>
-        Task<IPaginatedList<T>> FindAsync(IFilterCriteria<T> criteria, IPaginator<T> paginator, IIncludePathsBuilder<T> includePaths, CancellationToken cancellationToken = default);
+        Task<IPaginatedList<T>> ListAsync(IFilterCriteria<T> criteria, IPaginator<T> paginator, CancellationToken cancellationToken = default);
     }
 }

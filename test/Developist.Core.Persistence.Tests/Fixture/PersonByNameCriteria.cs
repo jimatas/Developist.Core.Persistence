@@ -1,6 +1,4 @@
-﻿using Developist.Core.Persistence.Filtering;
-
-namespace Developist.Core.Persistence.Tests.Fixture;
+﻿namespace Developist.Core.Persistence.Tests.Fixture;
 
 public class PersonByNameCriteria : IFilterCriteria<Person>
 {
@@ -12,12 +10,18 @@ public class PersonByNameCriteria : IFilterCriteria<Person>
     {
         if (GivenName is not null)
         {
-            query = query.Where(p => p.GivenName != null && (UsePartialMatching ? p.GivenName.Contains(GivenName) : p.GivenName.Equals(GivenName)));
+            query = query.Where(p => p.GivenName != null
+                && (UsePartialMatching
+                    ? p.GivenName.Contains(GivenName)
+                    : p.GivenName.Equals(GivenName)));
         }
 
         if (FamilyName is not null)
         {
-            query = query.Where(p => p.FamilyName != null && (UsePartialMatching ? p.FamilyName.Contains(FamilyName) : p.FamilyName.Equals(FamilyName)));
+            query = query.Where(p => p.FamilyName != null
+                && (UsePartialMatching
+                    ? p.FamilyName.Contains(FamilyName)
+                    : p.FamilyName.Equals(FamilyName)));
         }
 
         return query;

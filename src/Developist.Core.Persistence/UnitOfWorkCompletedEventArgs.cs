@@ -11,8 +11,7 @@ namespace Developist.Core.Persistence
         /// Initializes a new instance of the <see cref="UnitOfWorkCompletedEventArgs"/> class.
         /// </summary>
         /// <param name="unitOfWork">The unit of work that completed.</param>
-        public UnitOfWorkCompletedEventArgs(IUnitOfWork unitOfWork)
-            => UnitOfWork = unitOfWork;
+        public UnitOfWorkCompletedEventArgs(IUnitOfWork unitOfWork) => UnitOfWork = unitOfWork;
 
         /// <summary>
         /// Gets the unit of work that completed.

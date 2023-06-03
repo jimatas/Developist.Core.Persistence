@@ -1,5 +1,4 @@
 ﻿using Developist.Core.Persistence.EntityFrameworkCore;
-using Developist.Core.Persistence.EntityFrameworkCore.DependencyInjection;
 using Developist.Core.Persistence.IntegrationTests.Fixture;
 using Developist.Core.Persistence.IntegrationTests.Helpers;
 using Microsoft.Extensions.DependencyInjection;
