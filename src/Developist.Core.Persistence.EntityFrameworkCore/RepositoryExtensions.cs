@@ -19,8 +19,8 @@ public static class RepositoryExtensions
     {
         ArgumentNullException.ThrowIfNull(configureIncludePaths);
 
-        var includePathsBuilder = new IncludePathsBuilder<T>();
-        configureIncludePaths(includePathsBuilder);
+        var includePaths = new IncludePathsBuilder<T>();
+        configureIncludePaths(includePaths);
 
         if (repository is not Repository<T> efRepository)
         {
@@ -29,13 +29,13 @@ public static class RepositoryExtensions
 
         if (efRepository is RepositoryWithIncludes<T> efRepositoryWithIncludes)
         {
-            foreach (var path in efRepositoryWithIncludes.IncludePathsBuilder.AsList())
+            foreach (var path in efRepositoryWithIncludes.IncludePaths.AsList())
             {
-                includePathsBuilder.Include(path);
+                includePaths.Include(path);
             }
         }
 
-        return new RepositoryWithIncludes<T>(efRepository.UnitOfWork, includePathsBuilder);
+        return new RepositoryWithIncludes<T>(efRepository.UnitOfWork, includePaths);
     }
 
     /// <summary>
