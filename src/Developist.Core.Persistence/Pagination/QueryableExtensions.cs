@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace Developist.Core.Persistence
 {
     /// <summary>
-    /// Provides extension methods for working with <see cref="IQueryable{T}"/> instances.
+    /// Provides extension methods for working with <see cref="IQueryable{T}"/> objects.
     /// </summary>
-    internal static partial class QueryableExtensions
+    public static partial class QueryableExtensions
     {
         /// <summary>
         /// Converts the specified query to a paginated list using the specified <paramref name="paginator"/>.

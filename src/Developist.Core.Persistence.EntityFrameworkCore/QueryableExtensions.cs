@@ -3,9 +3,9 @@
 namespace Developist.Core.Persistence.EntityFrameworkCore;
 
 /// <summary>
-/// Provides extension methods for <see cref="IQueryable{T}"/> objects.
+/// Provides extension methods for working with <see cref="IQueryable{T}"/> objects.
 /// </summary>
-internal static class QueryableExtensions
+public static class QueryableExtensions
 {
     /// <summary>
     /// Includes related entities specified in <paramref name="includePaths"/> in the query results.

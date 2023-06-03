@@ -16,12 +16,5 @@
     <RepositoryUrl>https://github.com/jimatas/Developist.Core.Persistence</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
-
-  <ItemGroup>
-    <InternalsVisibleTo Include="Developist.Core.Persistence.EntityFrameworkCore" />
-    <InternalsVisibleTo Include="Developist.Core.Persistence.InMemory" />
-    <InternalsVisibleTo Include="Developist.Core.Persistence.IntegrationTests" />
-    <InternalsVisibleTo Include="Developist.Core.Persistence.Tests" />
-  </ItemGroup>
   
 </Project>

@@ -6,7 +6,7 @@ namespace Developist.Core.Persistence
     /// <summary>
     /// Provides extension methods for working with <see cref="IQueryable{T}"/> objects.
     /// </summary>
-    internal static partial class QueryableExtensions
+    public static partial class QueryableExtensions
     {
         /// <summary>
         /// Filters the specified query using the specified filter criteria.
