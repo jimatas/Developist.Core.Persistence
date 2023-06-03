@@ -18,7 +18,8 @@ public class RepositoryTests
         var action = () => new Repository<Person>(unitOfWork);
 
         // Assert
-        Assert.ThrowsException<ArgumentNullException>(action);
+        var exception = Assert.ThrowsException<ArgumentNullException>(action);
+        Assert.AreEqual(nameof(unitOfWork), exception.ParamName);
     }
 
     [TestMethod]
@@ -51,7 +52,8 @@ public class RepositoryTests
         var action = () => repository.CountAsync(criteria);
 
         // Assert
-        await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
+        var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
+        Assert.AreEqual(nameof(criteria), exception.ParamName);
     }
 
     [DataTestMethod]
@@ -78,6 +80,140 @@ public class RepositoryTests
 
         // Assert
         Assert.AreEqual(expectedResult, result);
+    }
+
+    [TestMethod]
+    public async Task SingleOrDefaultAsync_GivenNullCriteria_ThrowsArgumentNullException()
+    {
+        using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
+        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
+        var repository = unitOfWork.Repository<Person>();
+        IFilterCriteria<Person>? criteria = null;
+
+        // Act
+        var action = () => repository.SingleOrDefaultAsync(criteria);
+
+        // Assert
+        var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
+        Assert.AreEqual(nameof(criteria), exception.ParamName);
+    }
+
+    [TestMethod]
+    public async Task SingleOrDefaultAsync_GivenCriteriaReturningMultipleResults_ThrowsInvalidOperationException()
+    {
+        using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
+        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
+        var repository = unitOfWork.Repository<Person>();
+        var criteria = new PersonByNameCriteria { FamilyName = "Connor" };
+
+        await repository.SeedWithDataAsync();
+
+        // Act
+        var action = () => repository.SingleOrDefaultAsync(criteria);
+
+        // Assert
+        await Assert.ThrowsExceptionAsync<InvalidOperationException>(action);
+    }
+
+    [TestMethod]
+    public async Task SingleOrDefaultAsync_GivenCriteriaReturningNoResult_ReturnsDefaultValue()
+    {
+        using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
+        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
+        var repository = unitOfWork.Repository<Person>();
+        var criteria = new PersonByNameCriteria { GivenName = "Non-", FamilyName = "Existent" };
+
+        await repository.SeedWithDataAsync();
+
+        // Act
+        var result = await repository.SingleOrDefaultAsync(criteria);
+
+        // Assert
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public async Task SingleOrDefaultAsync_GivenCriteria_ReturnsExpectedResult()
+    {
+        using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
+        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
+        var repository = unitOfWork.Repository<Person>();
+        var criteria = new PersonByNameCriteria { GivenName = "Phillipa", FamilyName = "Connor" };
+
+        await repository.SeedWithDataAsync();
+
+        // Act
+        var result = await repository.SingleOrDefaultAsync(criteria);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Phillipa Connor", result.FullName);
+    }
+
+    [TestMethod]
+    public async Task FirstOrDefaultAsync_ByDefault_ReturnsExpectedResult()
+    {
+        using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
+        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
+        var repository = unitOfWork.Repository<Person>();
+
+        await repository.SeedWithDataAsync();
+
+        // Act
+        var result = await repository.FirstOrDefaultAsync();
+        var expectedResult = People.AsQueryable().First();
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual(expectedResult.FullName, result.FullName);
+    }
+
+    [TestMethod]
+    public async Task FirstOrDefaultAsync_OnEmptyRepository_ReturnsDefaultValue()
+    {
+        using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
+        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
+        var repository = unitOfWork.Repository<Person>();
+
+        // Act
+        var result = await repository.FirstOrDefaultAsync();
+
+        // Assert
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public async Task FirstOrDefaultAsync_GivenNullCriteria_ThrowsArgumentNullException()
+    {
+        using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
+        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
+        var repository = unitOfWork.Repository<Person>();
+        IFilterCriteria<Person>? criteria = null;
+
+        // Act
+        var action = () => repository.FirstOrDefaultAsync(criteria);
+
+        // Assert
+        var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(action);
+        Assert.AreEqual(nameof(criteria), exception.ParamName);
+    }
+
+    [TestMethod]
+    public async Task FirstOrDefaultAsync_GivenCriteria_ReturnsExpectedResult()
+    {
+        using var serviceProvider = ServiceProviderHelper.ConfigureServiceProvider(services => services.AddUnitOfWork());
+        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
+        var repository = unitOfWork.Repository<Person>();
+        var criteria = new PersonByNameCriteria { FamilyName = "Connor" };
+
+        await repository.SeedWithDataAsync();
+
+        // Act
+        var result = await repository.FirstOrDefaultAsync(criteria);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Phillipa Connor", result.FullName);
     }
 
     [TestMethod]
