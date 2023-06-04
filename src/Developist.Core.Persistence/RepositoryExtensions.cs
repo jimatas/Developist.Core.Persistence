@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +11,34 @@ namespace Developist.Core.Persistence
     /// </summary>
     public static class RepositoryExtensions
     {
+        /// <summary>
+        /// Adds a collection of entities to the repository.
+        /// </summary>
+        /// <typeparam name="T">The type of entities.</typeparam>
+        /// <param name="repository">The repository.</param>
+        /// <param name="entities">The collection of entities to add.</param>
+        public static void AddRange<T>(this IRepository<T> repository, IEnumerable<T> entities)
+        {
+            foreach (var entity in entities)
+            {
+                repository.Add(entity);
+            }
+        }
+
+        /// <summary>
+        /// Removes a collection of entities from the repository.
+        /// </summary>
+        /// <typeparam name="T">The type of entities.</typeparam>
+        /// <param name="repository">The repository.</param>
+        /// <param name="entities">The collection of entities to remove.</param>
+        public static void RemoveRange<T>(this IRepository<T> repository, IEnumerable<T> entities)
+        {
+            foreach (var entity in entities)
+            {
+                repository.Remove(entity);
+            }
+        }
+
         /// <summary>
         /// Counts the number of entities in the repository that satisfy a predicate.
         /// </summary>
