@@ -19,6 +19,11 @@ namespace Developist.Core.Persistence
         /// <param name="entities">The collection of entities to add.</param>
         public static void AddRange<T>(this IRepository<T> repository, IEnumerable<T> entities)
         {
+            if (entities is null)
+            {
+                throw new ArgumentNullException(nameof(entities));
+            }
+
             foreach (var entity in entities)
             {
                 repository.Add(entity);
@@ -33,6 +38,11 @@ namespace Developist.Core.Persistence
         /// <param name="entities">The collection of entities to remove.</param>
         public static void RemoveRange<T>(this IRepository<T> repository, IEnumerable<T> entities)
         {
+            if (entities is null)
+            {
+                throw new ArgumentNullException(nameof(entities));
+            }
+
             foreach (var entity in entities)
             {
                 repository.Remove(entity);
