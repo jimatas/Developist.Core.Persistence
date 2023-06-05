@@ -3,18 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A486057E-89A0-487D-941E-3B7FC1A52B49}"
-	ProjectSection(SolutionItems) = preProject
-		Directory.Build.props = Directory.Build.props
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence", "src\Developist.Core.Persistence\Developist.Core.Persistence.csproj", "{B9E62303-51DD-4F56-93EF-5959ABF8A040}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence", "Developist.Core.Persistence\Developist.Core.Persistence.csproj", "{B9E62303-51DD-4F56-93EF-5959ABF8A040}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.EntityFrameworkCore", "src\Developist.Core.Persistence.EntityFrameworkCore\Developist.Core.Persistence.EntityFrameworkCore.csproj", "{87E8CE5A-EFF3-403A-B433-11F1EE62A9F1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.EntityFrameworkCore", "Developist.Core.Persistence.EntityFrameworkCore\Developist.Core.Persistence.EntityFrameworkCore.csproj", "{87E8CE5A-EFF3-403A-B433-11F1EE62A9F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.InMemory", "src\Developist.Core.Persistence.InMemory\Developist.Core.Persistence.InMemory.csproj", "{3E86E78A-8130-4FFC-9409-3A91F8645A05}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.InMemory", "Developist.Core.Persistence.InMemory\Developist.Core.Persistence.InMemory.csproj", "{3E86E78A-8130-4FFC-9409-3A91F8645A05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.Tests", "test\Developist.Core.Persistence.Tests\Developist.Core.Persistence.Tests.csproj", "{BDEF4EC5-AE69-4028-93ED-6916552A9234}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Developist.Core.Persistence.Tests", "Developist.Core.Persistence.Tests\Developist.Core.Persistence.Tests.csproj", "{BDEF4EC5-AE69-4028-93ED-6916552A9234}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Developist.Core.Persistence.IntegrationTests", "test\Developist.Core.Persistence.IntegrationTests\Developist.Core.Persistence.IntegrationTests.csproj", "{522A9A0C-A582-4E05-A526-06DF62394EE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +35,10 @@ Global
 		{BDEF4EC5-AE69-4028-93ED-6916552A9234}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDEF4EC5-AE69-4028-93ED-6916552A9234}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDEF4EC5-AE69-4028-93ED-6916552A9234}.Release|Any CPU.Build.0 = Release|Any CPU
+		{522A9A0C-A582-4E05-A526-06DF62394EE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{522A9A0C-A582-4E05-A526-06DF62394EE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{522A9A0C-A582-4E05-A526-06DF62394EE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{522A9A0C-A582-4E05-A526-06DF62394EE1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

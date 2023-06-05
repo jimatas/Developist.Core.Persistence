@@ -2,56 +2,63 @@
 
 ### Entity Framework Core and in-memory Unit of Work and Repository implementations
 
-Start by defining your entities by deriving from the [`IEntity`](Developist.Core.Persistence/Entities/IEntity.cs) or [`IEntity<TIdentifier>`](Developist.Core.Persistence/Entities/IEntity`1.cs) interface, or alternatively from the [`EntityBase<TIdentifier>`](Developist.Core.Persistence/Entities/EntityBase`1.cs) abstract class.
+If you are using the Entity Framework Core version of the package, define your `DbContext` subclass and any entity type configurations that are needed to map your entities to the database schema.
 
-If you are using the Entity Framework Core version of the package, you will also have to define your `DbContext` subclass and any entity type configurations that are needed to map your entities to the database schema.
+Register the [`IUnitOfWork`](src/Developist.Core.Persistence/IUnitOfWork.cs) dependency with the built-in dependency injection framework by using the appropriate DI-registration extension method: either `AddUnitOfWork<TContext>()` for the Entity Framework Core version, or `AddUnitOfWork()` for the in-memory version of the package.
 
-Register the [`IUnitOfWork`](Developist.Core.Persistence/IUnitOfWork.cs) depdendency with the built-in dependency injection framework by using the appropriate DI-registration extension method: either `AddUnitOfWork<TDbContext>()` for the Entity Framework Core version, or `AddUnitOfWork()` for the in-memory version of the package.
-
-There are some overloads of this extension method provided that accept an [`IRepositoryFactory`](Developist.Core.Persistence/IRepositoryFactory.cs) type or instance, which will be used instead of the default factory to create the [`IRepository<TEntity>`](Developist.Core.Persistence/IRepository`1.cs) instances returned by the unit of work's `Repository<TEntity>()` method.
+There are several overloads of this extension method provided that accept an [`IRepositoryFactory`](src/Developist.Core.Persistence/IRepositoryFactory.cs) type or instance, which will be used instead of the default factory to create the [`IRepository<T>`](src/Developist.Core.Persistence/IRepository`1.cs) instances returned by the unit of work's `Repository<T>()` method.
 
 #### Usage
-A typical usage scenario involves injecting the `IUnitOfWork` interface through the constructor of a consumer. You can subsequently query entities and persist them using the repositories obtained through the unit of work's `Repository<TEntity>` method, such as in the following example.
+
+A typical usage scenario involves injecting the `IUnitOfWork` interface through the constructor of a consumer. You can subsequently query entities and persist them using the repositories obtained through the unit of work's `Repository<T>()` method, such as in the following example.
 
 ```csharp
-public UserFinderService(IUnitOfWork uow) => this.uow = uow;
+public PersonFinderService(IUnitOfWork uow) => _uow = uow;
 
-public Task<User?> GetUserByUsername(string username)
+public Task<IPaginatedList<Person>> FindAllByNameAsync(string familyName, string? givenName = default, int? pageNumber = 1)
 {
-    IQueryableFilter<User> filterByUsername = new UsernameQueryableFilter(username);
-    var matchingUsers = await uow.Repository<User>().FindAsync(filterByUsername);
-    return matchingUsers.SingleOrDefault();
+    IFilterCriteria<Person> criteria = new PersonByNameFilterCriteria(familyName, givenName);
+    IPaginator paginator = new SortingPaginator(pageNumber, pageSize: 10)
+        .SortedByProperty(p => p.FamilyName)
+        .SortedByProperty(p => p.GivenName);
+    
+    return await _uow.Repository<Person>().ListAsync(criteria, paginator);
 }
 ```
 
-The [`IQueryableFilter<TEntity>`](Developist.Core.Persistence/IQueryableFilter`1.cs) interface in the previous example is an implementation of the Specification pattern. The interface declares a single method, `Filter(IQueryable<TEntity> sequence)`, which accepts an `IQueryable<T>` to which the filtering criteria are to be applied. How that is done is completely up to the implementor, but typically it will be something along the lines of:
+The [`IFilterCriteria<T>`](src/Developist.Core.Persistence/Filtering/IFilterCriteria`1.cs) interface in the previous example is an implementation of the Specification pattern. The interface declares a single method, `Filter(IQueryable<T> query)`, which accepts an `IQueryable<T>` to which the filtering criteria are to be applied. How that is done is completely up to the implementor, but typically it will be something along the lines of:
 
 ```csharp
-public class UsernameQueryableFilter : IQueryableFilter<User>
+public class PersonByNameFilterCriteria : IFilterCriteria<Person>
 {
-    private readonly string? username;
-    public UsernameQueryableFilter(string username) => this.username = username;
-    public IQueryable<User> Filter(IQueryable<User> sequence) 
+    private readonly string _familyName;
+    private readonly string? _givenName;
+    
+    public PersonByNameFilterCriteria(string familyName, string? givenName = default)
     {
-        if (!string.IsNullOrEmpty(this.username))
+        _familyName = familyName;
+        _givenName = givenName;
+    }
+    
+    public IQueryable<User> Filter(IQueryable<User> query) 
+    {
+        query = query.Where(p => p.FamilyName.Equals(_familyName));
+            
+        if (!string.IsNullOrEmpty(_givenName))
         {
-            sequence = sequence.Where(u => u.Username.Equals(username));
+            query = query.Where(p => p.GivenName.Equals(_givenName));
         }
-        return sequence;
+        
+        return query;
     }
 }
 ```
 
-The `FindAsync` method has numerous overloads and extensions that accept different parameters in order to customize the returned result. Among these overloads are those that accept an [`IQueryablePaginator<TEntity>`](Developist.Core.Persistence/Pagination/IQueryablePaginator`1.cs) to partition large result sets, and those that accept an [`IIncludePathsBuilder<TEntity>`](Developist.Core.Persistence/Entities/IncludePaths/IIncludePathsBuilder`1.cs) through which the include paths of related entities to eager load can be specified, as for instance in the following example.
-```csharp
-var userWithLoginHistory = (await repository.FindAsync(filterByUsername, 
-    related => related.Include(u => u.AccountInfo).ThenInclude(a => a.LoginHistory))).SingleOrDefault();
-```
-
-For impromptu queries there's some extension methods provided that wrap a predicate expression in an `IQueryableFilter<TEntity>` instance. To further assist with this, there's also a couple of extension methods provided for logically combining predicates using AND (`AndAlso`) and OR (`OrElse`).
+The `ListAsync()` method has numerous overloads and extensions that accept different parameters in order to customize the returned result. Among these overloads are those that accept an [`IPaginator<T>`](src/Developist.Core.Persistence/Pagination/IPaginator`1.cs) to partition large result sets, and those that accept an `IFilterCriteria<T>` to filter the data based on specific criteria.
+For impromptu queries, the package also offers extension methods that wrap a predicate expression, `Expression<Func<T, bool>>`, within an [`PredicateFilterCriteria<T>`](src/Developist.Core.Persistence/Filtering/PredicateFilterCriteria`1.cs) instance.
 
 #### Persisting changes
 
-Changes made to any entities that were retrieved through a repository that was obtained from a unit of work, will be committed back to the database upon calling that unit of work's `CompleteAsync` method.
+Changes made to any entities that were retrieved through a repository that was obtained from a unit of work, will be committed back to the database upon calling that unit of work's `CompleteAsync()` method.
 
-New entities can be added using the repository's `Add` method and existing entities can be removed using its `Remove` method. Again, these changes will only be persisted after calling the unit of work's `CompleteAsync` method.
+New entities can be added using the repository's `Add()` method and existing entities can be removed using its `Remove()` method. Again, these changes will only be persisted after calling the unit of work's `CompleteAsync()` method.

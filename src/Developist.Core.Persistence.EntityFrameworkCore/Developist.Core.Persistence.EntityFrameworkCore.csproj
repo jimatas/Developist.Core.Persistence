@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <Authors>Jim Atas</Authors>
+    <Description>Provides easy-to-use implementations of the Repository and Unit of Work patterns that work with Entity Framework Core, as well as an in-memory implementation for testing purposes.</Description>
+    <Copyright>Copyright (c) $([System.DateTime]::Now.Year) $(Authors)</Copyright>
+    <Version>5.0.0</Version>
+    <AssemblyVersion>$(Version.Split('.')[0]).$(Version.Split('.')[1]).0.0</AssemblyVersion>
+    <FileVersion>$(Version.Split('.')[0]).$(Version.Split('.')[1]).$([System.Math]::Floor($([System.DateTime]::Now.Subtract($([System.DateTime]::Parse("01-01-2000"))).TotalDays))).$([System.Math]::Floor($([MSBuild]::Divide($([System.DateTime]::Now.Subtract($([System.DateTime]::Today)).TotalSeconds), 2.0))))</FileVersion>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>repository;unitofwork;entityframeworkcore;efcore;dbcontext;inmemory</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/jimatas/Developist.Core.Persistence</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jimatas/Developist.Core.Persistence</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Developist.Core.Persistence\Developist.Core.Persistence.csproj" />
+  </ItemGroup>
+  
+</Project>
