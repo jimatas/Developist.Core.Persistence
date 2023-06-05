@@ -4,7 +4,7 @@
 
 If you are using the Entity Framework Core version of the package, define your `DbContext` subclass and any entity type configurations that are needed to map your entities to the database schema.
 
-Register the [`IUnitOfWork`](Developist.Core.Persistence/IUnitOfWork.cs) depdendency with the built-in dependency injection framework by using the appropriate DI-registration extension method: either `AddUnitOfWork<TContext>()` for the Entity Framework Core version, or `AddUnitOfWork()` for the in-memory version of the package.
+Register the [`IUnitOfWork`](Developist.Core.Persistence/IUnitOfWork.cs) dependency with the built-in dependency injection framework by using the appropriate DI-registration extension method: either `AddUnitOfWork<TContext>()` for the Entity Framework Core version, or `AddUnitOfWork()` for the in-memory version of the package.
 
 There are several overloads of this extension method provided that accept an [`IRepositoryFactory`](Developist.Core.Persistence/IRepositoryFactory.cs) type or instance, which will be used instead of the default factory to create the [`IRepository<T>`](Developist.Core.Persistence/IRepository`1.cs) instances returned by the unit of work's `Repository<T>()` method.
 
