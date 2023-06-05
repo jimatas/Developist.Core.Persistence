@@ -4,9 +4,9 @@
 
 If you are using the Entity Framework Core version of the package, define your `DbContext` subclass and any entity type configurations that are needed to map your entities to the database schema.
 
-Register the [`IUnitOfWork`](Developist.Core.Persistence/IUnitOfWork.cs) dependency with the built-in dependency injection framework by using the appropriate DI-registration extension method: either `AddUnitOfWork<TContext>()` for the Entity Framework Core version, or `AddUnitOfWork()` for the in-memory version of the package.
+Register the [`IUnitOfWork`](src/Developist.Core.Persistence/IUnitOfWork.cs) dependency with the built-in dependency injection framework by using the appropriate DI-registration extension method: either `AddUnitOfWork<TContext>()` for the Entity Framework Core version, or `AddUnitOfWork()` for the in-memory version of the package.
 
-There are several overloads of this extension method provided that accept an [`IRepositoryFactory`](Developist.Core.Persistence/IRepositoryFactory.cs) type or instance, which will be used instead of the default factory to create the [`IRepository<T>`](Developist.Core.Persistence/IRepository`1.cs) instances returned by the unit of work's `Repository<T>()` method.
+There are several overloads of this extension method provided that accept an [`IRepositoryFactory`](src/Developist.Core.Persistence/IRepositoryFactory.cs) type or instance, which will be used instead of the default factory to create the [`IRepository<T>`](src/Developist.Core.Persistence/IRepository`1.cs) instances returned by the unit of work's `Repository<T>()` method.
 
 #### Usage
 
@@ -26,7 +26,7 @@ public Task<IPaginatedList<Person>> FindAllByNameAsync(string familyName, string
 }
 ```
 
-The [`IFilterCriteria<T>`](Developist.Core.Persistence/Filtering/IFilterCriteria`1.cs) interface in the previous example is an implementation of the Specification pattern. The interface declares a single method, `Filter(IQueryable<T> query)`, which accepts an `IQueryable<T>` to which the filtering criteria are to be applied. How that is done is completely up to the implementor, but typically it will be something along the lines of:
+The [`IFilterCriteria<T>`](src/Developist.Core.Persistence/Filtering/IFilterCriteria`1.cs) interface in the previous example is an implementation of the Specification pattern. The interface declares a single method, `Filter(IQueryable<T> query)`, which accepts an `IQueryable<T>` to which the filtering criteria are to be applied. How that is done is completely up to the implementor, but typically it will be something along the lines of:
 
 ```csharp
 public class PersonByNameFilterCriteria : IFilterCriteria<Person>
@@ -54,8 +54,8 @@ public class PersonByNameFilterCriteria : IFilterCriteria<Person>
 }
 ```
 
-The `ListAsync()` method has numerous overloads and extensions that accept different parameters in order to customize the returned result. Among these overloads are those that accept an [`IPaginator<T>`](Developist.Core.Persistence/Pagination/IPaginator`1.cs) to partition large result sets, and those that accept an `IFilterCriteria<T>` to filter the data based on specific criteria.
-For impromptu queries, the package also offers extension methods that wrap a predicate expression, `Expression<Func<T, bool>>`, within an [`PredicateFilterCriteria<T>`](Developist.Core.Persistence/Filtering/PredicateFilterCriteria`1.cs) instance.
+The `ListAsync()` method has numerous overloads and extensions that accept different parameters in order to customize the returned result. Among these overloads are those that accept an [`IPaginator<T>`](src/Developist.Core.Persistence/Pagination/IPaginator`1.cs) to partition large result sets, and those that accept an `IFilterCriteria<T>` to filter the data based on specific criteria.
+For impromptu queries, the package also offers extension methods that wrap a predicate expression, `Expression<Func<T, bool>>`, within an [`PredicateFilterCriteria<T>`](src/Developist.Core.Persistence/Filtering/PredicateFilterCriteria`1.cs) instance.
 
 #### Persisting changes
 
