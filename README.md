@@ -15,10 +15,10 @@ A typical usage scenario involves injecting the `IUnitOfWork` interface through 
 ```csharp
 public PersonFinderService(IUnitOfWork uow) => _uow = uow;
 
-public Task<IPaginatedList<Person>> FindAllByNameAsync(string familyName, string? givenName = default, int? pageNumber = 1)
+public async Task<IPaginatedList<Person>> FindAllByNameAsync(string familyName, string? givenName = default, int? pageNumber = 1)
 {
     IFilterCriteria<Person> criteria = new PersonByNameFilterCriteria(familyName, givenName);
-    IPaginator paginator = new SortingPaginator(pageNumber, pageSize: 10)
+    IPaginator<Person> paginator = new SortingPaginator<Person>(pageNumber, pageSize: 10)
         .SortedByProperty(p => p.FamilyName)
         .SortedByProperty(p => p.GivenName);
     
@@ -40,7 +40,7 @@ public class PersonByNameFilterCriteria : IFilterCriteria<Person>
         _givenName = givenName;
     }
     
-    public IQueryable<User> Filter(IQueryable<User> query) 
+    public IQueryable<Person> Filter(IQueryable<Person> query) 
     {
         query = query.Where(p => p.FamilyName.Equals(_familyName));
             
