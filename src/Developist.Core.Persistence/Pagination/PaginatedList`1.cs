@@ -18,7 +18,7 @@ namespace Developist.Core.Persistence
         /// <summary>
         /// Initializes a new instance of the <see cref="PaginatedList{T}"/> class.
         /// </summary>
-        /// <param name="innerList">The inner list of items.</param>
+        /// <param name="innerList">The list of items corresponding to the current page of results.</param>
         /// <param name="pageNumber">The current page number.</param>
         /// <param name="pageSize">The number of items per page.</param>
         /// <param name="itemCount">The total number of items in the list.</param>
@@ -46,7 +46,7 @@ namespace Developist.Core.Persistence
         }
 
         /// <summary>
-        /// Provides access to the inner list of items.
+        /// Provides access to the list of items corresponding to the current page of results.
         /// </summary>
         protected IReadOnlyList<T> InnerList { get; }
 

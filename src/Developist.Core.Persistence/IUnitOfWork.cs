@@ -20,7 +20,7 @@ namespace Developist.Core.Persistence
         bool HasActiveTransaction { get; }
 
         /// <summary>
-        /// Begins a transaction asynchronously.
+        /// Begins a transaction asynchronously, provided the underlying provider supports transactions.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
