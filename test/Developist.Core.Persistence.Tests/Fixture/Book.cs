@@ -2,7 +2,7 @@
 
 public class Book
 {
-    public string Title { get; set; } = string.Empty;
+    public Guid Id { get; init; }
+    public string Title { get; init; } = default!;
     public ICollection<Person> Authors { get; } = new HashSet<Person>();
-    public Genre Genre { get; set; }
 }

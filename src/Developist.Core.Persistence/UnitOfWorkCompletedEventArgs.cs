@@ -1,21 +1,23 @@
-﻿using System;
+﻿using Developist.Core.Persistence.Utilities;
 
-namespace Developist.Core.Persistence
+namespace Developist.Core.Persistence;
+
+/// <summary>
+/// Provides data for the <see cref="IUnitOfWorkBase.Completed"/> event.
+/// </summary>
+public class UnitOfWorkCompletedEventArgs : EventArgs
 {
     /// <summary>
-    /// Provides data for the <see cref="IUnitOfWork.Completed"/> event.
+    /// Initializes a new instance of the <see cref="UnitOfWorkCompletedEventArgs"/> class.
     /// </summary>
-    public class UnitOfWorkCompletedEventArgs : EventArgs
+    /// <param name="unitOfWork">The unit of work that completed.</param>
+    public UnitOfWorkCompletedEventArgs(IUnitOfWorkBase unitOfWork)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UnitOfWorkCompletedEventArgs"/> class.
-        /// </summary>
-        /// <param name="unitOfWork">The unit of work that completed.</param>
-        public UnitOfWorkCompletedEventArgs(IUnitOfWork unitOfWork) => UnitOfWork = unitOfWork;
-
-        /// <summary>
-        /// Gets the unit of work that completed.
-        /// </summary>
-        public IUnitOfWork UnitOfWork { get; }
+        UnitOfWork = Ensure.NotNull(unitOfWork);
     }
+
+    /// <summary>
+    /// Gets the unit of work that completed.
+    /// </summary>
+    public IUnitOfWorkBase UnitOfWork { get; }
 }
