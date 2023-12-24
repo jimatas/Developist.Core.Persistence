@@ -1,28 +1,23 @@
-﻿using System;
-using System.Linq;
+﻿using Developist.Core.Persistence.Utilities;
 
-namespace Developist.Core.Persistence
+namespace Developist.Core.Persistence.Filtering;
+
+/// <summary>
+/// Provides extension methods for <see cref="IQueryable{T}"/> to enable filtering.
+/// </summary>
+public static class QueryableExtensions
 {
     /// <summary>
-    /// Provides extension methods for working with <see cref="IQueryable{T}"/> objects.
+    /// Filters the query according to the specified filter criteria.
     /// </summary>
-    public static partial class QueryableExtensions
+    /// <typeparam name="T">The type of the items in the query.</typeparam>
+    /// <param name="query">The query to filter.</param>
+    /// <param name="filterCriteria">The filter criteria to apply.</param>
+    /// <returns>An <see cref="IQueryable{T}"/> that represents the filtered query.</returns>
+    public static IQueryable<T> Filter<T>(this IQueryable<T> query, IFilterCriteria<T> filterCriteria)
     {
-        /// <summary>
-        /// Filters the specified query using the specified filter criteria.
-        /// </summary>
-        /// <typeparam name="T">The type of entity being filtered.</typeparam>
-        /// <param name="query">The query to filter.</param>
-        /// <param name="criteria">The filter criteria to apply to the query.</param>
-        /// <returns>The filtered query.</returns>
-        public static IQueryable<T> FilterBy<T>(this IQueryable<T> query, IFilterCriteria<T> criteria)
-        {
-            if (criteria is null)
-            {
-                throw new ArgumentNullException(nameof(criteria));
-            }
+        Ensure.NotNull(filterCriteria);
 
-            return criteria.Filter(query);
-        }
+        return filterCriteria.Apply(query);
     }
 }

@@ -1,20 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <PropertyGroup>
+    <Description>This library offers persistence base classes and interfaces, featuring well-defined implementations of the Repository and Unit of Work patterns.</Description>
     <Authors>Jim Atas</Authors>
-    <Description>Provides easy-to-use implementations of the Repository and Unit of Work patterns that work with Entity Framework Core, as well as an in-memory implementation for testing purposes.</Description>
     <Copyright>Copyright (c) $([System.DateTime]::Now.Year) $(Authors)</Copyright>
-    <Version>5.0.1</Version>
+    <Version>6.0.0</Version>
     <AssemblyVersion>$(Version.Split('.')[0]).$(Version.Split('.')[1]).0.0</AssemblyVersion>
     <FileVersion>$(Version.Split('.')[0]).$(Version.Split('.')[1]).$([System.Math]::Floor($([System.DateTime]::Now.Subtract($([System.DateTime]::Parse("01-01-2000"))).TotalDays))).$([System.Math]::Floor($([MSBuild]::Divide($([System.DateTime]::Now.Subtract($([System.DateTime]::Today)).TotalSeconds), 2.0))))</FileVersion>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <LangVersion>10</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageTags>repository;unitofwork;entityframeworkcore;efcore;dbcontext;inmemory</PackageTags>
+    <PackageTags>repository;unitofwork;entityframeworkcore;efcore;dbcontext</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/jimatas/Developist.Core.Persistence</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jimatas/Developist.Core.Persistence</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
-  
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Developist.Core.Persistence.EntityFrameworkCore" />
+  </ItemGroup>
+
 </Project>

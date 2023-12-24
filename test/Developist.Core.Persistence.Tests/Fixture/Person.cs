@@ -2,10 +2,14 @@
 
 public class Person
 {
-    public string GivenName { get; set; } = string.Empty;
-    public string FamilyName { get; set; } = string.Empty;
-    public string FullName => $"{GivenName} {FamilyName}";
-    public int? Age { get; set; }
-    public ICollection<Person> Friends { get; } = new HashSet<Person>();
+    public Guid Id { get; init ; }
+    public string GivenName { get; init; } = default!;
+    public string FamilyName { get; init; } = default!;
+    public int? Age { get; init; }
     public Book? FavoriteBook { get; set; }
+
+    public override string ToString()
+    {
+        return $"{GivenName} {FamilyName}";
+    }
 }
