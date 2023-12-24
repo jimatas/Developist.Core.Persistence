@@ -1,9 +1,10 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.Persistence;
+using Developist.Core.Persistence.EntityFrameworkCore;
+using Developist.Core.Persistence.Utilities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Developist.Core.Persistence.EntityFrameworkCore;
+namespace Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
 /// Provides extension methods to add unit of work and repository services to the dependency injection container.
