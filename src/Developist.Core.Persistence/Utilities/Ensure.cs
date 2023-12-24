@@ -1,7 +1,7 @@
 ﻿namespace Developist.Core.Persistence.Utilities;
 
 /// <summary>
-/// Provides methods for ensuring that values meet specific conditions.
+/// Provides a set of methods for argument validation and ensuring proper parameter values.
 /// </summary>
 internal static class Ensure
 {

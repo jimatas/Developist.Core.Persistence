@@ -1,4 +1,6 @@
-﻿namespace Developist.Core.Persistence.Pagination;
+﻿using Developist.Core.Persistence.Utilities;
+
+namespace Developist.Core.Persistence.Pagination;
 
 /// <summary>
 /// Represents a sorting criterion for a query, providing a more specific sorting key and direction.
@@ -13,7 +15,7 @@ public class SortCriterion<T, TProperty> : SortCriterion<T>
     /// <param name="key">An expression representing the key used for sorting.</param>
     /// <param name="direction">The direction of the sort (ascending or descending).</param>
     public SortCriterion(Expression<Func<T, TProperty>> key, SortDirection direction)
-        : base(key ?? throw new ArgumentNullException(nameof(key)), direction)
+        : base(Ensure.NotNull(key), direction)
     {
         Key = key;
     }
