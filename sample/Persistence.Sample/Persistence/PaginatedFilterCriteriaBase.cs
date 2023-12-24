@@ -1,7 +1,7 @@
 ﻿using Developist.Core.Persistence;
 using Developist.Core.Persistence.Pagination;
 
-namespace Developist.Customers.Application.Queries.Criteria;
+namespace Developist.Customers.Persistence;
 
 /// <summary>
 /// Serves as a foundational base for implementing the Specification pattern through the <see cref="ICriteria{T}"/> abstraction.
@@ -10,6 +10,7 @@ namespace Developist.Customers.Application.Queries.Criteria;
 public abstract class PaginatedFilterCriteriaBase<T> : PaginationCriteria<T>, IFilterCriteria<T>
 {
     private string? _sortString;
+    private bool _isFiltered;
 
     /// <summary>
     /// Gets or sets the sorting criteria expressed as a string. The string format is parsed and applied to the query.
@@ -37,11 +38,24 @@ public abstract class PaginatedFilterCriteriaBase<T> : PaginationCriteria<T>, IF
         }
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Applies either filter criteria or pagination criteria to the given query based on whether filter criteria have already been applied.
+    /// If filter criteria have already been applied, it applies pagination criteria, and vice versa.
+    /// </summary>
+    /// <param name="query">The query to which filter or pagination criteria are to be applied.</param>
+    /// <returns>The <see cref="IQueryable{T}"/> after applying either filter or pagination criteria.</returns>
     public new IQueryable<T> Apply(IQueryable<T> query)
     {
-        query = ApplyFilter(query);
-        query = base.Apply(query);
+        if (_isFiltered)
+        {
+            query = base.Apply(query);
+            _isFiltered = false;
+        }
+        else
+        {
+            query = ApplyFilter(query);
+            _isFiltered = true;
+        }
 
         return query;
     }

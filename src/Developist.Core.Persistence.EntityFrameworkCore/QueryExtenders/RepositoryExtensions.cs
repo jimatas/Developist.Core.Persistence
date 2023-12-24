@@ -51,7 +51,7 @@ public static partial class RepositoryExtensions
         return queryExtender;
     }
 
-    // Declared internal for unit test visibility.
+    // Declared as internal for unit test visibility.
     internal class CompositeQueryExtender<T> : IQueryExtender<T>
     {
         private readonly List<IQueryExtender<T>> _queryExtenders = new();

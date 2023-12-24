@@ -1,4 +1,5 @@
 ﻿using Developist.Customers.Domain.Model;
+using Developist.Customers.Persistence;
 
 namespace Developist.Customers.Application.Queries.Criteria;
 

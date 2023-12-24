@@ -4,6 +4,7 @@ using Developist.Core.Persistence.EntityFrameworkCore;
 using Developist.Customers.Application.Queries.Criteria;
 using Developist.Customers.Domain.Model;
 using Developist.Customers.Domain.Queries;
+using Developist.Customers.Persistence;
 
 namespace Developist.Customers.Application.Queries;
 
@@ -27,7 +28,7 @@ public class GetCustomersHandler : IQueryHandler<GetCustomers, IPaginatedList<Cu
 
         var result = await _customerRepository
             .WithIncludes(props => props.Include(c => c.PaymentInformation))
-            .ListAsync(criteria, cancellationToken);
+            .ListCustomAsync(criteria, cancellationToken);
 
         return result;
     }
