@@ -1,6 +1,5 @@
 ﻿using Developist.Core.Cqrs;
 using Developist.Core.Persistence;
-using Developist.Core.Persistence.EntityFrameworkCore;
 using Developist.Core.Persistence.Pagination;
 using Developist.Customers.Api.Model;
 using Developist.Customers.Api.Serialization;
@@ -21,10 +20,7 @@ ConfigureServices(builder.Services, builder.Configuration);
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI(options => options.SwaggerEndpoint("v1/swagger.json", "Developist.Customers.Api v1"));
-
-app.UseHttpsRedirection();
+ConfigureApplication(app);
 
 // Paginates the list of customers using a specific payment method.
 app.MapGet("/customers", async (IDispatcher mediator,
@@ -103,5 +99,15 @@ static void ConfigureServices(IServiceCollection services, IConfiguration config
         options.DescribeAllParametersInCamelCase();
         options.MapType<PaymentMethodsModel>(() => new OpenApiSchema { Type = "string", Format = "comma-separated" });
     });
+}
+#endregion
+
+#region ConfigureApplication
+static void ConfigureApplication(WebApplication app)
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options => options.SwaggerEndpoint("v1/swagger.json", "Developist.Customers.Api v1"));
+
+    app.UseHttpsRedirection();
 }
 #endregion
