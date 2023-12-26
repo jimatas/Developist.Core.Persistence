@@ -29,6 +29,23 @@ public static class DependencyInjection
     /// Adds a unit of work and repository services to the dependency injection container for the specified database context type and repository factory type.
     /// </summary>
     /// <typeparam name="TContext">The type of the database context.</typeparam>
+    /// <typeparam name="TRepositoryFactory">The type of the repository factory used to create repositories.</typeparam>
+    /// <param name="services">The collection of services.</param>
+    /// <param name="lifetime">The lifetime of the services.</param>
+    /// <returns>The collection of services.</returns>
+    public static IServiceCollection AddUnitOfWork<TContext, TRepositoryFactory>(
+        this IServiceCollection services,
+        ServiceLifetime lifetime = ServiceLifetime.Scoped)
+        where TContext : DbContext
+        where TRepositoryFactory : IRepositoryFactory<TContext>
+    {
+        return services.AddUnitOfWork<TContext>(typeof(TRepositoryFactory), lifetime);
+    }
+
+    /// <summary>
+    /// Adds a unit of work and repository services to the dependency injection container for the specified database context type and repository factory type.
+    /// </summary>
+    /// <typeparam name="TContext">The type of the database context.</typeparam>
     /// <param name="services">The collection of services.</param>
     /// <param name="repositoryFactoryType">The type of the repository factory used to create repositories.</param>
     /// <param name="lifetime">The lifetime of the services.</param>

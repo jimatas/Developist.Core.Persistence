@@ -20,6 +20,34 @@ public class DependencyInjectionTests : TestClassBase
     }
 
     [TestMethod]
+    public void AddUnitOfWork_UsingGenericFactoryTypeOverload_RegistersUnitOfWork()
+    {
+        // Arrange
+        using var serviceProvider = ConfigureServiceProvider(services => services.AddUnitOfWork<SampleDbContext, SampleRepositoryFactory>());
+
+        // Act
+        var unitOfWork = serviceProvider.GetService<IUnitOfWorkBase>();
+
+        // Assert
+        Assert.IsNotNull(unitOfWork);
+    }
+
+    [DataTestMethod]
+    [DataRow(typeof(RepositoryFactory<SampleDbContext>))]
+    [DataRow(typeof(SampleRepositoryFactory))]
+    public void AddUnitOfWork_UsingFactoryTypeOverload_RegistersUnitOfWork(Type repositoryFactoryType)
+    {
+        // Arrange
+        using var serviceProvider = ConfigureServiceProvider(services => services.AddUnitOfWork<SampleDbContext>(repositoryFactoryType));
+
+        // Act
+        var unitOfWork = serviceProvider.GetService<IUnitOfWorkBase>();
+
+        // Assert
+        Assert.IsNotNull(unitOfWork);
+    }
+
+    [TestMethod]
     public void AddUnitOfWork_GivenNullRepositoryFactoryType_ThrowsArgumentNullException()
     {
         // Arrange
@@ -60,18 +88,5 @@ public class DependencyInjectionTests : TestClassBase
         // Assert
         var exception = Assert.ThrowsException<ArgumentException>(action);
         Assert.IsTrue(exception.Message.StartsWith($"The provided generic type '{repositoryFactoryType.Name}' must have a generic parameter of type 'SampleDbContext'."));
-    }
-
-    [DataTestMethod]
-    [DataRow(typeof(RepositoryFactory<SampleDbContext>))]
-    [DataRow(typeof(SampleRepositoryFactory))]
-    public void AddUnitOfWork_GivenValidRepositoryFactoryType_DoesNotThrowException(Type repositoryFactoryType)
-    {
-        // Arrange
-
-        // Act
-        ConfigureServiceProvider(services => services.AddUnitOfWork<SampleDbContext>(repositoryFactoryType));
-
-        // Assert
     }
 }
