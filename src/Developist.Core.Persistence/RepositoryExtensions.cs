@@ -106,9 +106,27 @@ public static class RepositoryExtensions
         Action<PaginationCriteriaConfigurator<T>> configurePagination,
         CancellationToken cancellationToken = default) where T : class
     {
+        return repository.ListAsync(new PredicateFilterCriteria<T>(predicate), configurePagination, cancellationToken);
+    }
+
+    /// <summary>
+    /// Returns a paginated list of entities from the repository that satisfy the given filter criteria, using the provided pagination criteria
+    /// </summary>
+    /// <typeparam name="T">The type of entity in the repository.</typeparam>
+    /// <param name="repository">The repository to retrieve entities from.</param>
+    /// <param name="filterCriteria">The filter criteria.</param>
+    /// <param name="configurePagination">The action used to configure the pagination criteria.</param>
+    /// <param name="cancellationToken">The cancellation token used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation and returns a paginated list of entities.</returns>
+    public static Task<IPaginatedList<T>> ListAsync<T>(
+        this IRepository<T> repository,
+        IFilterCriteria<T> filterCriteria,
+        Action<PaginationCriteriaConfigurator<T>> configurePagination,
+        CancellationToken cancellationToken = default) where T : class
+    {
         var paginationCriteria = new PaginationCriteria<T>();
         configurePagination(new PaginationCriteriaConfigurator<T>(paginationCriteria));
 
-        return repository.ListAsync(new PredicateFilterCriteria<T>(predicate), paginationCriteria, cancellationToken);
+        return repository.ListAsync(filterCriteria, paginationCriteria, cancellationToken);
     }
 }

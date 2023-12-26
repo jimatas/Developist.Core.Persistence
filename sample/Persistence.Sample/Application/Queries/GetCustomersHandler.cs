@@ -1,10 +1,10 @@
 ﻿using Developist.Core.Cqrs;
 using Developist.Core.Persistence;
 using Developist.Core.Persistence.EntityFrameworkCore;
+using Developist.Core.Persistence.Pagination;
 using Developist.Customers.Application.Queries.Criteria;
 using Developist.Customers.Domain.Model;
 using Developist.Customers.Domain.Queries;
-using Developist.Customers.Persistence;
 
 namespace Developist.Customers.Application.Queries;
 
@@ -24,23 +24,15 @@ public class GetCustomersHandler : IQueryHandler<GetCustomers, IPaginatedList<Cu
     /// <inheritdoc/>
     public async Task<IPaginatedList<Customer>> HandleAsync(GetCustomers query, CancellationToken cancellationToken)
     {
-        var criteria = MapToCustomerCriteria(query);
-
         var result = await _customerRepository
             .WithIncludes(props => props.Include(c => c.PaymentInformation))
-            .ListCustomAsync(criteria, cancellationToken);
+            .ListAsync(
+                new CustomerCriteria { PaymentMethods = query.PaymentMethods },
+                p => p.StartAtPage(query.PageNumber)
+                      .UsePageSize(query.PageSize)
+                      .SortByString(query.SortedBy),
+                cancellationToken);
 
         return result;
-    }
-
-    private static CustomerCriteria MapToCustomerCriteria(GetCustomers request)
-    {
-        return new CustomerCriteria
-        {
-            PaymentMethods = request.PaymentMethods,
-            PageNumber = request.PageNumber,
-            PageSize = request.PageSize,
-            SortCriteria = request.SortedBy
-        };
     }
 }

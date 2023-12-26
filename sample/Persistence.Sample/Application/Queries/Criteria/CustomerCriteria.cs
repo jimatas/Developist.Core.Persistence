@@ -1,12 +1,12 @@
-﻿using Developist.Customers.Domain.Model;
-using Developist.Customers.Persistence;
+﻿using Developist.Core.Persistence;
+using Developist.Customers.Domain.Model;
 
 namespace Developist.Customers.Application.Queries.Criteria;
 
 /// <summary>
-/// Represents pagination and filtering criteria specifically for <see cref="Customer"/> entities.
+/// Represents filtering criteria specifically for <see cref="Customer"/> entities.
 /// </summary>
-public class CustomerCriteria : PaginatedFilterCriteriaBase<Customer>
+public class CustomerCriteria : IFilterCriteria<Customer>
 {
     /// <summary>
     /// Gets or sets a collection of <see cref="PaymentMethod"/> values used to filter <see cref="Customer"/> entities.
@@ -14,7 +14,7 @@ public class CustomerCriteria : PaginatedFilterCriteriaBase<Customer>
     public ICollection<PaymentMethod>? PaymentMethods { get; set; }
 
     /// <inheritdoc/>
-    protected override IQueryable<Customer> ApplyFilter(IQueryable<Customer> query)
+    public IQueryable<Customer> Apply(IQueryable<Customer> query)
     {
         if (PaymentMethods?.Any() is true)
         {
