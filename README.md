@@ -46,7 +46,7 @@ var repositoryWithIncludes = _unitOfWork.Repository<Customer>()
   .WithIncludes(props => props.Include(cust => cust.PaymentInformation).ThenInclude(pay => pay.AccountDetails));
 
 // Retrieve a customer entity by its unique identifier.
-var customer = repositoryWithIncludes.SingleOrDefaultAsync(cust => cust.Id == id);
+var customer = await repositoryWithIncludes.SingleOrDefaultAsync(cust => cust.Id == id);
 
 // Access information from the related entities.
 var bankAccountNumber = customer.PaymentInformation.AccountDetails.BankAccountNumber;
