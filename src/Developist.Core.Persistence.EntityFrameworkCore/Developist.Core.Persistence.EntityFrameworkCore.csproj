@@ -12,6 +12,7 @@
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageTags>repository;unitofwork;entityframeworkcore;efcore;dbcontext;inmemory</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/jimatas/Developist.Core.Persistence</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jimatas/Developist.Core.Persistence</RepositoryUrl>
@@ -20,6 +21,13 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="Developist.Core.Persistence.EntityFrameworkCore.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
