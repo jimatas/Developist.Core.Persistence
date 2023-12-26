@@ -2,7 +2,6 @@
 using Developist.Core.Persistence;
 using Developist.Core.Persistence.EntityFrameworkCore;
 using Developist.Core.Persistence.Pagination;
-using Developist.Customers.Application.Queries.Criteria;
 using Developist.Customers.Domain.Model;
 using Developist.Customers.Domain.Queries;
 

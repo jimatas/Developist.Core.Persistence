@@ -1,7 +1,7 @@
 ﻿using Developist.Core.Persistence;
 using Developist.Customers.Domain.Model;
 
-namespace Developist.Customers.Application.Queries.Criteria;
+namespace Developist.Customers.Application.Queries;
 
 /// <summary>
 /// Represents filtering criteria specifically for <see cref="Customer"/> entities.
