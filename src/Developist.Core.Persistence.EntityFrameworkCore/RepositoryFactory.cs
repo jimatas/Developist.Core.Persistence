@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,7 +19,7 @@ public class RepositoryFactory<TContext> : IRepositoryFactory<TContext>
     /// <param name="serviceProvider">The service provider used to resolve dependencies.</param>
     public RepositoryFactory(IServiceProvider serviceProvider)
     {
-        _serviceProvider = Ensure.NotNull(serviceProvider);
+        _serviceProvider = Ensure.Argument.NotNull(serviceProvider);
     }
 
     /// <inheritdoc/>

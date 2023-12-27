@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 
 namespace Developist.Core.Persistence.Pagination;
 
@@ -15,7 +15,7 @@ public class SortCriterion<T, TProperty> : SortCriterion<T>
     /// <param name="key">An expression representing the key used for sorting.</param>
     /// <param name="direction">The direction of the sort (ascending or descending).</param>
     public SortCriterion(Expression<Func<T, TProperty>> key, SortDirection direction)
-        : base(Ensure.NotNull(key), direction)
+        : base(Ensure.Argument.NotNull(key), direction)
     {
         Key = key;
     }

@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 
 namespace Developist.Core.Persistence.EntityFrameworkCore;
 
@@ -28,7 +28,7 @@ internal class IncludesBuilder<T> : IIncludesBuilder<T>
     /// <inheritdoc/>
     public void Include(string path)
     {
-        Ensure.NotNullOrWhiteSpace(path);
+        Ensure.Argument.NotNullOrWhiteSpace(path);
         Paths.Add(path);
     }
 

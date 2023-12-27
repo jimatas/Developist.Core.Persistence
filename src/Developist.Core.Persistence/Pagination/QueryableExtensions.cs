@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 
 namespace Developist.Core.Persistence.Pagination;
 
@@ -16,7 +16,7 @@ public static class QueryableExtensions
     /// <returns>An <see cref="IQueryable{T}"/> that represents the paginated query.</returns>
     public static IQueryable<T> Paginate<T>(this IQueryable<T> query, IPaginationCriteria<T> paginationCriteria)
     {
-        Ensure.NotNull(paginationCriteria);
+        Ensure.Argument.NotNull(paginationCriteria);
 
         return paginationCriteria.Apply(query);
     }

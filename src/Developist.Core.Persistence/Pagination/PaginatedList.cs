@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 
 namespace Developist.Core.Persistence.Pagination;
 
@@ -26,11 +26,11 @@ public class PaginatedList<T> : IPaginatedList<T>
     /// <param name="totalCount">The total number of items in the list.</param>
     public PaginatedList(int pageNumber, int pageSize, IReadOnlyList<T> innerList, int totalCount)
     {
-        PageNumber = Ensure.NotLessThan(1, pageNumber);
-        PageSize = Ensure.NotLessThan(1, pageSize);
+        PageNumber = Ensure.Argument.NotOutOfRange(pageNumber, minValue: 1);
+        PageSize = Ensure.Argument.NotOutOfRange(pageSize, minValue: 1);
         PageCount = CalculatePageCount(totalCount, pageSize);
-        InnerList = Ensure.NotNull(innerList);
-        TotalCount = Ensure.NotLessThan(innerList.Count, totalCount);
+        InnerList = Ensure.Argument.NotNull(innerList);
+        TotalCount = Ensure.Argument.NotOutOfRange(totalCount, minValue: innerList.Count);
     }
 
     /// <inheritdoc/>

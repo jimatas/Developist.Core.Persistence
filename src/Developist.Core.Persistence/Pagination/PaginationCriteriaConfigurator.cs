@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 
 namespace Developist.Core.Persistence.Pagination;
 
@@ -16,7 +16,7 @@ public class PaginationCriteriaConfigurator<T>
     /// <param name="paginationCriteria">The <see cref="PaginationCriteria{T}"/> instance to configure.</param>
     public PaginationCriteriaConfigurator(PaginationCriteria<T> paginationCriteria)
     {
-        _paginationCriteria = Ensure.NotNull(paginationCriteria);
+        _paginationCriteria = Ensure.Argument.NotNull(paginationCriteria);
     }
 
     /// <summary>

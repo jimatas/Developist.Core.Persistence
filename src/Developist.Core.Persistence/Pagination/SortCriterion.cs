@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 
 namespace Developist.Core.Persistence.Pagination;
 
@@ -14,8 +14,8 @@ public class SortCriterion : ISortCriterion
     /// <param name="direction">The direction of the sort (ascending or descending).</param>
     protected SortCriterion(string key, SortDirection direction)
     {
-        Key = Ensure.NotNullOrWhiteSpace(key);
-        Direction = Ensure.NotInvalidEnum(direction);
+        Key = Ensure.Argument.NotNullOrWhiteSpace(key);
+        Direction = Ensure.Argument.NotInvalidEnum(direction);
     }
 
     /// <inheritdoc/>

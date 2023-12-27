@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Developist.Core.Persistence.EntityFrameworkCore;
@@ -16,7 +16,7 @@ public static partial class RepositoryExtensions
     public static IRepository<T> WithIncludes<T>(this IRepository<T> repository,
         Action<IIncludesBuilder<T>> configureIncludes) where T : class
     {
-        Ensure.NotNull(configureIncludes);
+        Ensure.Argument.NotNull(configureIncludes);
 
         var includes = new IncludesBuilder<T>();
         configureIncludes(includes);

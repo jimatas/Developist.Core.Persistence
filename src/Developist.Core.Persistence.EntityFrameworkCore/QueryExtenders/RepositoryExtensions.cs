@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 
 namespace Developist.Core.Persistence.EntityFrameworkCore;
 
@@ -21,8 +21,8 @@ public static partial class RepositoryExtensions
         IQueryExtender<T> queryExtender,
         string featureName) where T : class
     {
-        Ensure.NotNull(queryExtender);
-        Ensure.NotNullOrWhiteSpace(featureName);
+        Ensure.Argument.NotNull(queryExtender);
+        Ensure.Argument.NotNullOrWhiteSpace(featureName);
 
         var efCoreRepository = EnsureRepositorySupportsFeature(repository, featureName);
 

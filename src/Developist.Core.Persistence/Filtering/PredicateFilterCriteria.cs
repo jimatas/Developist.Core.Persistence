@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 
 namespace Developist.Core.Persistence.Filtering;
 
@@ -16,7 +16,7 @@ public class PredicateFilterCriteria<T> : IFilterCriteria<T>
     /// <param name="predicate">The predicate to use for filtering data.</param>
     public PredicateFilterCriteria(Expression<Func<T, bool>> predicate)
     {
-        _predicate = Ensure.NotNull(predicate);
+        _predicate = Ensure.Argument.NotNull(predicate);
     }
 
     /// <inheritdoc/>

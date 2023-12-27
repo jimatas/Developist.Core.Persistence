@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 
 namespace Developist.Core.Persistence.EntityFrameworkCore;
 
@@ -16,7 +16,7 @@ public class ExtendableQueryRepository<T> : Repository<T> where T : class
     public ExtendableQueryRepository(IUnitOfWork unitOfWork, IQueryExtender<T> queryExtender)
         : base(unitOfWork)
     {
-        QueryExtender = Ensure.NotNull(queryExtender);
+        QueryExtender = Ensure.Argument.NotNull(queryExtender);
     }
 
     /// <summary>

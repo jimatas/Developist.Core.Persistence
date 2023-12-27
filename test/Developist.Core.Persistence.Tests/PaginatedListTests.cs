@@ -144,7 +144,7 @@ public class PaginatedListTests
         // Assert
         var exception = Assert.ThrowsException<ArgumentOutOfRangeException>(action);
         Assert.AreEqual(nameof(totalCount), exception.ParamName);
-        Assert.IsTrue(exception.Message.StartsWith($"Value cannot be less than {reportedMinCount}."));
+        Assert.IsTrue(exception.Message.StartsWith($"Value must be greater than or equal to {reportedMinCount}."));
     }
 
     [DataTestMethod]

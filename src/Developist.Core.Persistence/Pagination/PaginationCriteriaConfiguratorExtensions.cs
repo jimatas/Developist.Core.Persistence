@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 
 namespace Developist.Core.Persistence.Pagination;
 
@@ -28,7 +28,7 @@ public static class PaginationCriteriaConfiguratorExtensions
     /// <exception cref="FormatException"/>
     public static PaginationCriteriaConfigurator<T> SortByString<T>(this PaginationCriteriaConfigurator<T> configurator, string sortString)
     {
-        Ensure.NotNullOrWhiteSpace(sortString);
+        Ensure.Argument.NotNullOrWhiteSpace(sortString);
         
         foreach (var (propertyName, direction) in ParseSortingDirectives(sortString))
         {

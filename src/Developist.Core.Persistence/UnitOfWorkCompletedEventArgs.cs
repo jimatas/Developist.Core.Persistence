@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 
 namespace Developist.Core.Persistence;
 
@@ -13,7 +13,7 @@ public class UnitOfWorkCompletedEventArgs : EventArgs
     /// <param name="unitOfWork">The unit of work that completed.</param>
     public UnitOfWorkCompletedEventArgs(IUnitOfWorkBase unitOfWork)
     {
-        UnitOfWork = Ensure.NotNull(unitOfWork);
+        UnitOfWork = Ensure.Argument.NotNull(unitOfWork);
     }
 
     /// <summary>

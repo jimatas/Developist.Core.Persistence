@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 
 namespace Developist.Core.Persistence.Pagination;
 
@@ -47,7 +47,7 @@ public class PaginationCriteria<T> : IPaginationCriteria<T>
     public int PageNumber
     {
         get => _pageNumber;
-        set => _pageNumber = Ensure.NotLessThan(1, actualValue: value, paramName: nameof(PageNumber));
+        set => _pageNumber = Ensure.Argument.NotOutOfRange(value, minValue: 1, paramName: nameof(PageNumber));
     }
 
     /// <summary>
@@ -56,7 +56,7 @@ public class PaginationCriteria<T> : IPaginationCriteria<T>
     public int PageSize
     {
         get => _pageSize;
-        set => _pageSize = Ensure.NotLessThan(1, actualValue: value, paramName: nameof(PageSize));
+        set => _pageSize = Ensure.Argument.NotOutOfRange(value, minValue: 1, paramName: nameof(PageSize));
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ public class PaginationCriteria<T> : IPaginationCriteria<T>
     /// <inheritdoc/>
     public IQueryable<T> Apply(IQueryable<T> query)
     {
-        Ensure.NotNull(query);
+        Ensure.Argument.NotNull(query);
 
         query = ApplySorting(query);
         query = ApplyPagination(query);

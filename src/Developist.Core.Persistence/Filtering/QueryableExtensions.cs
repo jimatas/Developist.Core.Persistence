@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 
 namespace Developist.Core.Persistence.Filtering;
 
@@ -16,7 +16,7 @@ public static class QueryableExtensions
     /// <returns>An <see cref="IQueryable{T}"/> that represents the filtered query.</returns>
     public static IQueryable<T> Filter<T>(this IQueryable<T> query, IFilterCriteria<T> filterCriteria)
     {
-        Ensure.NotNull(filterCriteria);
+        Ensure.Argument.NotNull(filterCriteria);
 
         return filterCriteria.Apply(query);
     }

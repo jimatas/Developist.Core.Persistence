@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 
 namespace Developist.Core.Persistence.EntityFrameworkCore;
 
@@ -24,7 +24,7 @@ internal class IncludesBuilder<T, TProperty> : IncludesBuilder<T>, IIncludesBuil
             throw new InvalidOperationException($"The '{nameof(ThenInclude)}' method requires an initial path to be set before it can be used.");
         }
 
-        Ensure.NotNullOrWhiteSpace(pathSegment);
+        Ensure.Argument.NotNullOrWhiteSpace(pathSegment);
         Paths[^1] += $".{pathSegment}";
     }
 }

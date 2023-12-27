@@ -1,6 +1,6 @@
-﻿using Developist.Core.Persistence;
+﻿using Developist.Core.ArgumentValidation;
+using Developist.Core.Persistence;
 using Developist.Core.Persistence.EntityFrameworkCore;
-using Developist.Core.Persistence.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -55,7 +55,7 @@ public static class DependencyInjection
         Type repositoryFactoryType,
         ServiceLifetime lifetime = ServiceLifetime.Scoped) where TContext : DbContext
     {
-        Ensure.NotNull(repositoryFactoryType);
+        Ensure.Argument.NotNull(repositoryFactoryType);
         ValidateRepositoryFactoryType<TContext>(repositoryFactoryType);
 
         services.Add(new ServiceDescriptor(typeof(IRepositoryFactory<TContext>), repositoryFactoryType, lifetime));

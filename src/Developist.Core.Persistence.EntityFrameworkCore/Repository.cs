@@ -1,5 +1,5 @@
-﻿using Developist.Core.Persistence.Filtering;
-using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
+using Developist.Core.Persistence.Filtering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Developist.Core.Persistence.EntityFrameworkCore;
@@ -16,7 +16,7 @@ public class Repository<T> : IRepository<T> where T : class
     /// <param name="unitOfWork">The unit of work to use for managing changes to the data store.</param>
     public Repository(IUnitOfWork unitOfWork)
     {
-        UnitOfWork = Ensure.NotNull(unitOfWork);
+        UnitOfWork = Ensure.Argument.NotNull(unitOfWork);
     }
 
     /// <summary>
@@ -30,14 +30,14 @@ public class Repository<T> : IRepository<T> where T : class
     /// <inheritdoc/>
     public void Add(T entity)
     {
-        Ensure.NotNull(entity);
+        Ensure.Argument.NotNull(entity);
         UnitOfWork.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Added;
     }
 
     /// <inheritdoc/>
     public void Remove(T entity)
     {
-        Ensure.NotNull(entity);
+        Ensure.Argument.NotNull(entity);
         UnitOfWork.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Deleted;
     }
 

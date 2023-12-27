@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Developist.Core.Persistence.EntityFrameworkCore;
@@ -20,8 +20,8 @@ public class UnitOfWork<TContext> : IUnitOfWork<TContext>
     /// <param name="repositoryFactory">The repository factory to use for creating repository instances.</param>
     public UnitOfWork(TContext dbContext, IRepositoryFactory<TContext> repositoryFactory)
     {
-        DbContext = Ensure.NotNull(dbContext);
-        _repositoryFactory = Ensure.NotNull(repositoryFactory);
+        DbContext = Ensure.Argument.NotNull(dbContext);
+        _repositoryFactory = Ensure.Argument.NotNull(repositoryFactory);
     }
 
     /// <inheritdoc/>

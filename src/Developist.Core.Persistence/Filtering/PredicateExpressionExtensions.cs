@@ -1,4 +1,4 @@
-﻿using Developist.Core.Persistence.Utilities;
+﻿using Developist.Core.ArgumentValidation;
 
 namespace Developist.Core.Persistence.Filtering;
 
@@ -18,7 +18,7 @@ public static class PredicateExpressionExtensions
         this Expression<Func<T, bool>> predicate,
         Expression<Func<T, bool>> otherPredicate)
     {
-        Ensure.NotNull(otherPredicate);
+        Ensure.Argument.NotNull(otherPredicate);
 
         return Expression.Lambda<Func<T, bool>>(
             body: Expression.AndAlso(
@@ -38,7 +38,7 @@ public static class PredicateExpressionExtensions
         this Expression<Func<T, bool>> predicate,
         Expression<Func<T, bool>> otherPredicate)
     {
-        Ensure.NotNull(otherPredicate);
+        Ensure.Argument.NotNull(otherPredicate);
 
         return Expression.Lambda<Func<T, bool>>(
             body: Expression.OrElse(
