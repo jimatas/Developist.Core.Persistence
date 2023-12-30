@@ -25,4 +25,13 @@ public interface IPaginationCriteria<T> : ICriteria<T>
     /// while preserving the sequence in which the criteria are to be applied.
     /// </remarks>
     IReadOnlyList<ISortCriterion<T>> SortCriteria { get; }
+
+    /// <summary>
+    /// Applies the pagination criteria to the provided queryable data source.
+    /// </summary>
+    /// <param name="query">An <see cref="IQueryable{T}"/> representing the data source to
+    /// which the pagination criteria will be applied.</param>
+    /// <returns>An <see cref="IQueryable{T}"/> that represents a paginated subset of the
+    /// original query, sorted and paged according to the defined criteria.</returns>
+    new IQueryable<T> Apply(IQueryable<T> query);
 }
