@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>6.0.0</Version>
+    <Version>6.0.1</Version>
     <AssemblyMajorVersion>$(Version.Split('.')[0])</AssemblyMajorVersion>
     <AssemblyMinorVersion>$(Version.Split('.')[1])</AssemblyMinorVersion>
     <AssemblyBuildNumber>$([System.Math]::Floor($([System.DateTime]::Now.Subtract($([System.DateTime]::Parse("01-01-2000"))).TotalDays)))</AssemblyBuildNumber>
@@ -44,7 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Developist.Core.ArgumentValidation" Version="1.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.14" />
   </ItemGroup>
