@@ -10,9 +10,17 @@ public static class QueryableExtensions
         return detector.IsMethodDetected;
     }
 
-    public static bool IsSplitQuery<T>(this IQueryable<T>query)
+    public static bool IsSplitQuery<T>(this IQueryable<T> query)
     {
         var detector = new QueryableMethodDetector("AsSplitQuery");
+        detector.Visit(query.Expression);
+
+        return detector.IsMethodDetected;
+    }
+
+    public static bool IsSingleQuery<T>(this IQueryable<T> query)
+    {
+        var detector = new QueryableMethodDetector("AsSingleQuery");
         detector.Visit(query.Expression);
 
         return detector.IsMethodDetected;
@@ -21,6 +29,14 @@ public static class QueryableExtensions
     public static bool IsNoTracking<T>(this IQueryable<T> query)
     {
         var detector = new QueryableMethodDetector("AsNoTracking");
+        detector.Visit(query.Expression);
+
+        return detector.IsMethodDetected;
+    }
+
+    public static bool IsTracking<T>(this IQueryable<T> query)
+    {
+        var detector = new QueryableMethodDetector("AsTracking");
         detector.Visit(query.Expression);
 
         return detector.IsMethodDetected;

@@ -1,6 +1,6 @@
 ﻿using Developist.Core.ArgumentValidation;
 
-namespace Developist.Core.Persistence.Filtering;
+namespace Developist.Core.Persistence;
 
 /// <summary>
 /// An implementation of the <see cref="IFilterCriteria{T}"/> interface that filters data using a predicate.

@@ -1,6 +1,5 @@
 ﻿using Developist.Core.Cqrs;
 using Developist.Core.Persistence;
-using Developist.Core.Persistence.Pagination;
 using Developist.Customers.Domain.Model;
 
 namespace Developist.Customers.Domain.Queries;

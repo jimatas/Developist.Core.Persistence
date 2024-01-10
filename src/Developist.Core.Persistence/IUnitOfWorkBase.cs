@@ -20,7 +20,7 @@ public interface IUnitOfWorkBase
     /// <summary>
     /// Completes the unit of work and any pending transaction asynchronously.
     /// </summary>
-    /// <param name="cancellationToken">A token for cancelling the asynchronous operation.</param>
+    /// <param name="cancellationToken">A token for canceling the asynchronous operation.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     Task CompleteAsync(CancellationToken cancellationToken = default);
 }

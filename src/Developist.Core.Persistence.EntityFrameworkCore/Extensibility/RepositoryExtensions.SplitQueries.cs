@@ -18,12 +18,26 @@ public static partial class RepositoryExtensions
             featureName: "query splitting");
     }
 
-    // Declared as internal for unit test visibility.
+    /// <summary>
+    /// Creates a new instance of the repository that disables split queries for data retrieval operations.
+    /// </summary>
+    /// <typeparam name="T">The type of entity in the repository.</typeparam>
+    /// <param name="repository">The original repository instance.</param>
+    /// <returns>A new repository instance with query splitting disabled.</returns>
+    public static IRepository<T> WithoutSplitQueries<T>(this IRepository<T> repository) where T : class
+    {
+        return repository.ExtendWithFeature(
+            queryExtender: new SingleQueryExtender<T>(),
+            featureName: "query splitting");
+    }
+
     internal class SplitQueryExtender<T> : IQueryExtender<T> where T : class
     {
-        public IQueryable<T> Extend(IQueryable<T> query)
-        {
-            return query.AsSplitQuery();
-        }
+        public IQueryable<T> Extend(IQueryable<T> query) => query.AsSplitQuery();
+    }
+
+    internal class SingleQueryExtender<T> : IQueryExtender<T> where T : class
+    {
+        public IQueryable<T> Extend(IQueryable<T> query) => query.AsSingleQuery();
     }
 }

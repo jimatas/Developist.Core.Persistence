@@ -1,7 +1,6 @@
 ﻿using Developist.Core.Cqrs;
 using Developist.Core.Persistence;
 using Developist.Core.Persistence.EntityFrameworkCore;
-using Developist.Core.Persistence.Pagination;
 using Developist.Customers.Domain.Model;
 using Developist.Customers.Domain.Queries;
 
@@ -27,8 +26,8 @@ public class GetCustomersHandler : IQueryHandler<GetCustomers, IPaginatedList<Cu
             .WithIncludes(props => props.Include(c => c.PaymentInformation))
             .ListAsync(
                 new CustomerCriteria { PaymentMethods = query.PaymentMethods },
-                p => p.StartAtPage(query.PageNumber)
-                      .UsePageSize(query.PageSize)
+                p => p.SetPageNumber(query.PageNumber)
+                      .SetPageSize(query.PageSize)
                       .SortByString(query.SortedBy),
                 cancellationToken);
 

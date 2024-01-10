@@ -88,7 +88,7 @@ public class RepositoryExtensionsTests : TestClassBase
         await repository.InitializedWithPeopleAsync();
 
         // Act
-        var result = await repository.ListAsync(paginator => paginator.StartAtPage(2).UsePageSize(1).SortBy(p => p.Age));
+        var result = await repository.ListAsync(paginator => paginator.SetPageNumber(2).SetPageSize(1).SortBy(p => p.Age));
 
         // Assert
         Assert.AreEqual("Peter Connor", result.Single().ToString());
@@ -107,83 +107,10 @@ public class RepositoryExtensionsTests : TestClassBase
         // Act
         var result = await repository.ListAsync(
             p => p.Age < 20,
-            paginator => paginator.StartAtPage(1).UsePageSize(1).SortBy(p => p.Age, SortDirection.Descending));
+            paginator => paginator.SetPageNumber(1).SetPageSize(1).SortBy(p => p.Age, SortDirection.Descending));
 
         // Assert
         Assert.AreEqual("Dwayne Welsh", result.Single().ToString());
-    }
-
-    [TestMethod]
-    public void ExtendWithFeature_GivenNullQueryExtender_ThrowsArgumentNullException()
-    {
-        // Arrange
-        using var serviceProvider = ConfigureServiceProvider(services => services.AddUnitOfWork<SampleDbContext>());
-        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWorkBase>();
-        var repository = unitOfWork.Repository<Person>();
-        IQueryExtender<Person> queryExtender = null!;
-
-        // Act
-        void action() => repository.ExtendWithFeature(queryExtender, "null feature");
-
-        // Assert
-        var exception = Assert.ThrowsException<ArgumentNullException>(action);
-        Assert.AreEqual(nameof(queryExtender), exception.ParamName);
-    }
-
-    [TestMethod]
-    public void ExtendWithFeature_GivenNullFeatureName_ThrowsArgumentNullException()
-    {
-        // Arrange
-        using var serviceProvider = ConfigureServiceProvider(services => services.AddUnitOfWork<SampleDbContext>());
-        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWorkBase>();
-        var repository = unitOfWork.Repository<Person>();
-        IQueryExtender<Person> queryExtender = new Mock<IQueryExtender<Person>>().Object;
-        string featureName = null!;
-
-        // Act
-        void action() => repository.ExtendWithFeature(queryExtender, featureName);
-
-        // Assert
-        var exception = Assert.ThrowsException<ArgumentNullException>(action);
-        Assert.AreEqual(nameof(featureName), exception.ParamName);
-    }
-
-    [DataTestMethod]
-    [DataRow("")]
-    [DataRow(" ")]
-    [DataRow("\r\n\t")]
-    public void ExtendWithFeature_GivenEmptyOrWhiteSpaceStringForFeatureName_ThrowsArgumentException(string featureName)
-    {
-        // Arrange
-        using var serviceProvider = ConfigureServiceProvider(services => services.AddUnitOfWork<SampleDbContext>());
-        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWorkBase>();
-        var repository = unitOfWork.Repository<Person>();
-        IQueryExtender<Person> queryExtender = new Mock<IQueryExtender<Person>>().Object;
-
-        // Act
-        void action() => repository.ExtendWithFeature(queryExtender, featureName);
-
-        // Assert
-        var exception = Assert.ThrowsException<ArgumentException>(action);
-        Assert.AreEqual(nameof(featureName), exception.ParamName);
-    }
-
-    [TestMethod]
-    public void WithoutTracking_CalledOnRepository_ReturnsNoTrackingRepository()
-    {
-        // Arrange
-        using var serviceProvider = ConfigureServiceProvider(services => services.AddUnitOfWork<SampleDbContext>());
-        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWorkBase>();
-        var repository = unitOfWork.Repository<Person>();
-
-        // Act
-        repository = repository.WithoutTracking();
-
-        // Assert
-        Assert.IsInstanceOfType<ExtendableQueryRepository<Person>>(repository);
-
-        var nonTrackingRepository = (ExtendableQueryRepository<Person>)repository;
-        Assert.IsInstanceOfType<RepositoryExtensions.NoTrackingQueryExtender<Person>>(nonTrackingRepository.QueryExtender);
     }
 
     [TestMethod]
@@ -207,21 +134,23 @@ public class RepositoryExtensionsTests : TestClassBase
     }
 
     [TestMethod]
-    public void WithIncludes_CalledOnRepository_ReturnsIncludableRepository()
+    public async Task AnyAsync_CalledOnTrackingRepository_UsesTrackingQuery()
     {
         // Arrange
         using var serviceProvider = ConfigureServiceProvider(services => services.AddUnitOfWork<SampleDbContext>());
         var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWorkBase>();
         var repository = unitOfWork.Repository<Person>();
 
+        var spyingExtender = new QueryExtenderSpy<Person>();
+
         // Act
-        repository = repository.WithIncludes(includes => includes.Include(nameof(Person.FavoriteBook)));
+        _ = await repository.WithTracking()
+            .ExtendWithFeature(spyingExtender, "spying on features")
+            .AnyAsync();
 
         // Assert
-        Assert.IsInstanceOfType<ExtendableQueryRepository<Person>>(repository);
-
-        var includableRepository = (ExtendableQueryRepository<Person>)repository;
-        Assert.IsInstanceOfType<RepositoryExtensions.IncludableQueryExtender<Person>>(includableRepository.QueryExtender);
+        Assert.IsNotNull(spyingExtender.Query);
+        Assert.IsTrue(spyingExtender.Query.IsTracking());
     }
 
     [TestMethod]
@@ -242,24 +171,6 @@ public class RepositoryExtensionsTests : TestClassBase
         // Assert
         Assert.IsNotNull(spyingExtender.Query);
         Assert.IsTrue(spyingExtender.Query.IsIncludable());
-    }
-
-    [TestMethod]
-    public void WithSplitQueries_CalledOnRepository_ReturnsQuerySplittingRepository()
-    {
-        // Arrange
-        using var serviceProvider = ConfigureServiceProvider(services => services.AddUnitOfWork<SampleDbContext>());
-        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWorkBase>();
-        var repository = unitOfWork.Repository<Person>();
-
-        // Act
-        repository = repository.WithSplitQueries();
-
-        // Assert
-        Assert.IsInstanceOfType<ExtendableQueryRepository<Person>>(repository);
-
-        var querySplittingRepository = (ExtendableQueryRepository<Person>)repository;
-        Assert.IsInstanceOfType<RepositoryExtensions.SplitQueryExtender<Person>>(querySplittingRepository.QueryExtender);
     }
 
     [TestMethod]
@@ -285,23 +196,25 @@ public class RepositoryExtensionsTests : TestClassBase
     }
 
     [TestMethod]
-    public void DecoratingRepository_WithMultipleQueryExtenders_ReturnsRepositoryWithCompositeQueryExtender()
+    public async Task SingleOrDefaultAsync_CalledOnNonQuerySplittingRepository_UsesSingleQuery()
     {
         // Arrange
         using var serviceProvider = ConfigureServiceProvider(services => services.AddUnitOfWork<SampleDbContext>());
         var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWorkBase>();
-        var repository = unitOfWork.Repository<Person>();
+        var repository = unitOfWork.Repository<SocialPerson>();
+
+        await unitOfWork.CompleteAsync();
+
+        var spyingExtender = new QueryExtenderSpy<SocialPerson>();
 
         // Act
-        repository = repository.ExtendWithFeature(new Mock<IQueryExtender<Person>>().Object, "mocked feature 1")
-            .ExtendWithFeature(new Mock<IQueryExtender<Person>>().Object, "mocked feature 2")
-            .ExtendWithFeature(new Mock<IQueryExtender<Person>>().Object, "mocked feature 3");
+        _ = await repository.WithoutSplitQueries()
+            .ExtendWithFeature(spyingExtender, "spying on features")
+            .SingleOrDefaultAsync(p => p.GivenName.Equals("John") && p.FamilyName.Equals("Doe"));
 
         // Assert
-        Assert.IsInstanceOfType<ExtendableQueryRepository<Person>>(repository);
-
-        var extendedRepository = (ExtendableQueryRepository<Person>)repository;
-        Assert.IsInstanceOfType<RepositoryExtensions.CompositeQueryExtender<Person>>(extendedRepository.QueryExtender);
+        Assert.IsNotNull(spyingExtender.Query);
+        Assert.IsTrue(spyingExtender.Query.IsSingleQuery());
     }
 
     [TestMethod]
@@ -342,20 +255,5 @@ public class RepositoryExtensionsTests : TestClassBase
         Assert.IsNotNull(result.FavoriteBook);
         Assert.IsTrue(result.Friends.Any());
         Assert.IsTrue(result.Friends.All(friend => friend.FavoriteBook is not null));
-    }
-
-    [TestMethod]
-    public void ExtendWithFeature_CalledOnUnsupportedRepository_ThrowsNotSupportedException()
-    {
-        // Arrange
-        var repository = new Mock<IRepository<Person>>().Object;
-        var queryExtender = new Mock<IQueryExtender<Person>>().Object;
-
-        // Act
-        void action() => repository.ExtendWithFeature(queryExtender, "mocked features");
-
-        // Assert
-        var exception = Assert.ThrowsException<NotSupportedException>(action);
-        Assert.IsTrue(Regex.IsMatch(exception.Message, "The repository of type '.*' does not have support for mocked features\\."));
     }
 }

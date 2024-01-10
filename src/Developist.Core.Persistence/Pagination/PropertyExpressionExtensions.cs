@@ -1,4 +1,4 @@
-﻿namespace Developist.Core.Persistence.Pagination;
+﻿namespace Developist.Core.Persistence;
 
 /// <summary>
 /// Provides extension methods for working with property expressions.

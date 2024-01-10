@@ -1,5 +1,4 @@
-﻿using Developist.Core.Persistence.Pagination;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Developist.Core.Persistence.EntityFrameworkCore;
 

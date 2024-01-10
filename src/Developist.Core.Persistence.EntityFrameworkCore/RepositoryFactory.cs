@@ -23,7 +23,7 @@ public class RepositoryFactory<TContext> : IRepositoryFactory<TContext>
     }
 
     /// <inheritdoc/>
-    public IRepository<T> Create<T>(IUnitOfWork<TContext> unitOfWork) where T : class
+    public IRepository<T> CreateRepository<T>(IUnitOfWork<TContext> unitOfWork) where T : class
     {
         var repositoryType = GetRepositoryImplementationType<T>();
         var repository = (IRepository<T>)ActivatorUtilities.CreateInstance(_serviceProvider,

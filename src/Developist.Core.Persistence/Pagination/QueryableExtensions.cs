@@ -1,11 +1,11 @@
 ﻿using Developist.Core.ArgumentValidation;
 
-namespace Developist.Core.Persistence.Pagination;
+namespace Developist.Core.Persistence;
 
 /// <summary>
 /// Provides extension methods for <see cref="IQueryable{T}"/> to enable pagination.
 /// </summary>
-public static class QueryableExtensions
+public static partial class QueryableExtensions
 {
     /// <summary>
     /// Paginates the query according to the specified pagination criteria.

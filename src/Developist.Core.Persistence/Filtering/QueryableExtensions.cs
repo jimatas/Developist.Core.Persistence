@@ -1,11 +1,11 @@
 ﻿using Developist.Core.ArgumentValidation;
 
-namespace Developist.Core.Persistence.Filtering;
+namespace Developist.Core.Persistence;
 
 /// <summary>
 /// Provides extension methods for <see cref="IQueryable{T}"/> to enable filtering.
 /// </summary>
-public static class QueryableExtensions
+public static partial class QueryableExtensions
 {
     /// <summary>
     /// Filters the query according to the specified filter criteria.

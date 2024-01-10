@@ -1,5 +1,4 @@
-﻿using Developist.Core.Persistence.Filtering;
-using Developist.Core.Persistence.Tests.Fixture;
+﻿using Developist.Core.Persistence.Tests.Fixture;
 
 namespace Developist.Core.Persistence.Tests;
 

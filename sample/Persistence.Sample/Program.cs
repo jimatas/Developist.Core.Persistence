@@ -1,6 +1,5 @@
 ﻿using Developist.Core.Cqrs;
 using Developist.Core.Persistence;
-using Developist.Core.Persistence.Pagination;
 using Developist.Customers.Api.Model;
 using Developist.Customers.Api.Serialization;
 using Developist.Customers.Application;

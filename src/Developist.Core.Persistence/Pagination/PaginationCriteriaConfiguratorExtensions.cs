@@ -1,6 +1,6 @@
 ﻿using Developist.Core.ArgumentValidation;
 
-namespace Developist.Core.Persistence.Pagination;
+namespace Developist.Core.Persistence;
 
 /// <summary>
 /// Provides extension methods for configuring sorting options on instances of <see cref="PaginationCriteriaConfigurator{T}"/>.

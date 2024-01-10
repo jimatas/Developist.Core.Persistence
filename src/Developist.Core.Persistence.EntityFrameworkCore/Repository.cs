@@ -1,5 +1,4 @@
 ﻿using Developist.Core.ArgumentValidation;
-using Developist.Core.Persistence.Filtering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Developist.Core.Persistence.EntityFrameworkCore;
@@ -30,14 +29,12 @@ public class Repository<T> : IRepository<T> where T : class
     /// <inheritdoc/>
     public void Add(T entity)
     {
-        Ensure.Argument.NotNull(entity);
         UnitOfWork.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Added;
     }
 
     /// <inheritdoc/>
     public void Remove(T entity)
     {
-        Ensure.Argument.NotNull(entity);
         UnitOfWork.DbContext.Entry(entity, attachIfDetached: true).State = EntityState.Deleted;
     }
 

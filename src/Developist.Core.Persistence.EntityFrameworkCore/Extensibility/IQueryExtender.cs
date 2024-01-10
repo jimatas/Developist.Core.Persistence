@@ -4,7 +4,8 @@
 /// Represents a query builder interface for extending or modifying queries with additional operations such as includes or filters.
 /// </summary>
 /// <remarks>
-/// This interface is for internal use, and its functionality is exposed externally through extension methods of the repository.
+/// This interface is intended for internal use.
+/// Its functionality is exposed externally through extension methods of the repository.
 /// </remarks>
 /// <typeparam name="T">The entity type being queried.</typeparam>
 public interface IQueryExtender<T>

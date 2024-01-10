@@ -7,9 +7,9 @@
 public interface IIncludesBuilder<T>
 {
     /// <summary>
-    /// Includes a path for related entities in the query result.
+    /// Specifies the path to a related entity to include in the query result.
     /// </summary>
-    /// <param name="path">The path to include.</param>
+    /// <param name="path">The path to a related entity to include.</param>
     void Include(string path);
 
     /// <summary>

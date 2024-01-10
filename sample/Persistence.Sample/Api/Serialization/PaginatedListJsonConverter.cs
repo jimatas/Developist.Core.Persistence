@@ -1,5 +1,4 @@
 ﻿using Developist.Core.Persistence;
-using Developist.Core.Persistence.Pagination;
 
 namespace Developist.Customers.Api.Serialization;
 

@@ -1,6 +1,6 @@
 ﻿using Developist.Core.ArgumentValidation;
 
-namespace Developist.Core.Persistence.Pagination;
+namespace Developist.Core.Persistence;
 
 /// <summary>
 /// Represents a generic paginated list of items.

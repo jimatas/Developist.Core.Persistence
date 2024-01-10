@@ -1,6 +1,6 @@
 ﻿using Developist.Core.ArgumentValidation;
 
-namespace Developist.Core.Persistence.Pagination;
+namespace Developist.Core.Persistence;
 
 /// <summary>
 /// Represents a sorting criterion for a query, providing a more specific sorting key and direction.
@@ -28,6 +28,8 @@ public class SortCriterion<T, TProperty> : SortCriterion<T>
     /// <inheritdoc/>
     public override IOrderedQueryable<T> Apply(IQueryable<T> query)
     {
+        Ensure.Argument.NotNull(query);
+
         return Direction is SortDirection.Ascending
             ? query.OrderBy(Key)
             : query.OrderByDescending(Key);
@@ -36,6 +38,8 @@ public class SortCriterion<T, TProperty> : SortCriterion<T>
     /// <inheritdoc/>
     public override IOrderedQueryable<T> Apply(IOrderedQueryable<T> sortedQuery)
     {
+        Ensure.Argument.NotNull(sortedQuery);
+
         return Direction is SortDirection.Ascending
             ? sortedQuery.ThenBy(Key)
             : sortedQuery.ThenByDescending(Key);

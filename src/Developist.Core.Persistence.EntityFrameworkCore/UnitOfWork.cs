@@ -44,6 +44,6 @@ public class UnitOfWork<TContext> : IUnitOfWork<TContext>
     public IRepository<T> Repository<T>() where T : class
     {
         return (IRepository<T>)_repositories.GetOrAdd(typeof(T),
-            _ => _repositoryFactory.Create<T>(this));
+            _ => _repositoryFactory.CreateRepository<T>(this));
     }
 }

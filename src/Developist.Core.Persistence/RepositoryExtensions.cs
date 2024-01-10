@@ -1,7 +1,4 @@
-﻿using Developist.Core.Persistence.Filtering;
-using Developist.Core.Persistence.Pagination;
-
-namespace Developist.Core.Persistence;
+﻿namespace Developist.Core.Persistence;
 
 /// <summary>
 /// Provides extension methods for <see cref="IRepository{T}"/> for common querying operations.

@@ -1,6 +1,4 @@
 ﻿using Developist.Core.Persistence.EntityFrameworkCore.Tests.Fixture;
-using Developist.Core.Persistence.Filtering;
-using Developist.Core.Persistence.Pagination;
 using Developist.Core.Persistence.Tests.Fixture;
 using Microsoft.Extensions.DependencyInjection;
 

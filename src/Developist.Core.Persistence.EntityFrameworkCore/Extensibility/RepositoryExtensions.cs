@@ -14,7 +14,8 @@ public static partial class RepositoryExtensions
     /// <typeparam name="T">The entity type of the repository.</typeparam>
     /// <param name="repository">The repository to be extended.</param>
     /// <param name="queryExtender">The query extender to be applied to the repository.</param>
-    /// <param name="featureName">The name of the feature to be enabled or disabled in the repository.</param>
+    /// <param name="featureName">The name of the feature to be enabled or disabled in the repository.
+    /// It is referenced in error messages as follows: "The repository of type '{repositoryType}' does not have support for {featureName}."</param>
     /// <returns>A new <see cref="IRepository{T}"/> instance that includes the specified feature.</returns>
     public static IRepository<T> ExtendWithFeature<T>(
         this IRepository<T> repository,
@@ -51,7 +52,6 @@ public static partial class RepositoryExtensions
         return queryExtender;
     }
 
-    // Declared as internal for unit test visibility.
     internal class CompositeQueryExtender<T> : IQueryExtender<T>
     {
         private readonly List<IQueryExtender<T>> _queryExtenders = new();

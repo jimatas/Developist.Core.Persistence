@@ -8,8 +8,8 @@
 public interface IIncludesBuilder<T, out TProperty> : IIncludesBuilder<T>
 {
     /// <summary>
-    /// Includes a path for related entities that are nested under the previously included related entities in the query result.
+    /// Specifies the path segment of a related entity to include in the query result, which is nested under a previously included related entity.
     /// </summary>
-    /// <param name="pathSegment">The path segment to include.</param>
+    /// <param name="pathSegment">The path segment of a nested related entity to include.</param>
     void ThenInclude(string pathSegment);
 }

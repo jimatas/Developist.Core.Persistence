@@ -1,5 +1,4 @@
 ﻿using Developist.Core.Persistence.EntityFrameworkCore.Tests.Fixture;
-using Developist.Core.Persistence.Pagination;
 using Developist.Core.Persistence.Tests.Fixture;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -70,7 +69,7 @@ public class QueryableExtensionsTests : TestClassBase
         var query = dbContext.Set<Person>().AsQueryable();
 
         // Act
-        var subset = await query.ToPaginatedListAsync(paginator => paginator.StartAtPage(1).UsePageSize(2).SortBy(p => p.Age));
+        var subset = await query.ToPaginatedListAsync(paginator => paginator.SetPageNumber(1).SetPageSize(2).SortBy(p => p.Age));
 
         // Assert
         Assert.IsNotNull(subset);

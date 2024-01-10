@@ -1,6 +1,6 @@
 ﻿using Developist.Core.ArgumentValidation;
 
-namespace Developist.Core.Persistence.Pagination;
+namespace Developist.Core.Persistence;
 
 /// <summary>
 /// Provides a fluent configuration interface for customizing a <see cref="PaginationCriteria{T}"/> instance.
@@ -20,11 +20,11 @@ public class PaginationCriteriaConfigurator<T>
     }
 
     /// <summary>
-    /// Sets the starting page number for the pagination criteria.
+    /// Sets the page number for the pagination criteria.
     /// </summary>
-    /// <param name="pageNumber">The starting page number, with 1 representing the first page.</param>
+    /// <param name="pageNumber">The page number to retrieve, with 1 representing the first page.</param>
     /// <returns>A reference to itself for method chaining.</returns>
-    public PaginationCriteriaConfigurator<T> StartAtPage(int pageNumber)
+    public PaginationCriteriaConfigurator<T> SetPageNumber(int pageNumber)
     {
         _paginationCriteria.PageNumber = pageNumber;
 
@@ -36,7 +36,7 @@ public class PaginationCriteriaConfigurator<T>
     /// </summary>
     /// <param name="pageSize">The number of items per page.</param>
     /// <returns>A reference to itself for method chaining.</returns>
-    public PaginationCriteriaConfigurator<T> UsePageSize(int pageSize)
+    public PaginationCriteriaConfigurator<T> SetPageSize(int pageSize)
     {
         _paginationCriteria.PageSize = pageSize;
 

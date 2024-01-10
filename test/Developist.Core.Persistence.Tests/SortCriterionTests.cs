@@ -1,5 +1,4 @@
-﻿using Developist.Core.Persistence.Pagination;
-using Developist.Core.Persistence.Tests.Fixture;
+﻿using Developist.Core.Persistence.Tests.Fixture;
 
 namespace Developist.Core.Persistence.Tests;
 
@@ -216,5 +215,65 @@ public class SortCriterionTests
         // Assert
         Assert.IsNotNull(sortCriterion.Key);
         Assert.IsNotNull(((ISortCriterion)sortCriterion).Key);
+    }
+
+    [TestMethod]
+    public void Apply_GivenNullQuery_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var sortCriterion = new SortCriterion<Person>(nameof(Person.FamilyName), SortDirection.Ascending);
+        IQueryable<Person> query = null!;
+
+        // Act
+        void action() => sortCriterion.Apply(query);
+
+        // Assert
+        var exception = Assert.ThrowsException<ArgumentNullException>(action);
+        Assert.AreEqual(nameof(query), exception.ParamName);
+    }
+
+    [TestMethod]
+    public void ApplyOverride_GivenNullQuery_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var sortCriterion = new SortCriterion<Person, string>(p => p.FamilyName, SortDirection.Ascending);
+        IQueryable<Person> query = null!;
+
+        // Act
+        void action() => sortCriterion.Apply(query);
+
+        // Assert
+        var exception = Assert.ThrowsException<ArgumentNullException>(action);
+        Assert.AreEqual(nameof(query), exception.ParamName);
+    }
+
+    [TestMethod]
+    public void Apply_GivenNullSortedQuery_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var sortCriterion = new SortCriterion<Person>(nameof(Person.FamilyName), SortDirection.Ascending);
+        IOrderedQueryable<Person> sortedQuery = null!;
+
+        // Act
+        void action() => sortCriterion.Apply(sortedQuery);
+
+        // Assert
+        var exception = Assert.ThrowsException<ArgumentNullException>(action);
+        Assert.AreEqual(nameof(sortedQuery), exception.ParamName);
+    }
+
+    [TestMethod]
+    public void ApplyOverride_GivenNullSortedQuery_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var sortCriterion = new SortCriterion<Person, string>(p => p.FamilyName, SortDirection.Ascending);
+        IOrderedQueryable<Person> sortedQuery = null!;
+
+        // Act
+        void action() => sortCriterion.Apply(sortedQuery);
+
+        // Assert
+        var exception = Assert.ThrowsException<ArgumentNullException>(action);
+        Assert.AreEqual(nameof(sortedQuery), exception.ParamName);
     }
 }

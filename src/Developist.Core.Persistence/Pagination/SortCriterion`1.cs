@@ -1,4 +1,6 @@
-﻿namespace Developist.Core.Persistence.Pagination;
+﻿using Developist.Core.ArgumentValidation;
+
+namespace Developist.Core.Persistence;
 
 /// <summary>
 /// Represents a strongly-typed sorting criterion for a query.
@@ -38,6 +40,8 @@ public class SortCriterion<T> : SortCriterion, ISortCriterion<T>
     /// <inheritdoc/>
     public virtual IOrderedQueryable<T> Apply(IQueryable<T> query)
     {
+        Ensure.Argument.NotNull(query);
+
         var method = GetSortMethod(initial: true);
 
         return (IOrderedQueryable<T>)method.Invoke(null, new object[] { query, Key })!;
@@ -46,6 +50,8 @@ public class SortCriterion<T> : SortCriterion, ISortCriterion<T>
     /// <inheritdoc/>
     public virtual IOrderedQueryable<T> Apply(IOrderedQueryable<T> sortedQuery)
     {
+        Ensure.Argument.NotNull(sortedQuery);
+
         var method = GetSortMethod(initial: false);
 
         return (IOrderedQueryable<T>)method.Invoke(null, new object[] { sortedQuery, Key })!;

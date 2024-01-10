@@ -1,5 +1,4 @@
-﻿using Developist.Core.Persistence.Pagination;
-using Developist.Core.Persistence.Tests.Fixture;
+﻿using Developist.Core.Persistence.Tests.Fixture;
 
 namespace Developist.Core.Persistence.Tests;
 
@@ -29,7 +28,7 @@ public class PaginationCriteriaConfiguratorTests
         var configurator = new PaginationCriteriaConfigurator<Person>(paginationCriteria);
 
         // Act
-        configurator.StartAtPage(pageNumber);
+        configurator.SetPageNumber(pageNumber);
 
         // Assert
         Assert.AreEqual(pageNumber, paginationCriteria.PageNumber);
@@ -44,7 +43,7 @@ public class PaginationCriteriaConfiguratorTests
         var configurator = new PaginationCriteriaConfigurator<Person>(paginationCriteria);
 
         // Act
-        configurator.UsePageSize(pageSize);
+        configurator.SetPageSize(pageSize);
 
         // Assert
         Assert.AreEqual(pageSize, paginationCriteria.PageSize);

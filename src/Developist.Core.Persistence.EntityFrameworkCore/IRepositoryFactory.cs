@@ -14,5 +14,5 @@ public interface IRepositoryFactory<TContext> where TContext : DbContext
     /// <typeparam name="T">The type of entity for which to create a repository.</typeparam>
     /// <param name="unitOfWork">The unit of work associated with the repository.</param>
     /// <returns>A repository for the specified entity type and unit of work.</returns>
-    IRepository<T> Create<T>(IUnitOfWork<TContext> unitOfWork) where T : class;
+    IRepository<T> CreateRepository<T>(IUnitOfWork<TContext> unitOfWork) where T : class;
 }

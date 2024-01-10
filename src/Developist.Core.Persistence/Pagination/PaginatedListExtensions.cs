@@ -1,4 +1,4 @@
-﻿namespace Developist.Core.Persistence.Pagination;
+﻿namespace Developist.Core.Persistence;
 
 /// <summary>
 /// Provides extension methods for determining the availability of next and previous pages in an <see cref="IPaginatedList{T}"/>.

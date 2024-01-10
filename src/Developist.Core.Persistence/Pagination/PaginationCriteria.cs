@@ -1,6 +1,6 @@
 ﻿using Developist.Core.ArgumentValidation;
 
-namespace Developist.Core.Persistence.Pagination;
+namespace Developist.Core.Persistence;
 
 /// <summary>
 /// Default implementation of the <see cref="IPaginationCriteria{T}"/> interface that supports sorting by multiple properties.
